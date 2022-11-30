@@ -107,7 +107,7 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::correct()
   ***/
 
   // rb = constant
-  rb_.ref() = interface_.ref()*1e-2;  // const burning rate
+  rb_.ref() = interface_.ref()*dimensionedScalar("", dimVelocity, 1e-2);
 }
 
 void Foam::interfaceTrackingModels::subCellularInterfaceMotion::regress
