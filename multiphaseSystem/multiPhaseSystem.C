@@ -291,7 +291,7 @@ void Foam::multiPhaseSystem::solveAlphas()
             Sp,
             Su
         );
-
+        phase.clip(SMALL, 1 - SMALL);
         phase.alphaPhiRef() = alphaPhi;
     }
 

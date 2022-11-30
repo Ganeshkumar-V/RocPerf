@@ -10,7 +10,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
     forAll(fluid.anisothermalPhases(), anisothermalPhasei)
     {
         phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
-
+        continue;
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
         const volVectorField& U = phase.U();
