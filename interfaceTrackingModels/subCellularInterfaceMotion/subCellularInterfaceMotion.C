@@ -176,7 +176,7 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::regress
     else if ((alpha0[Own[i]] == 0) && (alpha0[Nei[i]] == 1))
     {
       interface_[Own[i]] = 1;
-      As_[Own[i]] = Sf[i]/V[Own[i]];  // Area of face between owner and neighbour
+      As_[Own[i]] = Sf[i]/V[Nei[i]];  // Area of face between owner and neighbour
       alpha[Nei[i]] = alpha0[Nei[i]] - rb_[Own[i]]*Sf[i]*dt/V[Nei[i]];
       if (alpha[Nei[i]] < 0)
       {
@@ -190,7 +190,7 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::regress
     else if ((alpha0[Own[i]] == 0) && (alpha0[Nei[i]] > 0.5))
     {
       interface_[Own[i]] = 1;
-      As_[Own[i]] = Sf[i]/V[Own[i]];  // Area of face between owner and neighbour
+      As_[Own[i]] = Sf[i]/V[Nei[i]];  // Area of face between owner and neighbour
       alpha[Nei[i]] = alpha0[Nei[i]] - rb_[Own[i]]*Sf[i]*dt/V[Nei[i]];
       if (alpha[Nei[i]] < 0)
       {

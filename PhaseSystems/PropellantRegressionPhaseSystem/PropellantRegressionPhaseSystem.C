@@ -231,32 +231,32 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::heatTransfer() const
   autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
           BasePhaseSystem::heatTransfer();
 
-  // phaseSystem::heatTransferTable& eqns = eqnsPtr();
-  //
-  // forAllConstIter(rDmdtTable, rDmdt_, rDmdtIter)
-  // {
-  //   const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
-  //   const volScalarField& rDmdt = *rDmdtIter();
-  //
-  //   const scalar coeff = coeff_[rDmdtIter.key()];
-  //
-  //   const phaseModel& phase1 = pair.phase1();
-  //   const phaseModel& phase2 = pair.phase2();
-  //
-  //   // specific Heat Capacity
-  //   const volScalarField Cp1(phase1.thermo().Cp());
-  //   const volScalarField Cp2(phase2.thermo().Cp());
-  //
-  //   // Equations
-  //   fvScalarMatrix& eqn1 = *eqns[phase1.name()];
-  //   fvScalarMatrix& eqn2 = *eqns[phase2.name()];
+  phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    // // Enthalpy Source
-    // eqn1 += - fvm::Sp(coeff*rDmdt, eqn1.psi())
-    //         + coeff*rDmdt*Cp1*Tad;
-    // eqn2 += - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi())
-    //         + (1.0 - coeff)*rDmdt*Cp2*Tad;
-    //
+  forAllConstIter(rDmdtTable, rDmdt_, rDmdtIter)
+  {
+    const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
+    const volScalarField& rDmdt = *rDmdtIter();
+
+    const scalar coeff = coeff_[rDmdtIter.key()];
+
+    const phaseModel& phase1 = pair.phase1();
+    const phaseModel& phase2 = pair.phase2();
+
+    // specific Heat Capacity
+    const volScalarField Cp1(phase1.thermo().Cp());
+    const volScalarField Cp2(phase2.thermo().Cp());
+
+    // Equations
+    fvScalarMatrix& eqn1 = *eqns[phase1.name()];
+    fvScalarMatrix& eqn2 = *eqns[phase2.name()];
+
+    // Enthalpy Source
+    eqn1 += - fvm::Sp(coeff*rDmdt, eqn1.psi())
+            + coeff*rDmdt*Cp1*Tad;
+    eqn2 += - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi())
+            + (1.0 - coeff)*rDmdt*Cp2*Tad;
+
     // // Stabilization Terms
     // eqn1 += coeff*rDmdt*phase1.thermo().he()
     //         - fvm::Sp(coeff*rDmdt, eqn1.psi());
@@ -264,12 +264,12 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::heatTransfer() const
     //         - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi());
 
 
-    // // Kinetic Energy Source
-    // eqn1 += - coeff*rDmdt*phase1.K()
-    //         + coeff*rDmdt*(0.5*magSqr(Up));
-    // eqn2 += - (1.0 - coeff)*rDmdt*phase2.K()
-    //         + (1.0 - coeff)*rDmdt*(0.5*magSqr(Ug));
-  // }
+    // Kinetic Energy Source
+    eqn1 += - coeff*rDmdt*phase1.K()
+            + coeff*rDmdt*(0.5*magSqr(Up));
+    eqn2 += - (1.0 - coeff)*rDmdt*phase2.K()
+            + (1.0 - coeff)*rDmdt*(0.5*magSqr(Ug));
+  }
 
   return eqnsPtr;
 }
@@ -281,28 +281,28 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::momentumTransfer()
   autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
                 BasePhaseSystem::momentumTransfer();
 
-  // phaseSystem::momentumTransferTable& eqns = eqnsPtr();
-  //
-  // forAllConstIter(rDmdtTable, rDmdt_, rDmdtIter)
-  // {
-  //   const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
-  //   const volScalarField& rDmdt = *rDmdtIter();
-  //
-  //   const scalar coeff = coeff_[rDmdtIter.key()];
-  //
-  //   const phaseModel& phase1 = pair.phase1();
-  //   const phaseModel& phase2 = pair.phase2();
-  //
-  //   // Equations
-  //   fvVectorMatrix& eqn1 = *eqns[phase1.name()];
-  //   fvVectorMatrix& eqn2 = *eqns[phase2.name()];
-  //
-  //   // // Momentum Source
-  //   // eqn1 += -fvm::Sp(coeff*rDmdt, eqn1.psi())
-  //   //         + coeff*rDmdt*Up;
-  //   // eqn2 += -fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi())
-  //   //         + (1.0 - coeff)*rDmdt*Ug;
-  // }
+  phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+  forAllConstIter(rDmdtTable, rDmdt_, rDmdtIter)
+  {
+    const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
+    const volScalarField& rDmdt = *rDmdtIter();
+
+    const scalar coeff = coeff_[rDmdtIter.key()];
+
+    const phaseModel& phase1 = pair.phase1();
+    const phaseModel& phase2 = pair.phase2();
+
+    // Equations
+    fvVectorMatrix& eqn1 = *eqns[phase1.name()];
+    fvVectorMatrix& eqn2 = *eqns[phase2.name()];
+
+    // Momentum Source
+    eqn1 += - fvm::Sp(coeff*rDmdt, eqn1.psi())
+            + coeff*rDmdt*Up;
+    eqn2 += - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi())
+            + (1.0 - coeff)*rDmdt*Ug;
+  }
 
   return eqnsPtr;
 }
