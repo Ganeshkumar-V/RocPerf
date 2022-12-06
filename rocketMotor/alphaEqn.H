@@ -8,9 +8,9 @@
     phaseModel& phase = fluid.phases()[phasei];
     volScalarField& alpha = phase;
 
-    if (phase.name() == gasPhase) continue;
+    if (phase.index() == gasIndex) continue;
     // Alpha Equation solved only for dispersed Phase
-    else if (phase.name() == particlePhase)
+    else if (phase.index() == particleIndex)
     {
       const volScalarField& rho = phase.rho();
       const surfaceScalarField rhoPhi(fvc::interpolate(rho)*phase.phi());
