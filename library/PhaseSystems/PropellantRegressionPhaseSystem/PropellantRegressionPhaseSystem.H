@@ -79,11 +79,32 @@ protected:
         // Molecular Weights of all the species
         dictionary molecularWeights_;
 
+        struct
+        {
+          scalar Al;
+          scalar Al2O3;
+          scalar H2O;
+          scalar H2;
+        } MW_;
+
         // Equivalence Ratio
         scalar eqR_;
 
         // Adiabatic Flame Temperature
         volScalarField Tad;
+
+        // Efficiency
+        scalar zeta;
+
+        // Burning rate
+        volScalarField rb_;
+
+        // Universal Gas constant
+        dimensionedScalar R_;
+
+        // propellant density
+        dimensionedScalar rhop_;
+        dimensionedScalar alphaRhoAl;
 
         // Inlet velocity
         volVectorField Ug;
@@ -149,6 +170,9 @@ public:
 
         //- Correct the mass transfer rates
         virtual void correct();
+
+        //- Calculate velocity
+        void calculateVelocity();
 
         //- Read base phaseProperties dictionary
         virtual bool read();

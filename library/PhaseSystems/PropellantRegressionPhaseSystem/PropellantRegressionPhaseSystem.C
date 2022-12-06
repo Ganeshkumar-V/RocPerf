@@ -69,12 +69,24 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::PropellantRegressionPhas
         dimensionedScalar("", dimTemperature, this->template get<scalar>("Tad"))
       )
     ),
+    zeta(this->template get<scalar>("Efficiency")),
+    rb_
+    (
+      volScalarField
+      (
+        IOobject("burningRate", mesh), mesh,
+        dimensionedScalar("", dimVelocity,0)
+      )
+    ),
+    R_("R", dimEnergy/dimMass/dimTemperature, 0),
+    rhop_("rhop", dimDensity, this->template get<scalar>("propellantRho")),
+    alphaRhoAl("", dimDensity, 0),
     Ug
     (
       volVectorField
       (
         IOobject("Ugas", mesh), mesh,
-        dimensionedVector("", dimVelocity, this->template get<vector>("Ugas"))
+        dimensionedVector("", dimVelocity, vector(0 0 0))
       )
     ),
     Up
@@ -82,7 +94,7 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::PropellantRegressionPhas
       volVectorField
       (
         IOobject("Uparticle", mesh), mesh,
-        dimensionedVector("", dimVelocity, this->template get<vector>("Uparticle"))
+        dimensionedVector("", dimVelocity, vector(0 0 0))
       )
     ),
     saturationModel_
@@ -125,6 +137,15 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::PropellantRegressionPhas
         );
     }
 
+    // molecularWeights
+    MW_.Al = molecularWeights_.get<scalar>("Al");
+    MW_.Al2O3 = molecularWeights_.get<scalar>("Al2O3");
+    MW_.H2O = molecularWeights_.get<scalar>("H2O");
+    MW_.H2 = molecularWeights_.get<scalar>("H2");
+
+    R_.value() = 8314.5/MW_.H2;
+    alphaRhoAl.value() = rhop_*eqR_/(1 + eqR_);
+
     // Coefficient of mass transfer
     forAllConstIter
     (
@@ -133,23 +154,17 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::PropellantRegressionPhas
       interfaceTrackingModelIter
     )
     {
-      // Molecular weights of Species
-      scalar Al = molecularWeights_.get<scalar>("Al");
-      scalar Al2O3 = molecularWeights_.get<scalar>("Al2O3");
-      scalar H2O = molecularWeights_.get<scalar>("H2O");
-      scalar H2 = molecularWeights_.get<scalar>("H2");
-
       // number of moles of fuel
-      scalar zeta = Al/(eqR_*H2O);
+      scalar xi = MW_.Al/(eqR_*MW_.H2O);
       scalar coeff = 1.0;
 
       if (eqR_ <= 1.0) // Lean or Stoichiometric Mixture
       {
-        coeff = Al2O3/(2*Al*(1 + 1/eqR_));
+        coeff = MW_.Al2O3/(2*MW_.Al*(1 + 1/eqR_));
       }
       else  // Rich mixture
       {
-        coeff = 1.0 - H2*zeta/(Al*(1 + 1/eqR_));
+        coeff = 1.0 - MW_.H2*xi/(MW_.Al*(1 + 1/eqR_));
       }
 
       this->coeff_.set
@@ -355,9 +370,42 @@ void Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::correct()
     {
         *rDmdt_[interfaceTrackingModelIter.key()]
               = interfaceTrackingModelIter()->rb()
-                *interfaceTrackingModelIter()->As()
-                *interfaceTrackingModelIter()->rhop();
+                *interfaceTrackingModelIter()->As()*rhop_;
+        rb_ = interfaceTrackingModelIter()->rb();
     }
+
+}
+
+template<class BasePhaseSystem>
+void Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::calculateVelocity()
+{
+    //- Calculate velocity of the gas and particles comes
+    //                into the combustion chamber
+
+    // density of gas phase entering,
+    volScalarField rhog = this->phases_[0].thermo().p()/(Tad*R);
+
+    // volume fraction of particle phase
+    volScalarField alphap = 1/(1 + (rhop_/rhog)*(zeta/(8 + 9*eqR_)));
+
+    // Velocity of gas and particle phase
+    const fvMesh& mesh(this->phases_[0].mesh());
+    Info << "velocity: ";
+    forAll(mesh.cells(), cellI)
+    {
+        // If interface present
+        if (rb_[cellI] == 0) continue;
+
+        Ug[cellI].x() = -alphaRhoAl*rb_[cellI]*(1/9)
+                          /(eqR_*(1 - alphap[cellI])*rhog[cellI]);
+        Up[cellI].x() = Ug[cellI].x()*zeta;
+
+        // Correct for change of Reference
+        Ug[cellI].x() += rb_[cellI];
+        Up[cellI].x() += rb_[cellI];
+        Info << Ug[cellI].x() << " | ";
+    }
+    Info << endl;
 
 }
 
