@@ -428,6 +428,20 @@ while (pimple.correct())
 
                 phase.URef().correctBoundaryConditions();
                 fvOptions.correct(phase.URef());
+
+                // Fix velocities for Propellant Cells
+                if (propellantIndex != -1)
+                {
+                  const volScalarField& propellant = phases[propellantIndex];
+                  forAll(propellant, i)
+                  {
+                    if (propellant[i] == 1.0)
+                    {
+                      phase.URef()[i] = vector(0, 0, 0);
+                    }
+                  }
+                }
+                
             }
         }
     }
