@@ -291,12 +291,6 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::heatTransfer() const
     eqn2 += - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi())
             + (1.0 - coeff)*rDmdt*hs2;
 
-    // // Stabilization Terms
-    eqn1 += coeff*rDmdt*phase1.thermo().he()
-            - fvm::Sp(coeff*rDmdt, eqn1.psi());
-    eqn2 += (1.0 - coeff)*rDmdt*phase2.thermo().he()
-            - fvm::Sp((1.0 - coeff)*rDmdt, eqn2.psi());
-
 
     // Kinetic Energy Source
     // eqn1 += - coeff*rDmdt*phase1.K()
