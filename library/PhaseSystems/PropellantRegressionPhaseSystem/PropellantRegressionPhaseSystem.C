@@ -237,6 +237,12 @@ Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::dmdts() const
 
         this->addField(pair.phase1(), "dmdt", coeff*rDmdt, dmdts);
         this->addField(pair.phase2(), "dmdt", (1.0 - coeff)*rDmdt, dmdts);
+
+        // Subtract for Propellant Phase
+        if (phases().size() > 2)
+        {
+          this->addField(this->phases()[2], "dmdt", -rDmdt, dmdts);
+        }
     }
     return dmdts;
 }
@@ -353,20 +359,20 @@ template<class BasePhaseSystem>
 void Foam::PropellantRegressionPhaseSystem<BasePhaseSystem>::solve()
 {
   // Regress Propellant surface (Manipulate propellant volume fraction)
-  forAllIter
-  (
-    interfaceTrackingModelTable,
-    interfaceTrackingModels_,
-    interfaceTrackingModelIter
-  )
-  {
-    word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-    volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
-    interfaceTrackingModelIter()->regress(alpha);
-  }
+  // forAllIter
+  // (
+  //   interfaceTrackingModelTable,
+  //   interfaceTrackingModels_,
+  //   interfaceTrackingModelIter
+  // )
+  // {
+  //   word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
+  //   volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
+  //   interfaceTrackingModelIter()->regress(alpha);
+  // }
 
   // Solve other phase volume fraction equations
-  // BasePhaseSystem::solve();
+  BasePhaseSystem::solve();
 }
 
 template<class BasePhaseSystem>

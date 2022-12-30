@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (!runTime.end())
     {
         #include "readTimeControls.H"
 
@@ -148,7 +148,22 @@ int main(int argc, char *argv[])
         else
         {
             #include "CourantNo.H"
-            #include "setDeltaT.H"
+            if (adjustTimeStep)
+            {
+              scalar maxDeltaTFact = maxCo/(CoNum + SMALL);
+              scalar deltaTFact = min(min(maxDeltaTFact, 1.0 + 0.1*maxDeltaTFact), 1.01);
+
+              runTime.setDeltaT
+              (
+                min
+                (
+                  deltaTFact*runTime.deltaTValue(),
+                  maxDeltaT
+                )
+              );
+
+              Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+            }
         }
 
         runTime++;
