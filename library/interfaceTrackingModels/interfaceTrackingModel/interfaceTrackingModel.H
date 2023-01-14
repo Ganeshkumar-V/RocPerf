@@ -132,6 +132,9 @@ public:
     //- Interface Area/Volume
     virtual tmp<volScalarField> As() const = 0;
 
+    //- Interface Area vector
+    virtual tmp<volVectorField> nHat() const;
+
     //- Propellant Density
     virtual tmp<volScalarField> rhop() const;
 };

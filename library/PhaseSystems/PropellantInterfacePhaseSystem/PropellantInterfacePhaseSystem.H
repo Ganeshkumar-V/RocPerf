@@ -71,6 +71,9 @@ protected:
         typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
             rDmdtTable;
 
+        typedef HashPtrTable<volVectorField, phasePairKey, phasePairKey::hash>
+            interfaceTable;
+
         typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
             coeffTable;
 
@@ -119,6 +122,8 @@ protected:
             //- Mass transfer rates
             rDmdtTable rDmdt_;
 
+            interfaceTable nHat_;
+
             //- Mass Transfer Coefficient for particle phase
             //        for gas phase it is 1.0 - coeff
             coeffTable coeff_;
@@ -165,9 +170,6 @@ public:
 
         //- Return the momentum transfer matrices
         virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
-
-        //- Regress Propellant Surface
-        virtual void solve();
 
         //- Correct the mass transfer rates
         virtual void correct();

@@ -107,6 +107,35 @@ int main(int argc, char *argv[])
 
             #include "YEqns.H"
 
+            label purePropellantSize = 0;
+            {
+              const volScalarField& propellant = phases[propellantIndex];
+
+              forAll(propellant, i)
+              {
+                if (propellant[i] >= 0.9)
+                {
+                  purePropellantSize++;
+                }
+              }
+            }
+            labelList purePropellantCells(purePropellantSize);
+            scalarField setTemp(purePropellantSize, 3000);
+            vectorField setVelocity(purePropellantSize, vector(0, 0, 0));
+            {
+              const volScalarField& propellant = phases[propellantIndex];
+
+              label j = 0;
+              forAll(propellant, i)
+              {
+                if (propellant[i] >= 0.9)
+                {
+                  purePropellantCells[j] = i;
+                  j++;
+                }
+              }
+            }
+
             if (faceMomentum)
             {
                 #include "pUf/UEqns.H"

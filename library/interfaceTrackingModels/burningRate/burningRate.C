@@ -69,7 +69,7 @@ void Foam::interfaceTrackingModels::burningRate::updateInterface()
             interfaceArea_[celli] =
                 mag(cutCell.faceArea())/mesh_.V()[celli];
             interfaceAreaVector_[celli] =
-                cutCell.faceArea()/mesh_.V()[celli];
+                cutCell.faceArea()/mag(cutCell.faceArea());
         }
     }
 }
@@ -103,7 +103,7 @@ Foam::interfaceTrackingModels::burningRate::burningRate
         this->mesh_.time().timeName(),
         this->mesh_,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
       ),
       this->mesh_,
       dimensionedScalar(dimless/dimLength, Zero)
@@ -116,10 +116,10 @@ Foam::interfaceTrackingModels::burningRate::burningRate
         this->mesh_.time().timeName(),
         this->mesh_,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
       ),
       this->mesh_,
-      dimensionedVector(dimless/dimLength, vector(0, 0, 0))
+      dimensionedVector(dimless, vector(0, 0, 0))
     ),
     isoAlpha_(dict.getOrDefault<scalar>("isoAlpha", 0.5)),
     rb_
@@ -187,5 +187,11 @@ Foam::tmp<Foam::volScalarField>
 Foam::interfaceTrackingModels::burningRate::As() const
 {
     return Foam::tmp<Foam::volScalarField>(new volScalarField("tAs", interfaceArea_));
+}
+
+Foam::tmp<Foam::volVectorField>
+Foam::interfaceTrackingModels::burningRate::nHat() const
+{
+    return Foam::tmp<Foam::volVectorField>(new volVectorField("tAs", interfaceAreaVector_));
 }
 // ************************************************************************* //

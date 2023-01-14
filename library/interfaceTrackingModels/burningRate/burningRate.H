@@ -111,6 +111,9 @@ public:
 
     //- Interface Area / Volume
     virtual tmp<volScalarField> As() const;
+
+    //- Interface Area / Volume
+    virtual tmp<volVectorField> nHat() const;
 };
 
 

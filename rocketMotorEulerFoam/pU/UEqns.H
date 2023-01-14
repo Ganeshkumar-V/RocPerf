@@ -32,5 +32,8 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
         UEqns[phase.index()].relax();
         fvOptions.constrain(UEqns[phase.index()]);
         fvOptions.correct(U);
+
+        // set velocity Values
+        UEqns[phase.index()].setValues(purePropellantCells, setVelocity);
     }
 }
