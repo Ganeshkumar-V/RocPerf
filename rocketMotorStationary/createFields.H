@@ -48,23 +48,6 @@ setRefCell
 );
 mesh.setFluxRequired(p_rgh.name());
 
-word particlePhase = fluid.get<word>("particlePhase");
-word gasPhase = fluid.get<word>("gasPhase");
-
-label particleIndex = -1;
-label gasIndex = -1;
-label propellantIndex = -1;
-forAll(fluid.phases(), phasei)
-{
-  phaseModel& phase = fluid.phases()[phasei];
-  if(phase.name() == gasPhase)
-      gasIndex = phasei;
-  else if (phase.name() == particlePhase)
-      particleIndex = phasei;
-  else
-      propellantIndex = phasei;
-}
-
 // // Write Surface Area of all faces
 // surfaceVectorField Sf
 // (

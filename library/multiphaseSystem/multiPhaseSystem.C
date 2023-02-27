@@ -293,6 +293,8 @@ void Foam::multiPhaseSystem::solveAlphas()
         );
 
         phase.alphaPhiRef() = alphaPhi;
+
+        // phase.clip(SMALL, 1 - SMALL);
     }
 
     // Report the phase fractions and the phase fraction sum
@@ -305,6 +307,7 @@ void Foam::multiPhaseSystem::solveAlphas()
             << ' ' << min(phase).value()
             << ' ' << max(phase).value()
             << endl;
+        Info << "volFraction: " << phase << endl;
     }
 
     volScalarField sumAlphaMoving

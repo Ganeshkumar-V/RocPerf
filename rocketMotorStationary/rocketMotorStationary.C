@@ -83,6 +83,26 @@ int main(int argc, char *argv[])
       fluid.phases()[phasei].clip(SMALL, 1 - SMALL);
     }
 
+    // Setting variables to initialize
+    labelList purePropellantCells(0);
+    scalarField setTemp(0, 0);
+    vectorField setVelocity(0, vector(0, 0, 0));
+    label propellantIndex = fluid.get<label>("propellantIndex");
+
+    // Mass Information
+    scalar massI = 0;
+    forAll(fluid.phases(), phasei)
+    {
+      const volScalarField& alpha = fluid.phases()[phasei];
+      const volScalarField& rho = fluid.phases()[phasei].rho();
+      const scalarField& V = mesh.V();
+
+      scalar massP = sum(alpha()*rho()*V);
+      massI += massP;
+      Info << "mass of " << fluid.phases()[phasei].name() << " phase: " << massP << " kg" << endl;
+    }
+    Info << "Initial Mass: " << massI << " kg" << endl;
+
     while (runTime.run())
     {
         #include "readTimeControls.H"
@@ -126,13 +146,13 @@ int main(int argc, char *argv[])
                   }
                 }
               }
-              labelList purePropellantCells(purePropellantSize);
-              scalarField setTemp
+              purePropellantCells = labelList(purePropellantSize);
+              setTemp = scalarField
               (
                 purePropellantSize,
                 fluid.getOrDefault<scalar>("Tset", 2000)
               );
-              vectorField setVelocity(purePropellantSize, vector(0, 0, 0));
+              setVelocity = vectorField(purePropellantSize, vector(0, 0, 0));
               {
                 const volScalarField& propellant = phases[propellantIndex];
 
@@ -171,6 +191,21 @@ int main(int argc, char *argv[])
                 fluid.correctTurbulence();
             }
         }
+
+        // Check for Mass Conservation
+        scalar mass = 0;
+        forAll(fluid.phases(), phasei)
+        {
+          const volScalarField& alpha = fluid.phases()[phasei];
+          const volScalarField& rho = fluid.phases()[phasei].rho();
+          const scalarField& V = mesh.V();
+
+          scalar massP = sum(alpha()*rho()*V);
+          mass += massP;
+          Info << "mass of " << fluid.phases()[phasei].name() << " phase: " << massP << " kg" << endl;
+        }
+        Info << "Total Mass: " << mass << " kg" << endl;
+        Info << "Difference: " << massI - mass << " kg" << endl;
 
         runTime.write();
 
