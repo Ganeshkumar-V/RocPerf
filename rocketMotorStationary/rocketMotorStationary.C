@@ -45,6 +45,30 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+void correctFlux(surfaceScalarField& flux, const volScalarField& propellant)
+{
+  /***
+    const fvMesh& mesh(propellant.mesh());
+    const labelList& Own(mesh.owner());
+    const labelList& Nei(mesh.neighbour());
+    scalar One(1 - SMALL);
+
+    forAll(Own, i)
+    {
+      if(propellant[Own[i]] == One && propellant[Nei[i]] == One)
+      {
+         flux[i] = 0;
+      }
+      else continue;
+    }
+    ***/
+}
+
+void correctU(volVectorField& U, const volScalarField& propellant)
+{
+  // U = neg(propellant - (1 - SMALL))*U;
+}
+
 int main(int argc, char *argv[])
 {
     #include "postProcess.H"
@@ -135,12 +159,13 @@ int main(int argc, char *argv[])
             if (propellantIndex != -1)
             {
               label purePropellantSize = 0;
+              scalar cutoff = 0.99; //(1.0 - SMALL);
               {
                 const volScalarField& propellant = phases[propellantIndex];
 
                 forAll(propellant, i)
                 {
-                  if (propellant[i] >= 0.99)
+                  if (propellant[i] >= cutoff)
                   {
                     purePropellantSize++;
                   }
@@ -159,7 +184,7 @@ int main(int argc, char *argv[])
                 label j = 0;
                 forAll(propellant, i)
                 {
-                  if (propellant[i] >= 0.99)
+                  if (propellant[i] >= cutoff)
                   {
                     purePropellantCells[j] = i;
                     j++;

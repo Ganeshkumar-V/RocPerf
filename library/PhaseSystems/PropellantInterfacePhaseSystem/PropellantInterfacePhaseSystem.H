@@ -88,10 +88,12 @@ protected:
           scalar Al2O3;
           scalar H2O;
           scalar H2;
+          scalar Prop;
         } MW_;
 
         // Active Aluminium content
         scalar AAlC_;
+        scalar K_;
 
         // Equivalence Ratio
         scalar eqR_;

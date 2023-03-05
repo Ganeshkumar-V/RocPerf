@@ -186,6 +186,8 @@ Foam::PropellantInterfacePhaseSystem<BasePhaseSystem>::PropellantInterfacePhaseS
     MW_.H2O = molecularWeights_.get<scalar>("H2O");
     MW_.H2 = molecularWeights_.get<scalar>("H2");
     AAlC_ = this->template get<scalar>("activeAlContent");
+    K_ = (MW_.Al/MW_.Al2O3)*(1/AAlC_ - 1);
+    MW_.Prop = MW_.Al + K_*MW_.Al2O3 + (1.5/eqR_)*MW_.H2O;
     regress_ = this->template get<bool>("regression");
 
     R_.value() = 8314.5/MW_.H2;
@@ -204,8 +206,10 @@ Foam::PropellantInterfacePhaseSystem<BasePhaseSystem>::PropellantInterfacePhaseS
 
       if (eqR_ <= 1.0) // Lean or Stoichiometric Mixture
       {
-        pcoeff = AAlC_*MW_.Al2O3/(2*MW_.Al*(1 + 1/eqR_)) + (1 - AAlC_);
-        gcoeff = AAlC_*(1.0 - MW_.Al2O3/(2*MW_.Al*(1 + 1/eqR_)));
+        // pcoeff = AAlC_*MW_.Al2O3/(2*MW_.Al*(1 + 1/eqR_)) + (1 - AAlC_);
+        // gcoeff = AAlC_*(1.0 - MW_.Al2O3/(2*MW_.Al*(1 + 1/eqR_)));
+        pcoeff = (K_ + 0.5)/MW_.Prop;
+        gcoeff = (1.5*MW_.H2 + ((1.5/eqR_) - 1.5)*MW_.H2O)/MW_.Prop;
       }
       else  // Rich mixture
       {
@@ -340,16 +344,12 @@ Foam::PropellantInterfacePhaseSystem<BasePhaseSystem>::massTransfer() const
 
         const PtrList<volScalarField>& Yi = phase.Y();
 
-        const dimensionedScalar fH2(dimless, 1.5*MW_.H2);
-        const dimensionedScalar xi(dimless, MW_.Al/(MW_.H2O*eqR_));
-        const dimensionedScalar fH2O((xi - 1.5)*MW_.H2O);
-        const volScalarField X(AAlC_*dmdt/(MW_.Al + xi*MW_.H2O));
+        const dimensionedScalar fH2(dimless, 1.5*MW_.H2/MW_.Prop);
+        const dimensionedScalar fH2O(dimless, (1.5/eqR_ - 1.5)*MW_.H2O/MW_.Prop);
 
-        if (min(X).value() < 0 || fH2.value() < 0 || fH2O.value() < 0)
+        if (min(dmdt).value() < 0)
         {
-          Info << "min(X): " << min(X).value() << endl;
-          Info << "fH2.value(): " << fH2.value() << endl;
-          Info << "fH2O.value(): " << fH2O.value() << endl;
+          Info << "min(dmdt): " << min(dmdt).value() << endl;
           FatalErrorInFunction
               << "Mass Transfer(): dmdt or one of the factors are negative"
               << exit(FatalError);
@@ -357,8 +357,8 @@ Foam::PropellantInterfacePhaseSystem<BasePhaseSystem>::massTransfer() const
 
         if (eqns.size() != 0)
         {
-          *eqns[Yi[0].name()] += X*fH2;
-          *eqns[Yi[1].name()] += X*fH2O;
+          *eqns[Yi[0].name()] += dmdt*fH2;
+          *eqns[Yi[1].name()] += dmdt*fH2O;
         }
 
     }

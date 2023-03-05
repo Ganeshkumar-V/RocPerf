@@ -205,6 +205,8 @@ void Foam::multiPhaseSystem::solveAlphas()
     MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
 
     // Solve for the moving phase alphas
+    // volScalarField::Internal SpD(IOobject("spD", mesh_), mesh_, dimensionedScalar(dimless/dimTime, Zero));
+    // volScalarField::Internal SuD(IOobject("suD", mesh_), mesh_, dimensionedScalar(dimless/dimTime, Zero));
     forAll(movingPhases(), movingPhasei)
     {
         phaseModel& phase = movingPhases()[movingPhasei];
@@ -293,7 +295,8 @@ void Foam::multiPhaseSystem::solveAlphas()
         );
 
         phase.alphaPhiRef() = alphaPhi;
-
+        // SpD = Sp;
+        // SuD = Su;
         // phase.clip(SMALL, 1 - SMALL);
     }
 
@@ -302,12 +305,56 @@ void Foam::multiPhaseSystem::solveAlphas()
     {
         phaseModel& phase = phases()[phasei];
 
+        // Correct Volume Fraction
+        // label propellantIndex = this->template get<label>("propellantIndex");
+        // if (propellantIndex != -1 && propellantIndex != phasei)
+        // {
+        //   const volScalarField& alphaProp(phases()[propellantIndex]);
+        //   volScalarField& alpha = phase;
+        //   alpha = neg(alphaProp - (1 - SMALL))*alpha
+        //           + (1 - neg(alphaProp - (1 - SMALL)))*SMALL;
+        // }
+        //
+        // // Find Neg Phase value
+        // Info << "Negative Alpha Occurs: -> " << endl;
+        // scalarField psiIf = phase;
+        // psiIf = 0.0;
+        // surfaceScalarField alphaPhi = alphaPhiCorrs[phase.index()];
+        // fvc::surfaceIntegrate(psiIf, alphaPhi);
+        // const labelList& Owner(phase.mesh().owner());
+        // const labelList& Nei(phase.mesh().neighbour());
+        // forAll(phase.mesh().owner(), i)
+        // {
+        //   if (phase[Owner[i]] < 0)
+        //   {
+        //     Info << "Owner: " << Owner[i] << " neighbour: "
+        //     << Nei[i] << " Flux: " << alphaPhi[i] << " Sp: "
+        //     << SpD[Owner[i]] << " Su: " << SuD[Owner[i]]
+        //     << " SurfInt: " << psiIf[Owner[i]]
+        //     << " alpha: " << phase[Owner[i]] << endl;
+        //   }
+        //   if (phase[Nei[i]] < 0)
+        //   {
+        //     Info << "Owner: " << Owner[i] << " neighbour: "
+        //     << Nei[i] << " Flux: " << alphaPhi[i] << " Sp: "
+        //     << SpD[Nei[i]] << " Su: " << SuD[Nei[i]]
+        //     << " SurfInt: " << psiIf[Nei[i]]
+        //     << " alpha: " << phase[Nei[i]] << endl;
+        //   }
+        // }
+        // Info << " End" << endl;
+
         Info<< phase.name() << " fraction, min, max = "
             << phase.weightedAverage(mesh_.V()).value()
             << ' ' << min(phase).value()
             << ' ' << max(phase).value()
             << endl;
-        Info << "volFraction: " << phase << endl;
+
+        // if (phase.name() == "particles")
+        // {
+        //   // Info << "volFraction: " << phase << endl;
+        // }
+        phase.clip(SMALL, 1 - SMALL);
     }
 
     volScalarField sumAlphaMoving
