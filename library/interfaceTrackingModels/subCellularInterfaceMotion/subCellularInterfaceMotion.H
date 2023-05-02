@@ -109,6 +109,9 @@ public:
 
     //- Mass Transfer Rate
     virtual tmp<volScalarField> dmdt() const;
+
+    //- Return Interface
+    virtual tmp<volScalarField> interface() const;
 };
 
 

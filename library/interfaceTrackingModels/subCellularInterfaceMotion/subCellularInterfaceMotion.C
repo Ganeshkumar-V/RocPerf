@@ -362,6 +362,7 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::findInterface
   const labelList& Nei = mesh.neighbour();
   const scalar One(1 - SMALL);
   const scalar Zero(SMALL);
+  interface_ = dimensionedScalar(dimless, 0.0);
 
   forAll(Own, i)
   {
@@ -389,6 +390,12 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::findInterface
     else continue;
   }
 
+}
+
+Foam::tmp<Foam::volScalarField>
+Foam::interfaceTrackingModels::subCellularInterfaceMotion::interface() const
+{
+    return Foam::tmp<Foam::volScalarField>(new volScalarField("tinterface", interface_));
 }
 
 Foam::tmp<Foam::volScalarField>
