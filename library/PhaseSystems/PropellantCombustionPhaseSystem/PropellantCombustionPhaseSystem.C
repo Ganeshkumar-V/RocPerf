@@ -214,18 +214,8 @@ Foam::PropellantCombustionPhaseSystem<BasePhaseSystem>::PropellantCombustionPhas
         );
     }
 
-    // Old Alpha
-    // forAllIter
-    // (
-    //   interfaceTrackingModelTable,
-    //   interfaceTrackingModels_,
-    //   interfaceTrackingModelIter
-    // )
-    // {
-    //   word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-    //   alphaOld = this->db().template lookupObject<volScalarField>(propellant);
-    //   regressionAlpha = alphaOld;
-    // }
+    // clipping Regression Alpha
+    regressionAlpha.clip(SMALL, 1-SMALL);
 }
 
 

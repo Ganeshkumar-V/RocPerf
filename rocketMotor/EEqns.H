@@ -41,7 +41,10 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         fvOptions.correct(phase.thermoRef().he());
 
         // Correct for Adiabatic Walls
+        if (propellantIndex != -1)
+        {
         ImposeWall(phase.thermoRef().he(), phases[propellantIndex]);
+        }
     }
 
     fluid.correctThermo();

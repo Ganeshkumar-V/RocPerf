@@ -448,7 +448,10 @@ while (pimple.correct())
                     );
 
                 // correct Fluxes
+                if (propellantIndex != -1)
+                {
                 correctU(phase.URef(), phases[propellantIndex]);
+                }
             }
 
             if (partialElimination)

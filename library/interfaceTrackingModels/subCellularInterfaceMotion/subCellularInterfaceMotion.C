@@ -276,6 +276,7 @@ Foam::label Foam::interfaceTrackingModels::subCellularInterfaceMotion::findNeigh
   {
     if (Own[i] == NEI)
     {
+      Info << "Nei: " << Nei[i] << " alpha: " << alpha[Nei[i]] << endl;
       if (alpha[Nei[i]] == One)
       {
         return Nei[i];
@@ -315,7 +316,7 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::regress
   forAll(Own, i)
   {
     // case:1 Interface is present in the Neighbour Cell
-    if (alpha0[Own[i]] == Zero && alpha0[Nei[i]] > Zero)
+    if ((alpha0[Own[i]] == Zero && alpha0[Nei[i]] > Zero) && (Nei == Own + 1))
     {
       interface_[Nei[i]] = 1;
 
@@ -331,12 +332,11 @@ void Foam::interfaceTrackingModels::subCellularInterfaceMotion::regress
       if (alpha[Nei[i]] < 0)
       {
           scalar Vr = -alpha[Nei[i]]*V[Nei[i]];
-          alpha[Nei[i]] = 0;
+          alpha[Nei[i]] = SMALL;
 
           // Find Neighbour cell
           label NNei = findNeighbour(alpha0, Nei[i]);
           alpha[NNei] = alpha0[NNei] - Vr/V[NNei];
-
           if (alpha[NNei] < 0)
           {
               FatalErrorInFunction
