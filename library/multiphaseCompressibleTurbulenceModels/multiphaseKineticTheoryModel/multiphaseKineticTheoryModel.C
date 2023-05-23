@@ -194,6 +194,29 @@ Foam::RASModels::multiphaseKineticTheoryModel::~multiphaseKineticTheoryModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+namespace Foam
+{
+void ImposeWall(volScalarField& psi, const volScalarField& alpha)
+{
+  const labelList& Own(psi.mesh().owner());
+  const labelList& Nei(psi.mesh().neighbour());
+
+  scalar One(0.999); //1.0 - SMALL);
+
+  forAll(Own, celli)
+  {
+    if ((alpha[Own[celli]] < One) && (alpha[Nei[celli]] >= One))
+    {
+      psi[Nei[celli]] = psi[Own[celli]];
+    }
+    else if ((alpha[Nei[celli]] < One) && (alpha[Own[celli]] >= One))
+    {
+      psi[Own[celli]] = psi[Nei[celli]];
+    }
+  }
+
+}
+}
 
 bool Foam::RASModels::multiphaseKineticTheoryModel::read()
 {
@@ -285,12 +308,12 @@ Foam::RASModels::multiphaseKineticTheoryModel::pPrime() const
             rho,
             e_
         )
-     +  frictionalStressModel_->frictionalPressurePrime
-        (
-            phase_,
-            alphaMinFriction_,
-            alphaMax_
-        )
+     // +  frictionalStressModel_->frictionalPressurePrime
+     //    (
+     //        phase_,
+     //        alphaMinFriction_,
+     //        alphaMax_
+     //    )
     );
 
     volScalarField::Boundary& bpPrime =
@@ -476,7 +499,12 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
 
         ThetaEqn.relax();
         fvOptions.constrain(ThetaEqn);
+
         ThetaEqn.solve();
+
+        // Impose wall on propellant surface
+        const volScalarField& alphaProp(this->db().lookupObject<volScalarField>("alpha.propellant"));
+        ImposeWall(Theta_, alphaProp);
         fvOptions.correct(Theta_);
     }
     else
@@ -546,29 +574,29 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
         lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1 + e_)*ThetaSqrt/sqrtPi;
 
         // Frictional pressure
-        volScalarField pf
-        (
-            frictionalStressModel_->frictionalPressure
-            (
-                phase_,
-                alphaMinFriction_,
-                alphaMax_
-            )
-        );
-
-        nuFric_ = frictionalStressModel_->nu
-        (
-            phase_,
-            alphaMinFriction_,
-            alphaMax_,
-            pf/rho,
-            D
-        );
+        // volScalarField pf
+        // (
+        //     frictionalStressModel_->frictionalPressure
+        //     (
+        //         phase_,
+        //         alphaMinFriction_,
+        //         alphaMax_
+        //     )
+        // );
+        //
+        // nuFric_ = frictionalStressModel_->nu
+        // (
+        //     phase_,
+        //     alphaMinFriction_,
+        //     alphaMax_,
+        //     pf/rho,
+        //     D
+        // );
 
         // Limit viscosity and add frictional viscosity
         nut_.min(maxNut_);
-        nuFric_ = min(nuFric_, maxNut_ - nut_);
-        nut_ += nuFric_;
+        // nuFric_ = min(nuFric_, maxNut_ - nut_);
+        // nut_ += nuFric_;
     }
 
     if (debug)
