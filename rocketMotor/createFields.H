@@ -83,6 +83,21 @@ if (runTime.value() == 0)
   // Write Control Volumes
   volScalarField::Internal V(mesh.V());
   V.write();
+
+  // Write face centers
+  surfaceVectorField Cf
+  (
+      IOobject
+      (
+          "Cf",
+          runTime.timeName(),
+          mesh,
+          IOobject::NO_READ,
+          IOobject::AUTO_WRITE
+      ),
+      mesh.Cf()
+  );
+  Cf.write();
 }
 
 // calculate Mach Number
