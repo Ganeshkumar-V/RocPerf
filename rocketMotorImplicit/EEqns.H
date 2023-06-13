@@ -15,12 +15,16 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         const volScalarField& rho = phase.rho();
         const volVectorField& U = phase.U();
 
+        volTensorField gradU(fvc::grad(U));
+        const volScalarField& mu(rho*phase.nu());
+
         fvScalarMatrix EEqn
         (
             phase.heEqn()
          ==
            *heatTransfer[phase.name()]
           + alpha*rho*(U&g)
+          + alpha*(mu*(gradU + dev2(T(gradU))) && gradU)   // Viscous Disscipation
           + fvOptions(alpha, rho, phase.thermoRef().he())
         );
 
