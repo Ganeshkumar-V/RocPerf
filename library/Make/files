@@ -3,6 +3,7 @@ fvPatchFields/particleFlowRateInletVelocity/particleFlowRateInletVelocityFvPatch
 fvPatchFields/massLoadingFraction/massLoadingFractionFvPatchScalarField.C
 fvPatchFields/sameAs/sameAsFvPatchFields.C
 fvPatchFields/invertField/invertFieldFvPatchFields.C
+fvPatchFields/transonic/transonicFvPatchField.C
 phaseModel/phaseModel/phaseModels.C
 
 multiphaseTurbulence = multiphaseCompressibleTurbulenceModels
