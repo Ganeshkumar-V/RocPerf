@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
     scalarField setPressure(0, 0);
     vectorField setVelocity(0, vector(0, 0, 0));
     label propellantIndex = fluid.get<label>("propellantIndex");
+    scalar surfaces = pimple.dict().getOrDefault<scalar>("surfaces", 80);
 
     while (runTime.run())
     {
