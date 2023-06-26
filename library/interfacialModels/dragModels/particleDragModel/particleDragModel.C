@@ -153,6 +153,7 @@ Foam::tmp<Foam::volScalarField> Foam::particleDragModel::K() const
 
 Foam::tmp<Foam::surfaceScalarField> Foam::particleDragModel::Kf() const
 {
+    Info << "I am getting called!" << exit(FatalIOError);
     return
         max
         (
