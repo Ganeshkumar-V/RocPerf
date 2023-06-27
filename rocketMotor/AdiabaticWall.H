@@ -29,7 +29,7 @@ inline void correctFlux(surfaceScalarField& flux, const volScalarField& propella
 
     forAll(Own, i)
     {
-      if(propellant[Own[i]] == One && propellant[Nei[i]] == One)
+      if(propellant[Own[i]] == One || propellant[Nei[i]] == One)
       {
          flux[i] = 0;
       }
@@ -40,14 +40,11 @@ inline void correctFlux(surfaceScalarField& flux, const volScalarField& propella
 
 inline void correctU(volVectorField& U, const volScalarField& propellant)
 {
-  const fvMesh& mesh(propellant.mesh());
-  const labelList& Own(mesh.owner());
-  const labelList& Nei(mesh.neighbour());
   scalar One(1 - SMALL);
 
-  forAll(Own, i)
+  forAll(propellant, i)
   {
-    if(propellant[Own[i]] == One && propellant[Nei[i]] == One)
+    if(propellant[i] == One)
     {
        U[i] = vector(0, 0, 0);
     }
