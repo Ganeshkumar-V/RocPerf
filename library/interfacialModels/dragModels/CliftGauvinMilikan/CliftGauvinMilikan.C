@@ -25,7 +25,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CliftGauvin.H"
+#include "CliftGauvinMilikan.H"
 #include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,15 +35,15 @@ namespace Foam
 {
 namespace particleDragModels
 {
-    defineTypeNameAndDebug(CliftGauvin, 0);
-    addToRunTimeSelectionTable(particleDragModel, CliftGauvin, dictionary);
+    defineTypeNameAndDebug(CliftGauvinMilikan, 0);
+    addToRunTimeSelectionTable(particleDragModel, CliftGauvinMilikan, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::particleDragModels::CliftGauvin::CliftGauvin
+Foam::particleDragModels::CliftGauvinMilikan::CliftGauvinMilikan
 (
     const dictionary& dict,
     const phasePair& pair,
@@ -51,24 +51,43 @@ Foam::particleDragModels::CliftGauvin::CliftGauvin
 )
 :
     particleDragModel(dict, pair, registerObject),
-    residualRe_("residualRe", dimless, dict)
+    residualRe_("residualRe", dimless, dict),
+    R_
+    (
+      "R", dimVelocity*dimVelocity/dimTemperature,
+      dict.get<scalar>("R")
+    ),
+    gamma_(dict.get<scalar>("gamma"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::particleDragModels::CliftGauvin::~CliftGauvin()
+Foam::particleDragModels::CliftGauvinMilikan::~CliftGauvinMilikan()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::particleDragModels::CliftGauvin::CdRe() const
+Foam::tmp<Foam::volScalarField> Foam::particleDragModels::CliftGauvinMilikan::CdRe() const
 {
     const tmp<volScalarField> tRe(pair_.Re());
     const volScalarField& Re(tRe());
 
-    return 24.0*(1.0 + 0.15*pow(Re, 0.687) + 0.0175*Re/(1.0 + 42500/max(pow(Re, 1.16), SMALL)));
+    const tmp<volScalarField> tT(pair_.continuous().thermo().T());
+    const volScalarField& T(tT());
+
+    volScalarField M(max(pair_.magUr()/sqrt(gamma_*R_*T), SMALL));
+
+    const tmp<volScalarField> tKn(sqrt(constant::mathematical::pi)*sqrt(gamma_/2)*M/max(Re, SMALL));
+    const volScalarField& Kn(tKn());
+
+    const tmp<volScalarField> tFact(max(1.0 + Kn*(2.49 + 0.84*exp(-1.74/Kn)), SMALL));
+    const volScalarField& Fact(tFact());
+    Info << "Correction Factor found" << endl;
+
+    return 24.0*(1.0 + 0.15*pow(Re, 0.687) + 0.0175*Re/(1.0 + 42500/max(pow(Re, 1.16), SMALL)))
+          /Fact;
 }
 
 

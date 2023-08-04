@@ -271,7 +271,32 @@ Foam::tmp<Foam::volScalarField> Foam::particleDragModels::Loth::CdRe() const
           : CdComp(Re[i], M[i])
         );
     }
-    CdRe_.correctBoundaryConditions();
+
+    // Update Boundary patches
+    volScalarField::Boundary& CdReB(CdRe_.boundaryFieldRef());
+    const volScalarField::Boundary& MB(M.boundaryField());
+    const volScalarField::Boundary& ReB(Re.boundaryField());
+    const volScalarField::Boundary& SB(S.boundaryField());
+    const volScalarField::Boundary& KnB(Kn.boundaryField());
+
+    forAll(CdReB, k)
+    {
+      Field<scalar>& pF(CdReB[k]);
+      const Field<scalar>& MpF(MB[k]);
+      const Field<scalar>& RepF(ReB[k]);
+      const Field<scalar>& SpF(SB[k]);
+      const Field<scalar>& KnpF(KnB[k]);
+
+      forAll(pF, i)
+      {
+        pF[i] =
+        (
+          RepF[i] <= 45 ? CdRare(RepF[i], MpF[i], KnpF[i], SpF[i])
+          : CdComp(RepF[i], MpF[i])
+        );
+      }
+    }
+    // CdRe_.correctBoundaryConditions();
 
     return Foam::tmp<Foam::volScalarField>(new volScalarField ("tCdRe", CdRe_));
 }

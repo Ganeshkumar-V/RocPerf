@@ -24,6 +24,7 @@ dragModel = interfacialModels/dragModels
 $(dragModel)/particleDragModel/particleDragModel.C
 $(dragModel)/SchillerNaumann/SchillerNaumann.C
 $(dragModel)/CliftGauvin/CliftGauvin.C
+$(dragModel)/CliftGauvinMilikan/CliftGauvinMilikan.C
 $(dragModel)/CliftGauvinInviscid/CliftGauvinInviscid.C
 $(dragModel)/Ergun/Ergun.C
 $(dragModel)/WenYu/WenYu.C
