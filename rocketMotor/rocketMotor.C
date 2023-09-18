@@ -169,9 +169,13 @@ int main(int argc, char *argv[])
             }
         }
 
-        volScalarField rhog(phases[0].thermo().rho());
-        rhog.clip(SMALL, max(rhog));
-        Mach = mag(phases[0].U())/sqrt(phases[0].thermo().gamma()*p/rhog);
+        if (runTime.write())
+        {
+            rhog = phases[0].thermo().rho();
+            gammag = phases[0].thermo().gamma();
+        }
+        // rhog.clip(SMALL, max(rhog));
+        // Mach = mag(phases[0].U())/sqrt(phases[0].thermo().gamma()*p/rhog);
 
         runTime.write();
 

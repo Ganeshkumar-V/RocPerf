@@ -48,7 +48,8 @@ Foam::waveTransmissiveShockFvPatchField<Type>::waveTransmissiveShockFvPatchField
     gas_("gas"),
     gamma_(0.0),
     R_(1.0),
-    supersonic(false)
+    supersonic(false),
+    transition_(p.size())
 {}
 
 
@@ -66,7 +67,8 @@ Foam::waveTransmissiveShockFvPatchField<Type>::waveTransmissiveShockFvPatchField
     gas_(ptf.gas_),
     gamma_(ptf.gamma_),
     R_(ptf.R_),
-    supersonic(ptf.supersonic)
+    supersonic(ptf.supersonic),
+    transition_(ptf.transition_)
 {}
 
 
@@ -83,8 +85,14 @@ Foam::waveTransmissiveShockFvPatchField<Type>::waveTransmissiveShockFvPatchField
     gas_(dict.get<word>("gas")),
     gamma_(dict.get<scalar>("gamma")),
     R_(dict.get<scalar>("R")),
-    supersonic(dict.getOrDefault<bool>("supersonic", false))
-{}
+    supersonic(dict.getOrDefault<bool>("supersonic", false)),
+    transition_(p.size())
+{
+    if (dict.found("transition"))
+    {
+        transition_ = scalarField("transition", dict, p.size());
+    }
+}
 
 
 template<class Type>
@@ -98,7 +106,8 @@ Foam::waveTransmissiveShockFvPatchField<Type>::waveTransmissiveShockFvPatchField
     gas_(ptpsf.gas_),
     gamma_(ptpsf.gamma_),
     R_(ptpsf.R_),
-    supersonic(ptpsf.supersonic)
+    supersonic(ptpsf.supersonic),
+    transition_(ptpsf.transition_)
 {}
 
 
@@ -114,7 +123,8 @@ Foam::waveTransmissiveShockFvPatchField<Type>::waveTransmissiveShockFvPatchField
     gas_(ptpsf.gas_),
     gamma_(ptpsf.gamma_),
     R_(ptpsf.R_),
-    supersonic(ptpsf.supersonic)
+    supersonic(ptpsf.supersonic),
+    transition_(ptpsf.transition_)
 {}
 
 
@@ -274,22 +284,41 @@ void Foam::waveTransmissiveShockFvPatchField<Type>::updateCoeffs()
       )
   );
 
+  // if (supersonic && (this->size() > 0))
+  // {
+  //     // Check for normal shock possibility at the exit
+  //     const scalarField M(mag(Ug)/sqrt(gamma_*R_*Tg));
+  //     const scalarField P(mag(*this));
+  //
+  //     scalar Sp(sum(this->patch().magSf()));
+  //     scalar Mavg = sum(M*this->patch().magSf())/Sp;
+  //     scalar Pavg = sum(P*this->patch().magSf())/Sp;
+  //
+  //     scalar Pp = (2*gamma_*sqr(Mavg) - (gamma_ - 1.0))*Pavg/(gamma_ + 1);
+  //     if (Pp <= mag(this->fieldInf()))
+  //     {
+  //         // Subsonic Flow - Normal Shock at the exit
+  //         this->valueFraction() = 1.0;
+  //         this->refValue() = this->fieldInf();
+  //     }
+  // }
   if (supersonic && (this->size() > 0))
   {
       // Check for normal shock possibility at the exit
       const scalarField M(mag(Ug)/sqrt(gamma_*R_*Tg));
       const scalarField P(mag(*this));
 
-      scalar Sp(sum(this->patch().magSf()));
-      scalar Mavg = sum(M*this->patch().magSf())/Sp;
-      scalar Pavg = sum(P*this->patch().magSf())/Sp;
-
-      scalar Pp = (2*gamma_*sqr(Mavg) - (gamma_ - 1.0))*Pavg/(gamma_ + 1);
-      if (Pp <= mag(this->fieldInf()))
+      forAll(M, i)
       {
-          // Subsonic Flow - Normal Shock at the exit
-          this->valueFraction() = 1.0;
-          this->refValue() = this->fieldInf();
+          // Find downstream pressure of the normal Shock
+          scalar Pp = (2*gamma_*sqr(M[i]) - (gamma_ - 1.0))*P[i]/(gamma_ + 1);
+
+          if (Pp <= mag(this->fieldInf()[i]))
+          {
+              Pout << "Normal Shock Possibility at " << i << " P = " << P[i] << endl;
+              this->valueFraction()[i] = 1.0;
+              this->refValue()[i] = this->fieldInf()[i];
+          }
       }
   }
   mixedFvPatchField<Type>::updateCoeffs();
@@ -315,6 +344,7 @@ void Foam::waveTransmissiveShockFvPatchField<Type>::write(Ostream& os) const
         os.writeEntry("lInf", this->lInf());
     }
 
+    os.writeEntry("transition", transition_);
     this->writeEntry("value", os);
 }
 
