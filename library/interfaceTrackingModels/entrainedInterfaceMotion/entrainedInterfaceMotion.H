@@ -72,6 +72,12 @@ public:
     // Propellant Bed surface
     Surface bed_;
 
+    // mass transfer rate
+    tmp<volScalarField> dmdt_;
+
+    // Retainer
+    scalar MR;
+
     // Constructors
 
         //- Construct from components
@@ -93,6 +99,9 @@ public:
 
     //- Interface Area / Volume
     virtual tmp<volScalarField> As() const;
+
+    //- Mass Transfer Rate
+    virtual tmp<volScalarField> dmdt() const;
 
     // These virtual functions are not used in this tracking models
     virtual void regress(volScalarField& alpha, const volScalarField& alphaOld);

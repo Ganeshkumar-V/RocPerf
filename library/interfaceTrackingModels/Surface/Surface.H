@@ -104,7 +104,9 @@ public:
     (
         const volScalarField& p,
         const volScalarField& dmdt,
-        const labelList& flame
+        const labelList& flame,
+        const scalar fp,
+        const scalar MR
     );
 
 
@@ -140,6 +142,10 @@ public:
         return interfaceNeighbours_();
     }
 
+    void store()
+    {
+        alphaOld_ = alpha_;
+    }
 
 };
 

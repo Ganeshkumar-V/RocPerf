@@ -31,7 +31,8 @@ License
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 #include "processorFvPatch.H"
-
+#include "ChemicalEfficiency.H"
+#include "EntrainedSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -68,7 +69,17 @@ Foam::interfaceTrackingModels::entrainedInterfaceMotion::entrainedInterfaceMotio
         pair_.phase1().mesh(),
         "bed",
         n, f, a
-    )
+    ),
+    dmdt_
+    (
+      new volScalarField
+      (
+        IOobject("dmdt", pair_.phase1().mesh()),
+        pair_.phase1().mesh(),
+        dimensionedScalar("", dimVelocity/dimLength, 0.0)
+      )
+    ),
+    MR(dict.get<scalar>("MR"))
 {}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -91,17 +102,21 @@ void Foam::interfaceTrackingModels::entrainedInterfaceMotion::regress
     const volScalarField& p(pair_.phase1().thermo().p());
 
     // 1. Regress flame surface and get dmdt
-    tmp<volScalarField> dmdtf = flame_->regressInterface(p, bed.iNeighbours());
+    tmp<volScalarField> dmdtf = flame_.regressInterface(p, bed_.iNeighbours());
+
+    const EntrainedSystem& eta(pair_.phase1().db().lookupObject<EntrainedSystem>("EntrainedSystem"));
+    const factors mtf(eta.massTransfer());
 
     // 2. Regress bed surface based on flame surface dmdt
-    tmp<volScalarField> dmdtb = bed_->regressInterface(p, dmdtf(), flame.iNeighbours());
+    dmdt_ = bed_.regressInterface(p, dmdtf(), flame_.iNeighbours(), mtf.particles, MR);
 
 }
 
 void Foam::interfaceTrackingModels::entrainedInterfaceMotion::store()
 {
     // store old time step alpha
-    alphaOld_ = alpha_;
+    bed_.store();
+    flame_.store();
 }
 
 Foam::tmp<Foam::volScalarField>
@@ -114,5 +129,11 @@ Foam::tmp<Foam::volScalarField>
 Foam::interfaceTrackingModels::entrainedInterfaceMotion::As() const
 {
     return bed_.As();
+}
+
+Foam::tmp<Foam::volScalarField>
+Foam::interfaceTrackingModels::entrainedInterfaceMotion::dmdt() const
+{
+    return dmdt_;
 }
 // ************************************************************************* //

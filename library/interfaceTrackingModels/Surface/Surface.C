@@ -346,7 +346,9 @@ Foam::tmp<Foam::volScalarField> Foam::Surface::regressInterface
 (
     const volScalarField& p,
     const volScalarField& dmdt,
-    const labelList& flame
+    const labelList& flame,
+    const scalar fp,
+    const scalar MR
 )
 {
 
@@ -409,7 +411,7 @@ Foam::tmp<Foam::volScalarField> Foam::Surface::regressInterface
             dmdt_[Own[i]] = alpha0[Nei[i]]*dmdt[flame[k]]*V[flame[k]]/V[Nei[i]];
             nHat_[Own[i]] = vector(1, 0, 0);
 
-            scalar newalpha = alpha0[Nei[i]] - dmdt[flame[k]]*V[flame[k]]*dt/V[Nei[i]];
+            scalar newalpha = alpha0[Nei[i]] - ((1.0 - MR)/fp)*dmdt[flame[k]]*V[flame[k]]*dt/V[Nei[i]];
             if (newalpha < 0)
             {
                 scalar Vr = -newalpha*V[Nei[i]];
@@ -448,10 +450,4 @@ Foam::tmp<Foam::volScalarField> Foam::Surface::regressInterface
     }
 
     return tdmdt;
-}
-
-void Foam::Surface::store()
-{
-    // store old time step alpha
-    alphaOld_ = alpha_;
 }

@@ -99,7 +99,7 @@ protected:
         word checkAndRegress_;
         scalar stopRegress_;
         scalar intialV_;
-        dimensionedScalar retainer_;
+        dimensionedScalar MR_;
 
         // Regresssion Parameters
         volScalarField alphaOld;
@@ -118,8 +118,6 @@ protected:
 
             //- Mass transfer rates
             rDmdtTable rDmdt_;
-
-            interfaceTable nHat_;
 
             //- The saturation model used to evaluate Tsat = Tf
             autoPtr<saturationModel> saturationModel_;
@@ -144,7 +142,7 @@ public:
     typedef PtrListDictionary<phaseModel> phaseModelList;
 
     // Public Data
-    chemicalEfficiency eta;
+    EntrainedSystem eta;
 
     // Member Functions
 

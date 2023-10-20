@@ -102,7 +102,7 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::EntrainedPropel
       )
     ),
     rhoPropellant("rhoprop", dimDensity, this->template get<scalar>("propellantRho")),
-    retainer_("retainer", dimless, 0.0),
+    MR_("Mass Retained", dimless, 0.0),
     alphaOld
     (
       volScalarField
@@ -212,24 +212,6 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::EntrainedPropel
             )
         );
 
-        nHat_.set
-        (
-          pair,
-          new volVectorField
-          (
-            IOobject
-            (
-              IOobject::groupName("nHat", pair.name()),
-              this->mesh().time().timeName(),
-              this->mesh(),
-              IOobject::READ_IF_PRESENT,
-              IOobject::AUTO_WRITE
-            ),
-            this->mesh(),
-            dimensionedVector(dimless)
-          )
-        );
-
         // Set Source terms
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
@@ -288,11 +270,11 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::dmdts() const
         const scalar pcoeff = mtf.particles;
         const scalar gcoeff = (mtf.H2 + mtf.H2O);
 
-        this->addField(pair.phase1(), "dmdt", (1.0 - retainer_)*pcoeff*rDmdt, dmdts);
+        this->addField(pair.phase1(), "dmdt", (pcoeff - MR_)*rDmdt, dmdts);
         this->addField(pair.phase2(), "dmdt", gcoeff*rDmdt, dmdts);
 
         // Subtract for Propellant Phase
-        this->addField(this->phases()[2], "dmdt", (retainer_*pcoeff - 1.0)*rDmdt, dmdts);
+        this->addField(this->phases()[2], "dmdt", -((pcoeff - MR_) + gcoeff)*rDmdt, dmdts);
     }
     return dmdts;
 }
@@ -394,8 +376,8 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::heatTransfer() 
     fvScalarMatrix& eqn2 = *eqns[phase2.name()];
 
     // Implementation - 1
-    eqn1 += - fvm::Sp((1.0 - retainer_)*pcoeff*rDmdt, eqn1.psi())
-            + (1.0 - retainer_)*pcoeff*rDmdt*Hs1;
+    eqn1 += - fvm::Sp((pcoeff - MR_)*rDmdt, eqn1.psi())
+            + (pcoeff - MR_)*rDmdt*Hs1;
     eqn2 += - fvm::Sp(gcoeff*rDmdt, eqn2.psi())
             + gcoeff*rDmdt*Hs2;
 
@@ -439,8 +421,8 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::momentumTransfe
           fvVectorMatrix& eqn2 = *eqns[phase2.name()];
 
           // Momentum Source
-          eqn1 += - fvm::Sp((1.0 - retainer_)*pcoeff*rDmdt, eqn1.psi())
-                  + (1.0 - retainer_)*pcoeff*rDmdt*Up_;
+          eqn1 += - fvm::Sp((pcoeff - MR_)*rDmdt, eqn1.psi())
+                  + (pcoeff - MR_)*rDmdt*Up_;
           eqn2 += - fvm::Sp(gcoeff*rDmdt, eqn2.psi())
                   + gcoeff*rDmdt*Ug_;
       }
@@ -463,50 +445,7 @@ void Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::solve()
     )
     {
       interfaceTrackingModelIter()->regress(regressionAlpha, alphaOld);
-      regressionAlpha.clip(SMALL, 1-SMALL);
-      if (checkAndRegress_ == "full")
-      {
-        word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-        volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
-        alpha = regressionAlpha;
-      }
-      else if(checkAndRegress_ == "check")
-      {
-        scalar V = (sum(regressionAlpha.internalField()*this->mesh().V())).value();
-        if (V/intialV_ > stopRegress_)
-        {
-          word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-          volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
-          alpha = regressionAlpha;
-          Info << "Regression is running! -> Remaining Propellant: "
-                                        << 100*V/intialV_ << " %" << endl;
-        }
-        else
-        {
-          retainer_ = 1.0;
-          Info << "Regression is stopped! -> Remaining Propellant: "
-                                        << 100*V/intialV_ << " %" << endl;
 
-         // Solve Propellant density
-         const phasePair& pair(this->phasePairs_[interfaceTrackingModelIter.key()]);
-         const volScalarField dmdt(this->rDmdt(pair));
-
-         const factors mtf(eta.massTransfer());
-         const scalar gcoeff = (mtf.H2 + mtf.H2O);
-
-         volScalarField& rhoRef = this->db().template lookupObjectRef
-            <volScalarField>("thermo:rho." + interfaceTrackingModelIter()->propellant_);
-         const volScalarField& alpha = this->db().template lookupObject
-            <volScalarField>("alpha." + interfaceTrackingModelIter()->propellant_);
-
-         fvScalarMatrix rhoEqn(fvm::ddt(rhoRef) == -gcoeff*dmdt/alpha);
-         rhoEqn.solve();
-        }
-      }
-      else
-      {
-        Info << "Propellant Reression is not done!" << endl;
-      }
     }
   }
 
@@ -538,49 +477,8 @@ void Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::correct()
         interfaceTrackingModelIter
     )
     {
-      if (retainer_.value() == 0.0) // No retainment
-      {
         *rDmdt_[interfaceTrackingModelIter.key()]
         = interfaceTrackingModelIter()->dmdt()*rhoPropellant;
-        rb_ = interfaceTrackingModelIter()->rb();
-        *nHat_[interfaceTrackingModelIter.key()]
-        = interfaceTrackingModelIter()->nHat();
-      }
-      else
-      {
-        // Find interface and get interface field
-        word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-        volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
-        interfaceTrackingModelIter()->findInterface(alpha);
-
-        const tmp<volScalarField> tinterface(interfaceTrackingModelIter()->interface());
-        const volScalarField& interface(tinterface());
-        const scalar sumInterface(gSum(interface));
-
-        // Get variables
-        const tmp<volScalarField> tdmdtRegress(interfaceTrackingModelIter()->dmdt());
-        const volScalarField& dmdtRegress(tdmdtRegress());
-
-        const tmp<volScalarField> trbRegress(interfaceTrackingModelIter()->rb());
-        const volScalarField& rbRegress(trbRegress());
-
-        // Compute Average
-        dimensionedScalar dmdtAvg
-        (
-          "", dmdtRegress.dimensions(),
-          gSum(dmdtRegress.internalField())/sumInterface
-        );
-        dimensionedScalar rbAvg
-        (
-          "", dimVelocity,
-          0.5*gSum(rbRegress.internalField())/sumInterface
-        );
-
-        // Compute dmdt, rb and nHat
-        *nHat_[interfaceTrackingModelIter.key()] = interface*vector(1, 0, 0);
-        rb_ = interface*rbAvg;
-        *rDmdt_[interfaceTrackingModelIter.key()] = interface*dmdtAvg*rhoPropellant;
-      }
     }
 
     // calculate velocity of the gas and particle source
@@ -595,7 +493,15 @@ void Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::store()
 {
   BasePhaseSystem::store();
   alphaOld = regressionAlpha;
-  // const volScalarField& kappad(this->db().template lookupObject<volScalarField>("kappaParticle"));
+  forAllIter
+  (
+      interfaceTrackingModelTable,
+      interfaceTrackingModels_,
+      interfaceTrackingModelIter
+  )
+  {
+      interfaceTrackingModelIter()->store();
+  }
 }
 
 template<class BasePhaseSystem>
@@ -605,13 +511,24 @@ void Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::calculateV
     //                into the combustion chamber
 
     // Velocity of gas and particle phase
-    forAllConstIter(interfaceTable, nHat_, nHatIter)
+    forAllIter
+    (
+        interfaceTrackingModelTable,
+        interfaceTrackingModels_,
+        interfaceTrackingModelIter
+    )
     {
-      const volVectorField& nHat = *nHatIter();
+      const tmp<volScalarField> tAs = interfaceTrackingModelIter()->As();
+      const tmp<volScalarField> trb = interfaceTrackingModelIter()->rb();
+      const tmp<volScalarField> tdmdt = interfaceTrackingModelIter()->dmdt();
+
+      const volScalarField& As(tAs());
+      const volScalarField& rb(trb());
+      const volScalarField& dmdt(tdmdt());
 
       eta.gasVelocity
       (
-        nHat, (this->phases()[0].thermo().p()), rb_, Ug_
+        (this->phases()[0].thermo().p()), dmdt, rb, As, Ug_
       );
     }
 }
