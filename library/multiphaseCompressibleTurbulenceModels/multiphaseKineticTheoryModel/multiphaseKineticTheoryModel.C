@@ -29,6 +29,7 @@ License
 #include "multiphaseKineticTheoryModel.H"
 #include "mathematicalConstants.H"
 #include "fvOptions.H"
+#include "processorFvPatch.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -110,6 +111,8 @@ Foam::RASModels::multiphaseKineticTheoryModel::multiphaseKineticTheoryModel
     alphaMinFriction_("alphaMinFriction", dimless, kineticCoeffDict_),
     residualAlpha_("residualAlpha", dimless, kineticCoeffDict_),
     maxNut_("maxNut", dimViscosity, 1000, kineticCoeffDict_),
+
+    ThetaSmall("", dimVelocity*dimVelocity, kineticCoeffDict_.get<scalar>("minTheta")),
 
     Theta_
     (
@@ -217,7 +220,60 @@ void ImposeWall(volScalarField& psi, const volScalarField& alpha)
     }
   }
 
+  forAll(psi.mesh().boundary(),patchi)
+  {
+    if (isType<processorFvPatch>(psi.mesh().boundary()[patchi]))
+    {
+      const processorPolyPatch& pp
+          = refCast<const processorPolyPatch>(psi.mesh().boundaryMesh()[patchi]);
+      if (pp.owner())
+      {
+        const scalarField& psibF(psi.boundaryField()[patchi].patchNeighbourField());
+        const scalarField& alphaF(alpha.boundaryField()[patchi].patchInternalField());
+        const scalarField& alphabF(alpha.boundaryField()[patchi].patchNeighbourField());
+        const labelList& fC(psi.mesh().boundary()[patchi].faceCells());
+        forAll(fC, i)
+        {
+          if ((alphabF[i] < One) && (alphaF[i] >= One))
+          {
+            psi[fC[i]] = psibF[i];
+          }
+        }
+      }
+    }
+  }
+
 }
+
+void detectZero(const volScalarField& psi)
+{
+    const volScalarField::Internal& psiIF(psi.internalField());
+    const word name(psi.name());
+
+    forAll(psiIF, i)
+    {
+        if (psiIF[i] == 0)
+        {
+            Info << name << " at " << i << " -> " << psiIF[i] << endl;
+        }
+    }
+
+    const volScalarField::Boundary& psibF(psi.boundaryField());
+    forAll(psibF, bFi)
+    {
+        const scalarField& sF(psi.boundaryField()[bFi]);
+        const word patchName(psi.mesh().boundary()[bFi].name());
+
+        forAll(sF, sFi)
+        {
+            if (sF[sFi] == 0)
+            {
+                Info << name << " -> " << patchName << " at " << sFi << " -> " << 0 << endl;
+            }
+        }
+    }
+}
+
 }
 
 bool Foam::RASModels::multiphaseKineticTheoryModel::read()
@@ -398,9 +454,11 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
     volScalarField alpha(max(alpha_, scalar(0)));
     const volScalarField& rho = phase_.rho();
 
+    Theta_.clip(ThetaSmall, max(Theta_));
+
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
-    dimensionedScalar ThetaSmall("ThetaSmall", Theta_.dimensions(), 1e-15);
-    dimensionedScalar ThetaSmallSqrt(sqrt(ThetaSmall));
+    // dimensionedScalar ThetaSmall("ThetaSmall", Theta_.dimensions(), 1e-6);
+    // dimensionedScalar ThetaSmallSqrt(sqrt(ThetaSmall));
 
     tmp<volScalarField> tda(phase_.d());
     const volScalarField& da = tda();
@@ -456,7 +514,7 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
             0.25*sqr(beta)*da*magSqr(U - Uc_)
            /(
                max(alpha, residualAlpha_)*rho
-              *sqrtPi*(ThetaSqrt + ThetaSmallSqrt)
+              *sqrtPi*ThetaSqrt
             )
         );
 
@@ -495,38 +553,39 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
           + (tau && gradU)
           + fvm::Sp(-gammaCoeff, Theta_)
           + fvm::Sp(-J1, Theta_)
-          + fvm::Sp(J2/(Theta_ + ThetaSmall), Theta_)
+          + fvm::Sp(J2/Theta_, Theta_)
           + fvOptions(alpha, rho, Theta_)
         );
 
-        // // Fix empty cell values
-        // label emptyCellSize = 0;
-        // forAll(alpha, i)
-        // {
-        //   emptyCellSize = alpha[i] <= cutoff_ ? emptyCellSize + 1 : emptyCellSize;
-        // }
-        // Info << "EmptyCellSize: " << emptyCellSize << endl;
-        // labelList emptyCells(emptyCellSize);
-        // label j = 0;
-        // forAll(alpha, i)
-        // {
-        //   if(alpha[i] <= cutoff_)
-        //   {
-        //     emptyCells[j] = i;
-        //     j++;
-        //   }
-        // }
-        // scalarField Theta0(emptyCellSize, 1e-15);
-        // ThetaEqn.setValues(emptyCells, Theta0);
+        // Fix empty cell values
+        label emptyCellSize = 0;
+        forAll(alpha, i)
+        {
+          emptyCellSize = alpha[i] <= cutoff_ ? emptyCellSize + 1 : emptyCellSize;
+        }
+        Info << "EmptyCellSize: " << emptyCellSize << endl;
+        labelList emptyCells(emptyCellSize);
+        label j = 0;
+        forAll(alpha, i)
+        {
+          if(alpha[i] <= cutoff_)
+          {
+            emptyCells[j] = i;
+            j++;
+          }
+        }
+        scalarField Theta0(emptyCellSize, 1e-15);
+        ThetaEqn.setValues(emptyCells, Theta0);
 
         ThetaEqn.relax();
-        fvOptions.constrain(ThetaEqn);
+        // fvOptions.constrain(ThetaEqn);
 
         ThetaEqn.solve();
 
         // Impose wall on propellant surface
         const volScalarField& alphaProp(this->db().lookupObject<volScalarField>("alpha.propellant"));
         ImposeWall(Theta_, alphaProp);
+        // Theta_ = pos0(alpha - minAlpha_)*Theta_;
         fvOptions.correct(Theta_);
     }
     else
@@ -583,7 +642,7 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
     }
 
-    Theta_.max(0);
+    Theta_.max(ThetaSmall.value());
     Theta_.min(100);
     {
         // particle viscosity (Table 3.2, p.47)
@@ -620,12 +679,12 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
         nut_ += nuFric_;
     }
 
-    if (debug)
-    {
+    // if (debug)
+    // {
         Info<< typeName << ':' << nl
             << "    max(Theta) = " << max(Theta_).value() << nl
             << "    max(nut) = " << max(nut_).value() << endl;
-    }
+    // }
 }
 
 

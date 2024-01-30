@@ -129,6 +129,9 @@ class multiphaseKineticTheoryModel
             //- Maximum turbulent viscosity
             dimensionedScalar maxNut_;
 
+            //- Small Theta
+            dimensionedScalar ThetaSmall;
+
 
         // Kinetic Theory Model Fields
 

@@ -191,12 +191,13 @@ void Foam::transonicFvPatchScalarField::updateCoeffs()
     }
     else
     {
-        if (this->size() > 0) // To  stop other processors from calculation
-        {
+        // if (this->size() > 0) // To  stop other processors from calculation
+        // {
             // Mach Number internalField
-            const scalarField Mc(mag(Ug.patchInternalField())/sqrt(gamma_*R_*Tg.patchInternalField()));
+            // const scalarField Mc(mag(Ug.patchInternalField())/sqrt(gamma_*R_*Tg.patchInternalField()));
+            const volScalarField& Mc(this->db().lookupObject<volScalarField>("Mach"));
 
-            if (max(Mc) > 1.0)
+            if (max(Mc).value() > 1.0)
             {
                 this->valueFraction() = 0.0;
             }
@@ -204,7 +205,7 @@ void Foam::transonicFvPatchScalarField::updateCoeffs()
             {
                 this->valueFraction() = 1.0;
             }
-        }
+        // }
     }
 
     mixedFvPatchScalarField::updateCoeffs();
@@ -214,7 +215,7 @@ void Foam::transonicFvPatchScalarField::updateCoeffs()
 void Foam::transonicFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeEntry<scalar>("backPressure", backPressure_);
+    os.writeEntry<scalar>("backPressure", backPressure_); 
     os.writeEntry<word>("gas", gas_);
     os.writeEntry<bool>("supersonic", supersonic);
     os.writeEntry<scalar>("gamma", gamma_);

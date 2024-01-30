@@ -491,10 +491,6 @@ while (pimple.correct())
             fvScalarMatrix rhoEqn(fvm::ddt(alpha, rhoRef) == dmdts[phasei]);
             rhoEqn.solve();
         }
-        if (runTime.write())
-        {
-            rhoPropellant = phase.thermo().rho();
-        }
     }
 
     // Correct p_rgh for consistency with p and the updated densities

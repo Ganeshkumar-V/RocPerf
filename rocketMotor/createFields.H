@@ -101,18 +101,18 @@ if (runTime.value() == 0)
 }
 
 // calculate Mach Number
-// volScalarField Mach
-// (
-//     IOobject
-//     (
-//       "Mach",
-//       runTime.timeName(),
-//       mesh,
-//       IOobject::NO_READ,
-//       IOobject::AUTO_WRITE
-//     ),
-//     mag(phases[0].U())/sqrt(phases[0].thermo().gamma()*p/phases[0].thermo().rho())
-// );
+volScalarField Mach
+(
+    IOobject
+    (
+      "Mach",
+      runTime.timeName(),
+      mesh,
+      IOobject::NO_READ,
+      IOobject::AUTO_WRITE
+    ),
+    mag(phases[0].U())/sqrt(phases[0].thermo().gamma()*p/phases[0].thermo().rho())
+);
 
 // Gas phase density and specific heat ratios
 volScalarField rhog

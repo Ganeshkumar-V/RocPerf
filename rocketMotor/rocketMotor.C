@@ -180,6 +180,19 @@ int main(int argc, char *argv[])
         {
             rhog = phases[0].thermo().rho();
             gammag = phases[0].thermo().gamma();
+            if (propellantIndex != -1)
+            {
+                rhoPropellant = phases[propellantIndex].thermo().rho();
+            }
+        }
+        else
+        {
+            const tmp<volScalarField> trhog(phases[0].rho());
+            const tmp<volScalarField> tgammag(phases[0].thermo().gamma());
+
+            const volScalarField& Rhog(trhog());
+            const volScalarField& Gammag(tgammag());
+            Mach = mag(phases[0].U())/sqrt(Gammag*p/Rhog);
         }
         // rhog.clip(SMALL, max(rhog));
         // Mach = mag(phases[0].U())/sqrt(phases[0].thermo().gamma()*p/rhog);
