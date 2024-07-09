@@ -538,49 +538,55 @@ void Foam::PropellantCombustionPhaseSystem<BasePhaseSystem>::correct()
         interfaceTrackingModelIter
     )
     {
-      if (retainer_.value() == 0.0) // No retainment
-      {
-        *rDmdt_[interfaceTrackingModelIter.key()]
-        = interfaceTrackingModelIter()->dmdt()*rhoPropellant;
-        rb_ = interfaceTrackingModelIter()->rb();
-        *nHat_[interfaceTrackingModelIter.key()]
-        = interfaceTrackingModelIter()->nHat();
-      }
-      else
-      {
-        // Find interface and get interface field
-        word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
-        volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
-        interfaceTrackingModelIter()->findInterface(alpha);
+        if (retainer_.value() == 0.0) // No retainment
+        {
+            *rDmdt_[interfaceTrackingModelIter.key()] = interfaceTrackingModelIter()->dmdt()*rhoPropellant;
+            rb_ = interfaceTrackingModelIter()->rb();
+            *nHat_[interfaceTrackingModelIter.key()] = interfaceTrackingModelIter()->nHat();
+        }
+        else
+        {
+            // Find interface and get interface field
+            word propellant = "alpha." + interfaceTrackingModelIter()->propellant_;
+            volScalarField& alpha = this->db().template lookupObjectRef<volScalarField>(propellant);
+            interfaceTrackingModelIter()->findInterface(alpha);
 
-        const tmp<volScalarField> tinterface(interfaceTrackingModelIter()->interface());
-        const volScalarField& interface(tinterface());
-        const scalar sumInterface(gSum(interface));
+            const tmp<volScalarField> tinterface(interfaceTrackingModelIter()->interface());
+            const volScalarField& interface(tinterface());
+            const scalar sumInterface(gSum(interface));
 
-        // Get variables
-        const tmp<volScalarField> tdmdtRegress(interfaceTrackingModelIter()->dmdt());
-        const volScalarField& dmdtRegress(tdmdtRegress());
+            // Get variables
+            const tmp<volScalarField> tdmdtRegress(interfaceTrackingModelIter()->dmdt());
+            const volScalarField& dmdtRegress(tdmdtRegress());
 
-        const tmp<volScalarField> trbRegress(interfaceTrackingModelIter()->rb());
-        const volScalarField& rbRegress(trbRegress());
+            const tmp<volScalarField> trbRegress(interfaceTrackingModelIter()->rb());
+            const volScalarField& rbRegress(trbRegress());
 
-        // Compute Average
-        dimensionedScalar dmdtAvg
-        (
-          "", dmdtRegress.dimensions(),
-          gSum(dmdtRegress.internalField())/sumInterface
-        );
-        dimensionedScalar rbAvg
-        (
-          "", dimVelocity,
-          0.5*gSum(rbRegress.internalField())/sumInterface
-        );
+            // Compute Average
+            dimensionedScalar dmdtAvg
+            (
+              "", dmdtRegress.dimensions(),
+              gSum(dmdtRegress.internalField())/sumInterface
+            );
+            dimensionedScalar rbAvg
+            (
+              "", dimVelocity,
+              0.5*gSum(rbRegress.internalField())/sumInterface
+            );
 
-        // Compute dmdt, rb and nHat
-        *nHat_[interfaceTrackingModelIter.key()] = interface*vector(1, 0, 0);
-        rb_ = interface*rbAvg;
-        *rDmdt_[interfaceTrackingModelIter.key()] = interface*dmdtAvg*rhoPropellant;
-      }
+            // Compute dmdt, rb and nHat
+            *nHat_[interfaceTrackingModelIter.key()] = interface*vector(1, 0, 0);
+            rb_ = interface*rbAvg;
+            *rDmdt_[interfaceTrackingModelIter.key()] = interface*dmdtAvg*rhoPropellant;
+        }
+
+        // Set Source terms
+        const phasePair& pair(this->phasePairs_[interfaceTrackingModelIter.key()]);
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+        eta.getAdiabaticTemperature(phase1.thermo().p(), Tad);
+        Hs1 = phase1.thermo().he(phase1.thermo().p(), Tad);
+        Hs2 = phase2.thermo().he(phase2.thermo().p(), Tad);
     }
 
     // calculate velocity of the gas and particle source
@@ -588,6 +594,8 @@ void Foam::PropellantCombustionPhaseSystem<BasePhaseSystem>::correct()
     {
         calculateVelocity();
     }
+
+
 }
 
 template<class BasePhaseSystem>

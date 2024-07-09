@@ -32,9 +32,7 @@ Foam::Surface::Surface
 (
     const fvMesh& mesh,
     const word name,
-    scalar n,
-    scalar f,
-    dimensionedScalar a
+    const dictionary& dict
 )
 :
     alpha_
@@ -119,9 +117,10 @@ Foam::Surface::Surface
           dimensionedScalar("", dimVelocity, 0)
         )
     ),
-    n_(n),
-    f_(f),
-    a_(a)
+    n_(dict.get<scalar>("n")),
+    f_(dict.get<scalar>("f")),
+    Pmin_(dict.get<scalar>("Pmin")),
+    a_(dict.get<scalar>("a"))
 {
     // Find interface
     alpha_.clip(SMALL, 1 - SMALL);
@@ -140,10 +139,14 @@ Foam::Surface::Surface
 
 Foam::scalar Foam::Surface::rb(const scalar P)
 {
-    if (P > 1e6)
-        return (a_*(pow(P/1e6, n_))).value()*1e-2;
+    if (P < Pmin_)
+        return (a_*(pow(Pmin_/1e6, n_))).value()*1e-2;
     else
-        return (a_*(pow(P/1e6, n_*f_))).value()*1e-2;
+        return (a_*(pow(P/1e6, n_))).value()*1e-2;
+    // if (P > 1e6)
+    //     return (a_*(pow(P/1e6, n_))).value()*1e-2;
+    // else
+    //     return (a_*(pow(P/1e6, n_*f_))).value()*1e-2;
 }
 
 Foam::label Foam::Surface::findNeighbour

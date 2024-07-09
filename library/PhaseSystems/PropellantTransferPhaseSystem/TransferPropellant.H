@@ -24,33 +24,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
-#ifndef GCPSystem_H
-#define GCPSystem_H
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "runTimeSelectionTables.H"
-#include "phaseModel.H"
-#include "EntrainedSystem.H"
-
 namespace Foam
 {
 
+  struct Mfactors
+  {
+    scalar particles;
+    scalar gas;
+  };
+
 /*---------------------------------------------------------------------------*\
-                            Class Entrained System
+                            Class Chemical Efficiency
 \*---------------------------------------------------------------------------*/
 
-class GCPSystem
+class TransferPropellant
 {
 protected:
 
   // Protected data
 
+    // Propellant density and Active Aluminium content
+    dimensionedScalar rhoPropellant;
+
     // Adiabatic Flame Temperature
     scalar Tad;
 
     // Mass Transfer Rate factors
-    Entrainment::factors mtf;
+    Mfactors mtf;
 
     // Particle Phase density
     dimensionedScalar rhoP;
@@ -61,30 +61,59 @@ protected:
     // gas phase RT
     dimensionedScalar RT;
 
-public:
+    // Temperature Dependence
+    scalar A_;
+    scalar B_;
+    scalar C_;
 
-  //- Runtime type information
-  // TypeName("GCPSystem");
+public:
 
   // Constructors
 
     //- Construct from dictionary
-    GCPSystem(const fvMesh& mesh, const dictionary& dict);
+    TransferPropellant(const fvMesh& mesh, const dictionary& dict)
+    :
+      rhoPropellant("rhop", dimDensity, dict.get<scalar>("propellantRho")),
+      rhoP("rhoParticle", dimDensity, 2700),
+      alphaP("alphaP", dimless, dict.get<scalar>("alphaPReactant")),
+      RT("RT", dimPressure/dimDensity, 0),
+      A_(dict.get<scalar>("A")),
+      B_(dict.get<scalar>("B")),
+      C_(dict.get<scalar>("C"))
+    {
+
+      // Read Data from dictionary
+        dictionary gasDict = mesh.lookupObject<dictionary>("thermophysicalProperties.gas");
+
+        // Adiabatic Flame Temperature
+        Tad = dict.get<scalar>("Tad");
+
+        // Find mass transfer rate factors
+        mtf.particles = dict.subDict("massTransferRates").get<scalar>("particles");
+        mtf.gas = dict.subDict("massTransferRates").get<scalar>("gas");
+
+        Info << "Mass Transfer Rate Factors: " << endl;
+        Info << "       particles: " << mtf.particles << endl;
+        Info << "             gas: " << mtf.gas << endl;
+
+        // gas phase density
+        scalar MWGas = gasDict.subDict("mixture").subDict("specie").get<scalar>("molWeight");
+        RT = dimensionedScalar("RT", dimPressure/dimDensity, 8314.5*Tad/MWGas);
+    }
 
   // Methods
 
     // Public functions
-    struct Entrainment::factors massTransfer() const
+    struct Mfactors massTransfer() const
     {
         return mtf;
     }
 
     void gasVelocity
     (
+        const volVectorField& nHat,
         const volScalarField& P,
-        const volScalarField& dmdt,
         const volScalarField& rb,
-        const volScalarField& As,
         volVectorField& Ug
     )
     {
@@ -93,28 +122,22 @@ public:
         const volScalarField& rhoG(trhoG());
 
         // Gas Velocity
-        forAll(Ug, i)
+        Ug = rb*nHat*(1 - (rhoPropellant - alphaP*rhoP)/(rhoG*(1 - alphaP)));
+    }
+
+    // Enthalpy
+    void getAdiabaticTemperature
+    (
+        const volScalarField& P,
+        volScalarField& Tad
+    )
+    {
+        forAll(Tad, i)
         {
-            if(As[i] != 0)
-            {
-                Ug[i] = ((rb[i] - (1 - mtf.particles)*dmdt[i]/
-                          ((1 - alphaP)*As[i]*rhoG[i]))*vector(1, 0, 0)).value();
-            }
+           Tad[i] = A_*pow(P[i]/1e6, B_) + C_;
         }
     }
 
-    //- Destructor
-    // virtual ~GCPSystem();
-
 };
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
-
-// ************************************************************************* //
+}

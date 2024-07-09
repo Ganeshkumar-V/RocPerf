@@ -65,6 +65,7 @@ protected:
       // Burning rate Parameters
       scalar n_;
       scalar f_;
+      scalar Pmin_;
       dimensionedScalar a_;
 
 public:
@@ -76,9 +77,7 @@ public:
     (
         const fvMesh& mesh,
         const word name,
-        scalar n,
-        scalar f,
-        dimensionedScalar a
+        const dictionary& dict
     );
 
   // Methods

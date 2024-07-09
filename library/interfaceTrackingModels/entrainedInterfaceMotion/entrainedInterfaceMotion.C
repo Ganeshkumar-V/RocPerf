@@ -60,13 +60,13 @@ Foam::interfaceTrackingModels::entrainedInterfaceMotion::entrainedInterfaceMotio
     (
         pair_.phase1().mesh(),
         "flame",
-        n, f, a
+        dict
     ),
     bed_
     (
         pair_.phase1().mesh(),
         "bed",
-        n, f, a
+        dict
     ),
     dmdt_
     (

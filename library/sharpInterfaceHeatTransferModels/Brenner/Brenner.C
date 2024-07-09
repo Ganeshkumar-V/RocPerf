@@ -81,8 +81,8 @@ Foam::sharpInterfaceHeatTransferModels::Brenner::K(const scalar residualAlpha) c
   //   }
   // }
 
-    const tmp<volScalarField> tPe(max(pair_.Re()*pair_.Pr(), SMALL));
-    const volScalarField& Pe(tPe()*d_/dV_);
+    const tmp<volScalarField> tPe(max(pair_.Re()*pair_.Pr()*d_/dV_, SMALL));
+    const volScalarField& Pe(tPe());
 
     volScalarField Nu
     (

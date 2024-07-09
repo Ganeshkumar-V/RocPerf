@@ -97,6 +97,11 @@ protected:
     // gas phase RT
     dimensionedScalar RT;
 
+    // Temperature Dependence
+    scalar A_;
+    scalar B_;
+    scalar C_;
+
 public:
 
   // Constructors
@@ -108,7 +113,10 @@ public:
       rhoP("rhoParticle", dimDensity, 0),
       alphaRhoAlp("alphaRhoAl", dimDensity, 0),
       alphaP("alphaP", dimless, 0),
-      RT("RT", dimPressure/dimDensity, 0)
+      RT("RT", dimPressure/dimDensity, 0),
+      A_(dict.get<scalar>("A")),
+      B_(dict.get<scalar>("B")),
+      C_(dict.get<scalar>("C"))
     {
       // Read Data from dictionary
 
@@ -192,6 +200,19 @@ public:
 
         // Gas Velocity
         Ug = rb*nHat*(1 - (rhoPropellant - alphaP*rhoP)/(rhoG*(1 - alphaP)));
+    }
+
+    // Enthalpy
+    void getAdiabaticTemperature
+    (
+        const volScalarField& P,
+        volScalarField& Tad
+    )
+    {
+        forAll(Tad, i)
+        {
+           Tad[i] = A_*pow(P[i]/1e6, B_) + C_; 
+        }
     }
 
 };

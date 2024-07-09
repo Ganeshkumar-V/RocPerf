@@ -24,22 +24,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::PropellantInterfacePhaseSystem
+    Foam::PropellantTransferPhaseSystem
 
 Description
     Class which models non-thermally-coupled mass transfers; i.e.,
     representation changes, rather than phase changes.
 
 SourceFiles
-    PropellantInterfacePhaseSystem.C
+    PropellantTransferPhaseSystem.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PropellantInterfacePhaseSystem_H
-#define PropellantInterfacePhaseSystem_H
+#ifndef PropellantTransferPhaseSystem_H
+#define PropellantTransferPhaseSystem_H
 
 #include "phaseSystem.H"
 #include "saturationModel.H"
+#include "TransferPropellant.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,11 +50,11 @@ namespace Foam
 class interfaceTrackingModel;
 
 /*---------------------------------------------------------------------------*\
-                    Class PropellantInterfacePhaseSystem Declaration
+                    Class PropellantTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>
-class PropellantInterfacePhaseSystem
+class PropellantTransferPhaseSystem
 :
     public BasePhaseSystem
 {
@@ -79,47 +80,33 @@ protected:
 
     // Protected data
 
-        // Molecular Weights of all the species
-        dictionary molecularWeights_;
-
-        struct
-        {
-          scalar Al;
-          scalar Al2O3;
-          scalar H2O;
-          scalar H2;
-          scalar Prop;
-        } MW_;
-
-        // Active Aluminium content
-        scalar AAlC_;
-        scalar K_;
-
-        // Equivalence Ratio
-        scalar eqR_;
+        dictionary phaseProperties;
 
         // Adiabatic Flame Temperature
         volScalarField Tad;
-
-        // Efficiency
-        scalar zeta;
+        volScalarField Hs1;
+        volScalarField Hs2;
 
         // Burning rate
         volScalarField rb_;
 
-        // Universal Gas constant
-        dimensionedScalar R_;
-
         // propellant density
         dimensionedScalar rhoPropellant;
-        dimensionedScalar rhoParticle;
-        dimensionedScalar alphaRhoAl;
+
+        // Regression Control Parameters
         bool regress_;
+        word checkAndRegress_;
+        scalar stopRegress_;
+        scalar intialV_;
+        dimensionedScalar retainer_;
+
+        // Regresssion Parameters
         volScalarField alphaOld;
         volScalarField regressionAlpha;
         scalar epsilon;
 
         // Inlet velocity
+        bool thinFlimModel_;
         volVectorField Ug_;
         volVectorField Up_;
 
@@ -132,12 +119,6 @@ protected:
             rDmdtTable rDmdt_;
 
             interfaceTable nHat_;
-
-            //- Mass Transfer Coefficient for particle phase
-            coeffTable pCoeff_;
-
-            //- Mass Transfer Coefficient for particle phase
-            coeffTable gCoeff_;
 
             //- The saturation model used to evaluate Tsat = Tf
             autoPtr<saturationModel> saturationModel_;
@@ -153,14 +134,16 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        PropellantInterfacePhaseSystem(const fvMesh&);
+        PropellantTransferPhaseSystem(const fvMesh&);
 
 
     //- Destructor
-    virtual ~PropellantInterfacePhaseSystem();
+    virtual ~PropellantTransferPhaseSystem();
 
     typedef PtrListDictionary<phaseModel> phaseModelList;
 
+    // Public Data
+    TransferPropellant eta;
 
     // Member Functions
 
@@ -206,7 +189,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "PropellantInterfacePhaseSystem.C"
+    #include "PropellantTransferPhaseSystem.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
