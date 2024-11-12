@@ -36,6 +36,14 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             phase.thermo().he(setTemp, setTemp, purePropellantCells)
           );
         }
+        if (phase.name() == "particles")
+        {
+          EEqn.setValues
+          (
+            particleFreeCells,
+            phase.thermo().he(setParticleTemp, setParticleTemp, particleFreeCells)
+          );
+        }
 
         EEqn.solve();
         fvOptions.correct(phase.thermoRef().he());
