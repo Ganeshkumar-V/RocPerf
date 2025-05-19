@@ -56,18 +56,22 @@ defineTurbulenceModelTypes
     (phaseModelPhaseCompressibleTurbulenceModel, RAS, Type)
 
 // -------------------------------------------------------------------------- //
-// RAS models
+// RAS models - Continuous phase models
 // -------------------------------------------------------------------------- //
 
 #include "continuousMultiphaseKEpsilon.H"
 makeRASModel(continuousMultiphaseKEpsilon);
 
 // -------------------------------------------------------------------------- //
-// Additional models
+// Kinetic Theory based models
 // -------------------------------------------------------------------------- //
 
 #include "multiphaseKineticTheoryModel.H"
 makeTurbulenceModel
 (phaseModelPhaseCompressibleTurbulenceModel, RAS, multiphaseKineticTheoryModel);
+
+#include "dispersedMultiphaseKTGF.H"
+makeTurbulenceModel
+(phaseModelPhaseCompressibleTurbulenceModel, RAS, dispersedMultiphaseKTGF);
 
 // ************************************************************************* //
