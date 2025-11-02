@@ -143,7 +143,7 @@ void Foam::gasBurningRateInletVelocityFvPatchVectorField::updateValues
 {
     const vectorField n(patch().nf());
 
-    const scalarField rb(a_*pow(P/10e6, n_));
+    const scalarField rb(a_*pow(P/1e6, n_)*0.01);
 
     const scalarField avgU(-(X_*rhoPropellant_*rb)/gSum(alpha*rho));
     operator==(avgU*n);
