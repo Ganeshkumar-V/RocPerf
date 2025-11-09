@@ -4,11 +4,14 @@ label particleFreeCellSize = 0;
     const volScalarField alphaP(phases[1]);
     forAll(alphaP, i)
     {
-        if(alphaP[i] < 1e-10) particleFreeCellSize++;
+        if(alphaP[i] < 1e-10) 
+        { 
+            particleFreeCellSize++; 
+        }
     } 
 }
 labelList particleFreeCells(particleFreeCellSize);
-const volScalarField& gasTemp(gasPhase.thermo().T());
+const volScalarField& gasTemp(phases[0].thermo().T());
 scalarField setParticleTemp(particleFreeCellSize, 300);
 {
     const volScalarField alphaP(phases[1]);

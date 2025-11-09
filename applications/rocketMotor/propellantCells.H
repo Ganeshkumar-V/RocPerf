@@ -19,6 +19,7 @@ if (propellantIndex != -1)
         purePropellantSize,
         fluid.getOrDefault<scalar>("Tset", 2000)
     );
+    setPressure = scalarField(purePropellantSize, 101325);
     setVelocity = vectorField(purePropellantSize, vector(0, 0, 0));
     {
         const volScalarField& propellant = phases[propellantIndex];

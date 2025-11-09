@@ -55,7 +55,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "AdiabaticWall.H"
+#include "additionalFunctions.H"
 
 int main(int argc, char *argv[])
 {
@@ -126,71 +126,13 @@ int main(int argc, char *argv[])
       fluid.solve();
       fluid.correct();
 
-      // // Reconstruct Propellant surface
-      // surf.reconstruct();
+      // Find propellant cells to restrict velocity and temperature
+      #include "propellantCells.H"
 
-      //***********  Start Find Propellant size ***********//
-      if (propellantIndex != -1)
-      {
-        label purePropellantSize = 0;
-        scalar cutoff = 0.999; //(1.0 - SMALL);
-        {
-          const volScalarField& propellant = phases[propellantIndex];
+      // Find particle free cells to restrict Temperature
+      #include "particleFreeCells.H"
 
-          forAll(propellant, i)
-          {
-            if (propellant[i] >= cutoff)
-            {
-              purePropellantSize++;
-            }
-          }
-        }
-        purePropellantCells = labelList(purePropellantSize);
-        setTemp = scalarField
-        (
-          purePropellantSize,
-          fluid.getOrDefault<scalar>("Tset", 2000)
-        );
-        setPressure = scalarField(purePropellantSize, 101325);
-        setVelocity = vectorField(purePropellantSize, vector(0, 0, 0));
-        {
-          const volScalarField& propellant = phases[propellantIndex];
-
-          label j = 0;
-          forAll(propellant, i)
-          {
-            if (propellant[i] >= cutoff)
-            {
-              purePropellantCells[j] = i;
-              j++;
-            }
-          }
-        }
-      }
-      //***********  End Find Propellant size ***********//
-
-      //*********** Start Find Particle Free Cells ******//
-      label particleFreeCellSize = 0;
-      {
-        const volScalarField alphaP(phases[1]);
-        forAll(alphaP, i)
-        {
-          if(alphaP[i] < 1e-10) { particleFreeCellSize++; }
-        } 
-      }
-      labelList particleFreeCells(particleFreeCellSize);
-	    const volScalarField& gasTemp(phases[0].thermo().T());
-      scalarField setParticleTemp(particleFreeCellSize, 300);
-      {
-        const volScalarField alphaP(phases[1]);
-        label j = 0;
-        forAll(alphaP, i)
-        {
-          if(alphaP[i] < 1e-10) { particleFreeCells[j] = i; setParticleTemp[j] = gasTemp[i]; j++; }
-        }
-      }
-      //*********** End Find Particle Free Cells *******//
-
+      // Solve Conservation Equations
       #include "pU/UEqns.H"
       #include "EEqns.H"
       #include "pU/pEqn.H"
@@ -213,7 +155,7 @@ int main(int argc, char *argv[])
     runTime.write();
     runTime.printExecutionTime(Info);
   }
-  // findYplus(phases[0]);
+  // findYplus(phases[0]); <- to find Yplus along the walls (uncomment if req.)
   Info<< "End\n" << endl;
 
   ::_Exit(0);
