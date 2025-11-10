@@ -21,12 +21,6 @@ This codebase is provided as source and is intended to be built and run on Linux
 * **Build System:** Platform-specific makefiles (`platforms/`) and per-target
   Makefiles (`Make/`) for `wmake`.
 
-## 📸 Screenshots / Demo
-
-*(Optional: Add simulation results, graphs, or GIFs here.)*
-
-`![Simulation Result](https://placehold.co/600x400/222/fff?text=Simulation+Result+Screenshot)`
-
 ## 🛠️ Requirements
 
 * **Platform:** Linux 
