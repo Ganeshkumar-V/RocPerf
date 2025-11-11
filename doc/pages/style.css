@@ -1,0 +1,180 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Fallback for Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Style for the copy-to-clipboard button */
+.copy-btn-abs {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: #4A5568; /* gray-700 */
+    color: #E2E8F0; /* gray-300 */
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.code-block-wrapper:hover .copy-btn-abs {
+    opacity: 1;
+}
+
+.copy-btn-abs:hover {
+    background-color: #2D3748; /* gray-800 */
+}
+
+/* Glossy and vibrant design with updated gradient */
+
+/* Gradient background for header */
+header {
+    background: #022042; /* Dark blue */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header a {
+    color: #ffffff; /* White links */
+    text-decoration: none;
+    font-weight: bold;
+    /* Prevent font-size or transform changes when link states change */
+    transition: color 0.2s ease;
+    transform: none !important;
+    font-size: inherit !important;
+}
+
+/* Removed scaling and vibrant effects for RocIBCFD header */
+header a:hover,
+header a:focus,
+header a:active,
+.nav-active,
+.nav-active a {
+    color: #fa0000; /* Red on hover/active */
+    font-weight: bold !important; /* ensure it remains bold */
+    transform: none !important; /* remove any accidental scaling */
+    font-size: inherit !important; /* prevent font-size changes */
+}
+
+/* Glassy / translucent active/nav focus style
+   - Use a more specific selector so it overrides Tailwind utilities
+   - Backdrop filter for frosted glass (may require browser support)
+   - Subtle border and inner-shadow for glossy look */
+header .nav-active,
+header a:focus,
+header a:active {
+    background: rgba(255, 255, 255, 0.06); /* slight translucent white */
+    backdrop-filter: blur(6px) saturate(120%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 6px 12px rgba(2,32,66,0.25);
+    border-radius: 0.5rem;
+    padding: 0.35rem 0.75rem; /* small padding so it looks like a pill */
+    color: #ffffff !important; /* ensure text stays readable */
+}
+
+/* If Tailwind utility still applies a bg color, prefer this rule using !important on background */
+header .nav-active,
+header a:focus,
+header a:active {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Stronger overrides for Tailwind utilities and aria-current markers
+   Target elements that may have `bg-blue-600` or `aria-current="page"` */
+header [aria-current="page"],
+header .bg-blue-600,
+header a.bg-blue-600,
+header button.bg-blue-600,
+#mobile-menu .bg-blue-600,
+header a[aria-current="page"],
+header button[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(6px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(6px) saturate(120%) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 6px 12px rgba(2,32,66,0.25) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.35rem 0.75rem !important;
+    color: #ffffff !important;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Ensure the dropdown/home button's svg icon keeps proper contrast */
+header [aria-current="page"] svg {
+    stroke: #ffffff !important;
+}
+
+/* Ensure mobile menu links also remain bold when active */
+.mobile-nav a,
+.mobile-nav a:active,
+.mobile-nav a:focus {
+    font-weight: bold !important;
+    transform: none !important;
+    font-size: inherit !important;
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(135deg, #3b82f6, #f97316); /* Blue to Orange */
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero button {
+    background: linear-gradient(90deg, #ef4444, #f97316); /* Red to Orange */
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hero button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Section cards */
+section {
+    padding: 4rem 0;
+}
+
+section .card {
+    background: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+section .card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+footer {
+    background: #022042;
+    color: #ffffff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 0.5rem 0;
+}

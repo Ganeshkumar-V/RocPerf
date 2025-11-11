@@ -7,46 +7,15 @@
     <title>RocIBCFD - Rocket Propulsion Software</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Fallback for Inter font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        /* Style for the copy-to-clipboard button */
-        .copy-btn-abs {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background-color: #4A5568; /* gray-700 */
-            color: #E2E8F0; /* gray-300 */
-            border: none;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-            opacity: 0.3;
-            transition: opacity 0.3s ease;
-        }
-        
-        .code-block-wrapper:hover .copy-btn-abs {
-            opacity: 1;
-        }
-
-        .copy-btn-abs:hover {
-            background-color: #2D3748; /* gray-800 */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100 text-gray-800">
 
     <!-- Header Navigation -->
-    <header class="bg-white shadow-md sticky top-0 z-40">
+    <header class="shadow-md sticky top-0 z-40">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <!-- Project Title -->
-            <a href="index.html" class="text-2xl font-bold text-gray-900">RocIBCFD</a>
+            <a href="index.html" class="text-2xl font-bold text-white">RocIBCFD</a>
 
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
@@ -60,7 +29,7 @@
                 <!-- Home link with dropdown -->
                 <div class="relative group">
                     <!-- "Home" Button -->
-                    <button class="text-white bg-blue-600 px-3 py-2 rounded-md text-sm font-medium" aria-current="page">
+                    <button class="text-white bg-blue-600 px-3 py-2 rounded-md text-sm font-bold" aria-current="page">
                         Home
                         <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -72,52 +41,37 @@
                     </div>
                 </div>
 
-                <a href="equations.html" class="text-gray-700 hover:text-blue-600 transition-colors">Governing Equations</a>
-                <a href="features.html" class="text-gray-700 hover:text-blue-600 transition-colors">Features</a>
-                <a href="tutorials.html" class="text-gray-700 hover:text-blue-600 transition-colors">Tutorials</a>
-                <a href="documentation.html" class="text-gray-700 hover:text-blue-600 transition-colors">Documentation</a>
+                <a href="equations.html" class="text-white hover:text-red-500 transition-colors">Governing Equations</a>
+                <a href="features.html" class="text-white hover:text-red-500 transition-colors">Features</a>
+                <a href="tutorials.html" class="text-white hover:text-red-500 transition-colors">Tutorials</a>
+                <a href="documentation.html" class="text-white hover:text-red-500 transition-colors">Documentation</a>
             </div>
         </nav>
 
         <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden md:hidden px-2 pt-2 pb-3 space-y-1">
-            <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600" aria-current="page">Home</a>
-            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">...About RocIBCFD</a>
-            <a href="#getting-started" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">...Getting Started</a>
-            <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">...Contact</a>
+            <a href="index.html" class="block px-3 py-2 rounded-md text-base font-bold text-white bg-blue-600" aria-current="page">Home</a>
+            <a href="#about" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">...About RocIBCFD</a>
+            <a href="#getting-started" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">...Getting Started</a>
+            <a href="#contact" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">...Contact</a>
             
             <hr class="border-gray-300">
             
-            <a href="equations.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">Governing Equations</a>
-            <a href="features.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">Features</a>
-            <a href="tutorials.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">Tutorials</a>
-            <a href="documentation.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">Documentation</a>
+            <a href="equations.html" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">Governing Equations</a>
+            <a href="features.html" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">Features</a>
+            <a href="tutorials.html" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">Tutorials</a>
+            <a href="documentation.html" class="block px-3 py-2 rounded-md text-base font-bold text-white hover:bg-gray-200">Documentation</a>
         </div>
     </header>
 
     <!-- Main Content -->
     <main>
         <!-- Hero Section -->
-        <section class="bg-gray-900 text-white py-16 md:py-24">
-            <div class="container mx-auto px-6 text-center">
-                
-                <!-- Main Heading -->
-                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
-                    RocIBCFD
-                </h1>
-                
-                <!-- Subtitle -->
-                <p class="mt-4 text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto">
-                    An OpenFOAM based software tool for Internal Ballistic simulations of solid rocket motors
-                </p>
-
-                <!-- "Quick Start" Button -->
-                <div class="mt-12">
-                    <button id="quick-start-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
-                        🚀 Quick Start
-                    </button>
-                </div>
-
+        <section class="hero py-24 text-center">
+            <div class="container mx-auto px-6">
+                <h1>RocIBCFD</h1>
+                <p>An OpenFOAM-based software tool for Internal Ballistic simulations of solid rocket motors.</p>
+                <button id="quick-start-button">Get Started</button>
             </div>
         </section>
 
@@ -143,7 +97,7 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-6">What is RocIBCFD?</h2>
                     <p class="text-lg text-gray-700 leading-relaxed text-left md:text-center">
                         This repository provides an OpenFOAM-based collection of applications, libraries, and utilities for simulating rocket motor firing, specializing in propellant regression and particle-laden flows. The framework's core is the <code>rocketMotor</code> application, which handles propellant surface regression (for center-perforated and end-burning configurations) and various models for gas-particle interactions. The suite also supports CD nozzle simulations (both single-phase gas and two-phase gas-particle flows). To accelerate research, this project includes a set of tutorial and validation cases, specialized boundary conditions for propulsion, and utilities for performance-parameter extraction and to setup initial-conditions.
-                    </Fp>
+                    </p>
                 </div>
             </div>
         </section>
@@ -181,11 +135,9 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-10">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; 2024 RocIBCFD. All rights reserved.</p>
-            <p class="mt-2 text-sm">A project by GaneshKumar V.</p>
-        </div>
+    <footer>
+        <p>&copy; 2025 RocIBCFD. All rights reserved.</p>
+        <p>Designed by Ganeshkumar V.</p>
     </footer>
 
     <!-- 
@@ -194,9 +146,7 @@
       - 'z-50' places it on top.
     -->
     <div id="code-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-        
         <!-- Modal Content -->
-        <!-- CHANGED: max-w-2xl to make the modal wider -->
         <div class="relative z-50 max-w-2xl w-full mx-auto p-0 md:p-6" style="margin-top: -10vh;">
             <!-- The "terminal" block -->
             <div class="bg-gray-900 text-left rounded-lg shadow-lg">
