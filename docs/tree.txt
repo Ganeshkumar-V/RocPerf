@@ -1,0 +1,409 @@
+.
+├── Allwclean
+├── Allwmake
+├── LICENSE
+├── README.md
+├── applications
+│   └── rocketMotor
+│       ├── CourantNo.H
+│       ├── EEqns.H
+│       ├── Make
+│       │   ├── files
+│       │   ├── linux64IcxDPInt64Opt
+│       │   │   ├── options
+│       │   │   ├── rocketMotor.C.dep
+│       │   │   ├── rocketMotor.o
+│       │   │   ├── sourceFiles
+│       │   │   └── variables
+│       │   └── options
+│       ├── YEqns.H
+│       ├── additionalFunctions.H
+│       ├── createFieldRefs.H
+│       ├── createFields.H
+│       ├── pU
+│       │   ├── UEqns.H
+│       │   └── pEqn.H
+│       ├── particleFreeCells.H
+│       ├── propellantCells.H
+│       ├── rocketMotor.C
+│       ├── setDeltaTFactor.H
+│       └── setRDeltaT.H
+├── bashrc
+├── src
+│   ├── Make
+│   │   ├── files
+│   │   └── options
+│   ├── PhaseSystems
+│   │   ├── EntrainedGCPCombustionPhaseSystem
+│   │   │   ├── EntrainedGCPCombustionPhaseSystem.C
+│   │   │   ├── EntrainedGCPCombustionPhaseSystem.H
+│   │   │   ├── GCPSystem.C
+│   │   │   └── GCPSystem.H
+│   │   ├── EntrainedPropellantCombustionPhaseSystem
+│   │   │   ├── EntrainedPropellantCombustionPhaseSystem.C
+│   │   │   ├── EntrainedPropellantCombustionPhaseSystem.H
+│   │   │   ├── EntrainedSystem.C
+│   │   │   └── EntrainedSystem.H
+│   │   ├── InterphaseHeatTransferPhaseSystem
+│   │   │   ├── InterphaseHeatTransferPhaseSystem.C
+│   │   │   └── InterphaseHeatTransferPhaseSystem.H
+│   │   ├── MomentumEnergyTransferPhaseSystem
+│   │   │   ├── MomentumEnergyTransferPhaseSystem.C
+│   │   │   └── MomentumEnergyTransferPhaseSystem.H
+│   │   ├── PropellantBurningPhaseSystem
+│   │   │   ├── PropellantBurningPhaseSystem.C
+│   │   │   └── PropellantBurningPhaseSystem.H
+│   │   ├── PropellantCombustionPhaseSystem
+│   │   │   ├── ChemicalEfficiency.H
+│   │   │   ├── PropellantCombustionPhaseSystem.C
+│   │   │   └── PropellantCombustionPhaseSystem.H
+│   │   ├── PropellantInterfacePhaseSystem
+│   │   │   ├── PropellantInterfacePhaseSystem.C
+│   │   │   └── PropellantInterfacePhaseSystem.H
+│   │   ├── PropellantRegressionPhaseSystem
+│   │   │   ├── PropellantRegressionPhaseSystem.C
+│   │   │   └── PropellantRegressionPhaseSystem.H
+│   │   └── PropellantTransferPhaseSystem
+│   │       ├── PropellantTransferPhaseSystem.C
+│   │       ├── PropellantTransferPhaseSystem.H
+│   │       └── TransferPropellant.H
+│   ├── functionObjects
+│   │   ├── calculateThrust
+│   │   │   ├── calculateThrust.C
+│   │   │   └── calculateThrust.H
+│   │   └── vorticityStreamFunction
+│   │       ├── vorticityStreamFunction.C
+│   │       └── vorticityStreamFunction.H
+│   ├── fvPatchFields
+│   │   ├── burningRateInletVelocity
+│   │   │   ├── burningRateInletVelocityFvPatchVectorField.C
+│   │   │   └── burningRateInletVelocityFvPatchVectorField.H
+│   │   ├── gasBurningRateInletVelocity
+│   │   │   ├── gasBurningRateInletVelocityFvPatchVectorField.C
+│   │   │   └── gasBurningRateInletVelocityFvPatchVectorField.H
+│   │   ├── gasFlowRateInletVelocity
+│   │   │   ├── gasFlowRateInletVelocityFvPatchVectorField.C
+│   │   │   └── gasFlowRateInletVelocityFvPatchVectorField.H
+│   │   ├── invertField
+│   │   │   ├── invertFieldFvPatchField.C
+│   │   │   ├── invertFieldFvPatchField.H
+│   │   │   ├── invertFieldFvPatchFields.C
+│   │   │   ├── invertFieldFvPatchFields.H
+│   │   │   └── invertFieldFvPatchFieldsFwd.H
+│   │   ├── massLoadingFraction
+│   │   │   ├── massLoadingFractionFvPatchScalarField.C
+│   │   │   └── massLoadingFractionFvPatchScalarField.H
+│   │   ├── particleFlowRateInletVelocity
+│   │   │   ├── particleFlowRateInletVelocityFvPatchVectorField.C
+│   │   │   └── particleFlowRateInletVelocityFvPatchVectorField.H
+│   │   ├── pressureDirectedOutletInletUniformVelocity
+│   │   │   ├── pressureDirectedOutletInletUniformVelocityFvPatchVectorField.C
+│   │   │   └── pressureDirectedOutletInletUniformVelocityFvPatchVectorField.H
+│   │   ├── pressureDirectedOutletInletVelocity
+│   │   │   ├── pressureDirectedOutletInletVelocityFvPatchVectorField.C
+│   │   │   └── pressureDirectedOutletInletVelocityFvPatchVectorField.H
+│   │   ├── pressureOutletNSCBC
+│   │   │   ├── pressureOutletNSCBCFvPatchField.C
+│   │   │   ├── pressureOutletNSCBCFvPatchField.H
+│   │   │   ├── pressureOutletNSCBCFvPatchFields.C
+│   │   │   ├── pressureOutletNSCBCFvPatchFields.H
+│   │   │   └── pressureOutletNSCBCFvPatchFieldsFwd.H
+│   │   ├── propellantWall
+│   │   │   ├── propellantWallFvPatchVectorField.C
+│   │   │   └── propellantWallFvPatchVectorField.H
+│   │   ├── sameAs
+│   │   │   ├── sameAsFvPatchField.C
+│   │   │   ├── sameAsFvPatchField.H
+│   │   │   ├── sameAsFvPatchFields.C
+│   │   │   ├── sameAsFvPatchFields.H
+│   │   │   └── sameAsFvPatchFieldsFwd.H
+│   │   ├── subsonicNonReflectingNSCBC
+│   │   │   ├── subsonicNonReflectingNSCBCFvPatchField.C
+│   │   │   ├── subsonicNonReflectingNSCBCFvPatchField.H
+│   │   │   ├── subsonicNonReflectingNSCBCFvPatchFields.C
+│   │   │   ├── subsonicNonReflectingNSCBCFvPatchFields.H
+│   │   │   └── subsonicNonReflectingNSCBCFvPatchFieldsFwd.H
+│   │   ├── totalTimeVaryingPressure
+│   │   │   ├── totalTimeVaryingPressureFvPatchScalarField.C
+│   │   │   └── totalTimeVaryingPressureFvPatchScalarField.H
+│   │   ├── transonic
+│   │   │   ├── transonicFvPatchField.C
+│   │   │   └── transonicFvPatchField.H
+│   │   ├── transonicLocal
+│   │   │   ├── transonicLocalFvPatchField.C
+│   │   │   └── transonicLocalFvPatchField.H
+│   │   ├── waveTransmissiveShock
+│   │   │   ├── waveTransmissiveShockFvPatchField.C
+│   │   │   ├── waveTransmissiveShockFvPatchField.H
+│   │   │   ├── waveTransmissiveShockFvPatchFields.C
+│   │   │   ├── waveTransmissiveShockFvPatchFields.H
+│   │   │   └── waveTransmissiveShockFvPatchFieldsFwd.H
+│   │   └── waveTransmissiveVelocity
+│   │       ├── waveTransmissiveVelocityFvPatchField.C
+│   │       ├── waveTransmissiveVelocityFvPatchField.H
+│   │       ├── waveTransmissiveVelocityFvPatchFields.C
+│   │       ├── waveTransmissiveVelocityFvPatchFields.H
+│   │       └── waveTransmissiveVelocityFvPatchFieldsFwd.H
+│   ├── interfaceTrackingModels
+│   │   ├── Surface
+│   │   │   ├── Surface.C
+│   │   │   └── Surface.H
+│   │   ├── entrainedInterfaceMotion
+│   │   │   ├── entrainedInterfaceMotion.C
+│   │   │   └── entrainedInterfaceMotion.H
+│   │   ├── interfaceTrackingModel
+│   │   │   ├── interfaceTrackingModel.C
+│   │   │   └── interfaceTrackingModel.H
+│   │   └── subCellularInterfaceMotion
+│   │       ├── subCellularInterfaceMotion.C
+│   │       └── subCellularInterfaceMotion.H
+│   ├── interfacialModels
+│   │   └── dragModels
+│   │       ├── CliftGauvin
+│   │       │   ├── CliftGauvin.C
+│   │       │   └── CliftGauvin.H
+│   │       ├── CliftGauvinInviscid
+│   │       │   ├── CliftGauvinInviscid.C
+│   │       │   └── CliftGauvinInviscid.H
+│   │       ├── CliftGauvinMilikan
+│   │       │   ├── CliftGauvinMilikan.C
+│   │       │   └── CliftGauvinMilikan.H
+│   │       ├── Ergun
+│   │       │   ├── Ergun.C
+│   │       │   └── Ergun.H
+│   │       ├── GidaspowErgunWenYu
+│   │       │   ├── GidaspowErgunWenYu.C
+│   │       │   └── GidaspowErgunWenYu.H
+│   │       ├── HaiderLevenspiel
+│   │       │   ├── HaiderLevenspiel.C
+│   │       │   └── HaiderLevenspiel.H
+│   │       ├── Henderson
+│   │       │   ├── Henderson.C
+│   │       │   └── Henderson.H
+│   │       ├── HolzerSommerfeld
+│   │       │   ├── HolzerSommerfeld.C
+│   │       │   └── HolzerSommerfeld.H
+│   │       ├── Loth
+│   │       │   ├── Loth.C
+│   │       │   └── Loth.H
+│   │       ├── SchillerNaumann
+│   │       │   ├── SchillerNaumann.C
+│   │       │   └── SchillerNaumann.H
+│   │       ├── TurbulentLoth
+│   │       │   ├── TurbulentLoth.C
+│   │       │   └── TurbulentLoth.H
+│   │       ├── WenYu
+│   │       │   ├── WenYu.C
+│   │       │   └── WenYu.H
+│   │       └── particleDragModel
+│   │           ├── particleDragModel.C
+│   │           └── particleDragModel.H
+│   ├── multiphaseCompressibleTurbulenceModels
+│   │   ├── BoundaryConditions
+│   │   │   ├── JohnsonJacksonSlip
+│   │   │   │   ├── JohnsonJacksonSlip.C
+│   │   │   │   └── JohnsonJacksonSlip.H
+│   │   │   └── JohnsonJacksonTheta
+│   │   │       ├── JohnsonJacksonTheta.C
+│   │   │       └── JohnsonJacksonTheta.H
+│   │   ├── continuousMultiphaseKEpsilon
+│   │   │   ├── continuousMultiphaseKEpsilon.C
+│   │   │   └── continuousMultiphaseKEpsilon.H
+│   │   ├── continuousMultiphaseKOmega
+│   │   │   ├── continuousMultiphaseKOmegaSST.C
+│   │   │   └── continuousMultiphaseKOmegaSST.H
+│   │   ├── dispersedMultiphaseKTGF
+│   │   │   ├── dispersedMultiphaseKTGF.C
+│   │   │   └── dispersedMultiphaseKTGF.H
+│   │   ├── kineticTheoryModels
+│   │   │   ├── conductivityModel
+│   │   │   │   ├── Gidaspow
+│   │   │   │   │   ├── GidaspowConductivity.C
+│   │   │   │   │   └── GidaspowConductivity.H
+│   │   │   │   ├── HrenyaSinclair
+│   │   │   │   │   ├── HrenyaSinclairConductivity.C
+│   │   │   │   │   └── HrenyaSinclairConductivity.H
+│   │   │   │   ├── Syamlal
+│   │   │   │   │   ├── SyamlalConductivity.C
+│   │   │   │   │   └── SyamlalConductivity.H
+│   │   │   │   └── conductivityModel
+│   │   │   │       ├── conductivityModel.C
+│   │   │   │       └── conductivityModel.H
+│   │   │   ├── derivedFvPatchFields
+│   │   │   │   ├── JohnsonJacksonParticleSlip
+│   │   │   │   │   ├── JohnsonJacksonParticleSlipFvPatchVectorField.C
+│   │   │   │   │   └── JohnsonJacksonParticleSlipFvPatchVectorField.H
+│   │   │   │   └── JohnsonJacksonParticleTheta
+│   │   │   │       ├── JohnsonJacksonParticleThetaFvPatchScalarField.C
+│   │   │   │       └── JohnsonJacksonParticleThetaFvPatchScalarField.H
+│   │   │   ├── frictionalStressModel
+│   │   │   │   ├── JohnsonJackson
+│   │   │   │   │   ├── JohnsonJacksonFrictionalStress.C
+│   │   │   │   │   └── JohnsonJacksonFrictionalStress.H
+│   │   │   │   ├── JohnsonJacksonSchaeffer
+│   │   │   │   │   ├── JohnsonJacksonSchaefferFrictionalStress.C
+│   │   │   │   │   └── JohnsonJacksonSchaefferFrictionalStress.H
+│   │   │   │   ├── Schaeffer
+│   │   │   │   │   ├── SchaefferFrictionalStress.C
+│   │   │   │   │   └── SchaefferFrictionalStress.H
+│   │   │   │   └── frictionalStressModel
+│   │   │   │       ├── frictionalStressModel.C
+│   │   │   │       └── frictionalStressModel.H
+│   │   │   ├── granularPressureModel
+│   │   │   │   ├── Lun
+│   │   │   │   │   ├── LunPressure.C
+│   │   │   │   │   └── LunPressure.H
+│   │   │   │   ├── SyamlalRogersOBrien
+│   │   │   │   │   ├── SyamlalRogersOBrienPressure.C
+│   │   │   │   │   └── SyamlalRogersOBrienPressure.H
+│   │   │   │   └── granularPressureModel
+│   │   │   │       ├── granularPressureModel.C
+│   │   │   │       └── granularPressureModel.H
+│   │   │   ├── kineticTheoryModel
+│   │   │   │   ├── kineticTheoryModel.C
+│   │   │   │   └── kineticTheoryModel.H
+│   │   │   ├── radialModel
+│   │   │   │   ├── CarnahanStarling
+│   │   │   │   │   ├── CarnahanStarlingRadial.C
+│   │   │   │   │   └── CarnahanStarlingRadial.H
+│   │   │   │   ├── Gidaspow
+│   │   │   │   │   ├── GidaspowRadial.C
+│   │   │   │   │   └── GidaspowRadial.H
+│   │   │   │   ├── LunSavage
+│   │   │   │   │   ├── LunSavageRadial.C
+│   │   │   │   │   └── LunSavageRadial.H
+│   │   │   │   ├── SinclairJackson
+│   │   │   │   │   ├── SinclairJacksonRadial.C
+│   │   │   │   │   └── SinclairJacksonRadial.H
+│   │   │   │   └── radialModel
+│   │   │   │       ├── radialModel.C
+│   │   │   │       └── radialModel.H
+│   │   │   └── viscosityModel
+│   │   │       ├── Gidaspow
+│   │   │       │   ├── GidaspowViscosity.C
+│   │   │       │   └── GidaspowViscosity.H
+│   │   │       ├── HrenyaSinclair
+│   │   │       │   ├── HrenyaSinclairViscosity.C
+│   │   │       │   └── HrenyaSinclairViscosity.H
+│   │   │       ├── Syamlal
+│   │   │       │   ├── SyamlalViscosity.C
+│   │   │       │   └── SyamlalViscosity.H
+│   │   │       ├── none
+│   │   │       │   ├── noneViscosity.C
+│   │   │       │   └── noneViscosity.H
+│   │   │       └── viscosityModel
+│   │   │           ├── viscosityModel.C
+│   │   │           └── viscosityModel.H
+│   │   ├── multiphaseCompressibleTurbulenceModels.C
+│   │   └── multiphaseKineticTheoryModel
+│   │       ├── multiphaseKineticTheoryModel.C
+│   │       └── multiphaseKineticTheoryModel.H
+│   ├── multiphaseSystem
+│   │   ├── multiPhaseSystem.C
+│   │   ├── multiPhaseSystem.H
+│   │   ├── multiPhaseSystemNew.C
+│   │   └── multiPhaseSystems.C
+│   ├── phaseModel
+│   │   ├── AnisothermalParticlePhaseModel
+│   │   │   ├── AnisothermalParticlePhaseModel.C
+│   │   │   └── AnisothermalParticlePhaseModel.H
+│   │   ├── NoEnergyChangePhaseModel
+│   │   │   ├── NoEnergyChangePhaseModel.C
+│   │   │   └── NoEnergyChangePhaseModel.H
+│   │   ├── StaticPhaseModel
+│   │   │   ├── StaticPhaseModel.C
+│   │   │   └── StaticPhaseModel.H
+│   │   ├── ThermalEnergyPhaseModel
+│   │   │   ├── ThermalEnergyPhaseModel.C
+│   │   │   └── ThermalEnergyPhaseModel.H
+│   │   └── phaseModel
+│   │       └── phaseModels.C
+│   └── sharpInterfaceHeatTransferModels
+│       ├── Brenner
+│       │   ├── Brenner.C
+│       │   └── Brenner.H
+│       ├── DrakeInviscid
+│       │   ├── DrakeInviscid.C
+│       │   └── DrakeInviscid.H
+│       ├── KavanauRanzMarshall
+│       │   ├── KavanauRanzMarshall.C
+│       │   └── KavanauRanzMarshall.H
+│       ├── RanzMarshall
+│       │   ├── RanzMarshall.C
+│       │   └── RanzMarshall.H
+│       └── sharpInterfaceHeatTransferModel
+│           ├── sharpInterfaceHeatTransferModel.C
+│           └── sharpInterfaceHeatTransferModel.H
+└── utilities
+    ├── ReynoldsNumber
+    │   ├── Make
+    │   │   ├── files
+    │   │   └── options
+    │   └── ReynoldsNumber.C
+    ├── mapVolFields
+    │   ├── Make
+    │   │   ├── files
+    │   │   ├── linux64IcxDPInt64Opt
+    │   │   │   ├── mapVolFields.C.dep
+    │   │   │   ├── mapVolFields.o
+    │   │   │   ├── options
+    │   │   │   ├── sourceFiles
+    │   │   │   └── variables
+    │   │   └── options
+    │   ├── createTimes.H
+    │   ├── mapVolFields.C
+    │   └── setTimeIndex.H
+    ├── postProcessRocket
+    │   ├── Make
+    │   │   ├── files
+    │   │   ├── linux64IcxDPInt64Opt
+    │   │   │   ├── options
+    │   │   │   ├── postProcessRocket.C.dep
+    │   │   │   ├── postProcessRocket.o
+    │   │   │   ├── sourceFiles
+    │   │   │   └── variables
+    │   │   └── options
+    │   ├── cellDim.H
+    │   ├── postProcessRocket.C
+    │   └── readFields.H
+    ├── rocketConservation
+    │   ├── Make
+    │   │   ├── files
+    │   │   ├── linux64IcxDPInt64Opt
+    │   │   │   ├── options
+    │   │   │   ├── rocketConservation.C.dep
+    │   │   │   ├── rocketConservation.o
+    │   │   │   ├── sourceFiles
+    │   │   │   └── variables
+    │   │   └── options
+    │   ├── cellDim.H
+    │   ├── findInletData.H
+    │   ├── findOutletData.H
+    │   ├── findTotalForce.H
+    │   ├── readFields.H
+    │   └── rocketConservation.C
+    ├── setMultipleAlphaField
+    │   ├── Make
+    │   │   ├── files
+    │   │   └── options
+    │   ├── setMultipleAlphaField.C
+    │   └── setMultipleAlphaFieldDict
+    ├── setRocketInitField
+    │   ├── Make
+    │   │   ├── files
+    │   │   ├── linux64IcxDPInt64Opt
+    │   │   │   ├── options
+    │   │   │   ├── setRocketInitField.C.dep
+    │   │   │   ├── setRocketInitField.o
+    │   │   │   ├── sourceFiles
+    │   │   │   └── variables
+    │   │   └── options
+    │   ├── setRocketInitField.C
+    │   └── setRocketInitFieldDict
+    └── streamFunction
+        ├── Make
+        │   ├── files
+        │   └── options
+        ├── cellDim.H
+        ├── readFields.H
+        └── streamFunction.C
