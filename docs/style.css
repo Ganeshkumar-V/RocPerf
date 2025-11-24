@@ -598,6 +598,15 @@ pre.foam-code {
 }
 .btn-github:hover { background-color: #444; }
 
+.bc-table thead th {
+    background-color: #2c3e50 !important; /* Forces the Dark Blue background */
+    color: #ffffff !important;             /* Forces White text */
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 600;
+    border-bottom: none;                   /* Removes conflicting borders */
+}
+
 /* =========================================
    SCOPED TUTORIAL STYLES
    These only affect the tutorial content
