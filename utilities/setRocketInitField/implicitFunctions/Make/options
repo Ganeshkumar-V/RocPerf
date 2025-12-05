@@ -1,0 +1,5 @@
+EXE_INC = \
+    -I$(WM_PROJECT_DIR)/applications/utilities/preProcessing/setAlphaField/alphaFieldFunctions/lnInclude
+
+EXE_LIBS = \
+    -lalphaFieldFunctions

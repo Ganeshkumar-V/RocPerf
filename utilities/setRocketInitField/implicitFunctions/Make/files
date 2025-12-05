@@ -1,0 +1,5 @@
+/* Run-time selectable implicitFunctions */
+
+generalizedCylinder/generalizedCylinderImplicitFunction.C
+
+LIB = $(FOAM_PRF_LIBBIN)/libimplicitFunctions
