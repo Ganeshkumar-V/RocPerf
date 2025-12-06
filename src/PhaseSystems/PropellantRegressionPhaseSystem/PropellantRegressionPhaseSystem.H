@@ -76,39 +76,22 @@ protected:
 
     // Protected data
 
-        // Molecular Weights of all the species
-        dictionary molecularWeights_;
-
-        struct
-        {
-          scalar Al;
-          scalar Al2O3;
-          scalar H2O;
-          scalar H2;
-        } MW_;
-
-        // Active Aluminium content
-        scalar AAlC_;
-
-        // Equivalence Ratio
-        scalar eqR_;
-
         // Adiabatic Flame Temperature
         volScalarField Tad;
+        volScalarField Hs1;
+        volScalarField Hs2;
 
-        // Efficiency
-        scalar zeta;
+        // RT of gas phase at the propellant surface 
+        volScalarField RTf; 
 
         // Burning rate
         volScalarField rb_;
 
-        // Universal Gas constant
-        dimensionedScalar R_;
+        // Volume fraction of propellant field at previous time step
+        volScalarField alphaOld;
 
         // propellant density
         dimensionedScalar rhoPropellant;
-        dimensionedScalar rhoParticle;
-        dimensionedScalar alphaRhoAl;
 
         // Inlet velocity
         volVectorField Ug_;

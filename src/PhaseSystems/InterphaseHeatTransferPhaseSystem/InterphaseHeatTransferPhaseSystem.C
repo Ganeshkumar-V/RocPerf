@@ -74,14 +74,6 @@ InterphaseHeatTransferPhaseSystem
         sharpInterfaceHeatTransferModelIter
     )
     {
-      const phasePair& pair
-      (
-          this->phasePairs_[sharpInterfaceHeatTransferModelIter.key()]
-      );
-
-      const phaseModel& phase1 = pair.dispersed();
-      const phaseModel& phase2 = pair.continuous();
-
       K_ = sharpInterfaceHeatTransferModelIter()->K();
     }
 }
@@ -159,14 +151,6 @@ heatTransfer() const
       //       - K/Cp2*he2 + fvm::Sp(K/Cp1, he1);
       // *eqns[phase2.name()] +=
       //       - fvm::Sp(K/Cp2, he2) + K/Cp1*he1;
-
-      // Addition Heat diffusion in particle phase
-      // *eqns[phase1.name()] -=
-      //       - fvm::laplacian
-      //         (
-      //          fvc::interpolate(phase1*Kd/Cp1),
-      //          he1
-      //         );
     }
 
     return eqnsPtr;
@@ -239,14 +223,6 @@ store()
       sharpInterfaceHeatTransferModelIter
   )
   {
-    const phasePair& pair
-    (
-        this->phasePairs_[sharpInterfaceHeatTransferModelIter.key()]
-    );
-
-    const phaseModel& phase1 = pair.dispersed();
-    const phaseModel& phase2 = pair.continuous();
-
     K_ = sharpInterfaceHeatTransferModelIter()->K();
   }
 }
