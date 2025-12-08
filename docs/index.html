@@ -70,7 +70,6 @@
                 <div class="relative group">
                     <a href="tutorials.html" class="text-white transition-colors font-bold">
                         Tutorials
-                        <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </a>
                 </div>
                 <a href="html/index.html" class="text-white hover:text-red-500 transition-colors" target="_blank">API Documentation</a>
@@ -125,13 +124,13 @@
                     </div>
 
                     <h2 class="text-3xl font-bold text-gray-900 mb-6">
-                        Simulation toolkit for Rocket Motor - CFD
+                        RocPerf-CFD: Rocket Performance CFD
                     </h2>
                     
                     <p class="text-lg text-gray-700 text-justify">
                         <strong class="text-gray-900">RocPerf-CFD</strong> is a comprehensive, OpenFOAM-based framework 
-                        for simulating high-speed, gas-particle multiphase flows, that predicts all the 
-                        flow fields throughout the entire firing duration of solid rocket motors.
+                        for simulating high-speed, gas-particle multiphase flows, capturing the time-resolved evolution 
+                        of flow fields over the firing duration of rocket motors.
                       </p>
                       
                     <p class="mt-4 text-lg text-gray-700 leading-relaxed text-justify">
@@ -155,7 +154,7 @@
                           The framework's core is a robust <strong class="text-gray-900">Euler-Euler multiphase flow solver</strong> 
                           that solves separate mass, momentum, and energy equations for both the 
                           gas and particle phases. This approach allows for the high-fidelity 
-                          resolution of complex physics inside the rocket motor, including:
+                          resolution of complex physics inside the rocket motor with the following capabilities:
                         </p>
                       
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -163,13 +162,14 @@
                           <div class="bg-gray-50 rounded-xl p-6 border border-gray-200 hover:shadow-md hover:border-blue-200 transition-all duration-300">
                             <div class="flex items-center mb-3">
                               <div class="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" 
+                                  stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                               </div>
-                              <strong class="text-lg text-gray-900">High Speed Flows</strong>
+                              <strong class="text-lg text-gray-900">All Mach Number Flows</strong>
                             </div>
                             <p class="text-gray-700 leading-relaxed">
-                              Capable of simulating two-phase (gas-particle) and single-phase 
-                              flows through convergent-divergent (CD) nozzles (for flows with Mach number &lt; 3.5).
+                              Capable of simulating single-phase and two-phase (gas-particle)  
+                              flows through any geometry (CD Nozzles, Rocket Motor, etc.)
                             </p>
                           </div>
                       
@@ -181,7 +181,7 @@
                               <strong class="text-lg text-gray-900">Propellant Regression</strong>
                             </div>
                             <p class="text-gray-700 leading-relaxed">
-                              Accurately models the regressing propellant surface for common 
+                              Accurately models the propellant regression for common 
                               grain geometries such as center-perforated and end-burning configurations 
                               (future releases will handle arbitrary grain geometries).
                             </p>
@@ -192,12 +192,12 @@
                               <div class="p-2 bg-green-100 text-green-600 rounded-lg mr-3">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                               </div>
-                              <strong class="text-lg text-gray-900">Interphase Interactions</strong>
+                              <strong class="text-lg text-gray-900">Interphase Transport</strong>
                             </div>
                             <p class="text-gray-700 leading-relaxed">
-                              Momentum and energy exchange (drag and heat transfer) between 
-                              the gas and particle phases for all flow regimes that includes inertial, compressible 
-                              and rarefield flow regimes.
+                              Mass, momentum and energy exchange transport between 
+                              the gas and particle phases for all flow regimes (inertial, compressible 
+                              and rarefield flow regimes).
                             </p>
                           </div>
                       
@@ -206,10 +206,10 @@
                               <div class="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                               </div>
-                              <strong class="text-lg text-gray-900">Interparticle Interactions</strong>
+                              <strong class="text-lg text-gray-900">Interparticle + Particle-wall Interactions</strong>
                             </div>
                             <p class="text-gray-700 leading-relaxed">
-                              Models collisions and interactions between particles.
+                              Models collisions and interactions between particles and with the walls.
                             </p>
                           </div>
                       
@@ -228,7 +228,8 @@
                         </h3>
                       
                         <p class="text-lg text-gray-700 leading-relaxed text-left mb-8">
-                          To facilitate propulsion research, this suite includes a comprehensive set of integrated tools designed for direct propulsion analysis:
+                          To facilitate propulsion research, this suite includes a comprehensive set of integrated tools designed 
+                          for direct propulsion analysis:
                         </p>
                       
                         <ul class="space-y-10 text-lg text-left text-gray-700">
@@ -241,11 +242,23 @@
                               <svg class="w-5 h-5 ml-2 text-blue-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </a>
                             
-                            <p class="leading-relaxed">
-                              Includes multiphase inlet conditions defined by mass fraction for CD nozzle flows, and
-                              dynamic burning-rate mass flow inlets for propellant surfaces determined by the local pressure field—enabling
-                              steady solid rocket motor simulations.
-                            </p>
+                            <div class="text-gray-800">
+                              <p class="leading-relaxed mb-2 font-medium">
+                                Includes specialized boundary conditions relevant for propulsion simulations:
+                              </p>
+                            
+                              <ul class="list-disc pl-6 space-y-2 marker:text-blue-500">
+                                <li>
+                                  Mass flow rate inlet boundary conditions for the particle and gas phase
+                                </li>
+                                <li>
+                                  Burning rate based dynamic mass flow rate inlet condition for the propellant surface
+                                </li>
+                                <li>
+                                  Dynamic pressure outlet condition for all speed flows, etc.
+                                </li>
+                              </ul>
+                            </div>
                           </li>
                       
                           <li class="relative pl-4 border-l-2 border-transparent hover:border-gray-200 transition-colors duration-300">
@@ -256,22 +269,21 @@
                               <svg class="w-5 h-5 ml-2 text-blue-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </a>
                       
-                            <p class="mb-3">Dedicated tools designed to:</p>
+                            <div class="text-gray-800">
+                              <p class="mb-2 font-medium">Dedicated tools designed to:</p>
                             
-                            <ul class="space-y-3 pl-4 border-l-2 border-blue-100 ml-1">
-                              <li class="flex items-start">
-                                <span class="text-blue-500 mr-2 mt-1">›</span>
-                                <span>Initialize propellant grain geometry.</span>
-                              </li>
-                              <li class="flex items-start">
-                                <span class="text-blue-500 mr-2 mt-1">›</span>
-                                <span>Post-process results for key performance parameters (thrust, mass flow rate).</span>
-                              </li>
-                              <li class="flex items-start">
-                                <span class="text-blue-500 mr-2 mt-1">›</span>
-                                <span>Map solution fields based on volume for grid convergence studies and <i>a posteriori</i> error estimation.</span>
-                              </li>
-                            </ul>
+                              <ul class="list-disc pl-5 space-y-2 marker:text-blue-500">
+                                <li>
+                                  Initialize propellant volume fraction field based on exact propellant grain dimensions.
+                                </li>
+                                <li>
+                                  Post-process results for key performance parameters (thrust, mass flow rate, etc.).
+                                </li>
+                                <li>
+                                  Map solution fields based on volume for grid convergence studies and <i>a posteriori</i> error estimation.
+                                </li>
+                              </ul>
+                            </div>
                           </li>
                       
                           <li class="relative pl-4 border-l-2 border-transparent hover:border-gray-200 transition-colors duration-300">
