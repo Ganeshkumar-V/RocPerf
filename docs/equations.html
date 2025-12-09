@@ -105,8 +105,7 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main>
+    <div class="framework-section">
         <div class="container mx-auto px-4 py-4 bg-white">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Theoretical Framework</h2>
@@ -145,57 +144,156 @@
                 </div> 
             </div>
         </div>
+    </div>
 
+    <!-- Docs Container with Sidebar and Content -->
+    <div id="docs-container">
+        <!-- Left Sidebar (Fixed) -->
+        <aside class="docs-sidebar" id="main-sidebar">
+            <nav>
+                <ul class="nav-tree">
+                    <li class="nav-item open">
+                        <a href="#governing-equations" class="nav-link" onclick="toggleTree(this)">
+                            <span>Governing Equations</span>
+                            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                        <ul class="nav-sub">
+                            <li><a href="#mass-conservation" class="nav-sub-link">Mass Conservation</a></li>
+                            <li><a href="#momentum-conservation" class="nav-sub-link">Momentum Conservation</a></li>
+                            <li><a href="#energy-conservation" class="nav-sub-link">Energy Conservation</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="#closure-models" class="nav-link" onclick="toggleTree(this)">
+                            <span>Closure Models</span>
+                            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                        <ul class="nav-sub">
+                            <li><a href="#propellant-regression" class="nav-sub-link">Propellant Regression</a></li>
+                            <li><a href="#combustion-model" class="nav-sub-link">Combustion Model</a></li>
+                            <li><a href="#drag-models" class="nav-sub-link">Drag Models</a></li>
+                            <li><a href="#heat-transfer" class="nav-sub-link">Heat Transfer Models</a></li>
+                            <li><a href="#particle-interactions" class="nav-sub-link">Particle-particle Interactions</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                         <a href="#solution-algo" class="nav-link">Solution Algorithm</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area (Scrollable) -->
+        <main class="docs-content">
+    
         <!--Governing Equations-->
         <section id="governing-equations" class="py-10 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-7xl mx-auto">
-                    <p class="text-2xl font-bold text-gray-900 mb-4 text-center">Governing Equations</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
-                        The mass conservation equations of gas and particle phases are given by:
-                        $$
-                        \frac{\partial}{\partial t}(\alpha_k \rho_k) + \boldsymbol{\nabla} \cdot (\alpha_k \rho_k \boldsymbol{u}_k) = \dot{m}'''_{prop \rightarrow k} \tag{1}
-                        $$
-                        where $\alpha_k$, $\rho_k$, and $\boldsymbol{u}_k$ are the volume fraction, density, and velocity of the 
-                        $k^{\text{th}}$ phase, respectively. The source term due to mass transfer from propellant to $k^{\text{th}}$ 
-                        phase is denoted as $\dot{m}'''_{prop \rightarrow k}$. The momentum conservation equations for the gas phase 
-                        and particle phase are given by:
-                        $$
-                        \frac{\partial}{\partial t}(\alpha_g \rho_g \boldsymbol{u}_g) + \boldsymbol{\nabla} \cdot (\alpha_g \rho_g \boldsymbol{u}_g \boldsymbol{u}_g) = -\alpha_g \boldsymbol{\nabla} P + \boldsymbol{\nabla} \cdot (\alpha_g \boldsymbol{\tau}_g) 
-                        + \boldsymbol{M}_{prop \rightarrow g} + \boldsymbol{f}_{D,g}
-                        \tag{2}
-                        $$
-                        $$
-                        \frac{\partial}{\partial t}(\alpha_p \rho_p \boldsymbol{u}_p) + \boldsymbol{\nabla} \cdot (\alpha_p \rho_p \boldsymbol{u}_p \boldsymbol{u}_p) = -\alpha_p \boldsymbol{\nabla} P + \boldsymbol{\nabla} \cdot \boldsymbol{\tau}_p - \boldsymbol{\nabla} P_p + \boldsymbol{M}_{prop \rightarrow p} + \boldsymbol{f}_{D,p} \tag{3}
-                        $$
-                        where $P$ is the common pressure experienced by all the phases, $\boldsymbol{\tau}_k$ is the shear stress in the $k^{\text{th}}$ phase, 
-                        and $\boldsymbol{f}_{D,k}$ is the drag force experienced by the $k^{\text{th}}$ phase. The subscripts $g$ and $p$ refer to gas and particle phases, respectively. 
-                        Here $\boldsymbol{M}_{prop \rightarrow g}$ and $\boldsymbol{M}_{prop \rightarrow p}$ represent momentum source terms for the gas phase and particle phase, 
-                        respectively, due to regression. The shear stress in the gas and particle phases are modeled as follows:
-                        $$
-                        \boldsymbol{\tau}_g = \mu_g (\boldsymbol{\nabla} \boldsymbol{u}_g + \boldsymbol{\nabla} \boldsymbol{u}_g^T) - \frac{2}{3} \mu_g (\boldsymbol{\nabla} \cdot \boldsymbol{u}_g) \boldsymbol{I} \tag{4}
-                        $$
-                        $$
-                        \boldsymbol{\tau}_p = \mu_p (\boldsymbol{\nabla} \boldsymbol{u}_p + \boldsymbol{\nabla} \boldsymbol{u}_p^T) 
-                        + (\lambda_p - \frac{2}{3} \mu_p) (\boldsymbol{\nabla} \cdot \boldsymbol{u}_p) \boldsymbol{I} \tag{5}
-                        $$
-                        The energy conservation equations for the gas phase and particle phase considered are:
-                        $$
-                        \frac{\partial}{\partial t}(\alpha_g \rho_g h_g) + \boldsymbol{\nabla} \cdot (\alpha_g \rho_g \boldsymbol{u}_g h_g) = \boldsymbol{\nabla} \cdot \left( \frac{\alpha_g \lambda_g}{C_{p,g}} \boldsymbol{\nabla} h_g \right) + \alpha_g \frac{DP}{Dt} 
-                          + \alpha_g \boldsymbol{\tau}_g : \boldsymbol{\nabla} \boldsymbol{u}_g + \dot{q}'''_{p \rightarrow g} 
-                          + f_{D,g} \cdot (\boldsymbol{u}_p - \boldsymbol{u}_g) + H_{prop \rightarrow g} 
-                        \tag{6}
-                        $$
-                        $$
-                        \frac{\partial}{\partial t}(\alpha_p \rho_p h_p) + \boldsymbol{\nabla} \cdot (\alpha_p \rho_p \boldsymbol{u}_p h_p) = \alpha_p \frac{DP}{Dt} + 
-                        \alpha_p \boldsymbol{\tau}_p : \boldsymbol{\nabla} \boldsymbol{u}_p + H_{prop \rightarrow p} + \dot{q}'''_{g \rightarrow p} \tag{7}
-                        $$
-                        where $h$ is the enthalpy, $\lambda$ is the thermal conductivity, $C_p$ is the specific heat, 
-                        $H_{\text{prop}\to k}$ is the enthalpy source term for the $k^{\text{th}}$ phase due to regression, and 
-                        $q'''_{i\to j}$ is the rate of heat transfer from the $i^{\text{th}}$ phase to the $j^{\text{th}}$ phase. 
-                        Note that the source terms due to propellant regression are only relevant to the computational cells adjacent to the surface of the propellant bed. 
-                        For the remaining computational cells inside the rocket motor, only the source terms arising from particle–gas interactions are relevant.  
-                    </p>
+                    <p class="text-2xl font-bold text-gray-900 mb-10">Governing Equations</p>
+
+                    <!-- Mass Conservation Subsection -->
+                    <div id="mass-conservation" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Mass Conservation</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            The mass conservation equations of gas and particle phases are given by:
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            $$
+                            \frac{\partial}{\partial t}(\alpha_k \rho_k) + \boldsymbol{\nabla} \cdot (\alpha_k \rho_k \boldsymbol{u}_k) = \dot{m}'''_{prop \rightarrow k}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            where $\alpha_k$, $\rho_k$, and $\boldsymbol{u}_k$ are the volume fraction, density, and velocity of the 
+                            $k^{\text{th}}$ phase, respectively. The source term due to mass transfer from propellant to $k^{\text{th}}$ 
+                            phase is denoted as $\dot{m}'''_{prop \rightarrow k}$.
+                        </p>
+                    </div>
+
+                    <!-- Momentum Conservation Subsection -->
+                    <div id="momentum-conservation" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Momentum Conservation</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            The momentum conservation equations for the gas phase and particle phase are given by:
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-2">
+                            <strong>Gas Phase:</strong>
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            $$
+                            \frac{\partial}{\partial t}(\alpha_g \rho_g \boldsymbol{u}_g) + \boldsymbol{\nabla} \cdot (\alpha_g \rho_g \boldsymbol{u}_g \boldsymbol{u}_g) = -\alpha_g \boldsymbol{\nabla} P + \boldsymbol{\nabla} \cdot (\alpha_g \boldsymbol{\tau}_g) 
+                            + \boldsymbol{M}_{prop \rightarrow g} + \boldsymbol{f}_{D,g}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-2">
+                            <strong>Particle Phase:</strong>
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            $$
+                            \frac{\partial}{\partial t}(\alpha_p \rho_p \boldsymbol{u}_p) + \boldsymbol{\nabla} \cdot (\alpha_p \rho_p \boldsymbol{u}_p \boldsymbol{u}_p) = -\alpha_p \boldsymbol{\nabla} P + \boldsymbol{\nabla} \cdot \boldsymbol{\tau}_p - \boldsymbol{\nabla} P_p + \boldsymbol{M}_{prop \rightarrow p} + \boldsymbol{f}_{D,p}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            where $P$ is the common pressure experienced by all the phases, $\boldsymbol{\tau}_k$ is the shear stress in the $k^{\text{th}}$ phase, 
+                            and $\boldsymbol{f}_{D,k}$ is the drag force experienced by the $k^{\text{th}}$ phase. The subscripts $g$ and $p$ refer to gas and particle phases, respectively.
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            Here $\boldsymbol{M}_{prop \rightarrow g}$ and $\boldsymbol{M}_{prop \rightarrow p}$ represent momentum source terms for the gas phase and particle phase, 
+                            respectively, due to regression. The shear stress in the gas and particle phases are modeled as follows:
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            $$
+                            \boldsymbol{\tau}_g = \mu_g (\boldsymbol{\nabla} \boldsymbol{u}_g + \boldsymbol{\nabla} \boldsymbol{u}_g^T) - \frac{2}{3} \mu_g (\boldsymbol{\nabla} \cdot \boldsymbol{u}_g) \boldsymbol{I}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            $$
+                            \boldsymbol{\tau}_p = \mu_p (\boldsymbol{\nabla} \boldsymbol{u}_p + \boldsymbol{\nabla} \boldsymbol{u}_p^T) 
+                            + (\lambda_p - \frac{2}{3} \mu_p) (\boldsymbol{\nabla} \cdot \boldsymbol{u}_p) \boldsymbol{I}
+                            $$
+                        </p>
+                    </div>
+
+                    <!-- Energy Conservation Subsection -->
+                    <div id="energy-conservation" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Energy Conservation</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            The energy conservation equations for the gas phase and particle phase are:
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-2">
+                            <strong>Gas Phase:</strong>
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
+                            $$
+                            \frac{\partial}{\partial t}(\alpha_g \rho_g h_g) + \boldsymbol{\nabla} \cdot (\alpha_g \rho_g \boldsymbol{u}_g h_g) = \boldsymbol{\nabla} \cdot \left( \frac{\alpha_g \lambda_g}{C_{p,g}} \boldsymbol{\nabla} h_g \right) + \alpha_g \frac{DP}{Dt} 
+                            + \alpha_g \boldsymbol{\tau}_g : \boldsymbol{\nabla} \boldsymbol{u}_g + \dot{q}'''_{p \rightarrow g} 
+                            + f_{D,g} \cdot (\boldsymbol{u}_p - \boldsymbol{u}_g) + H_{prop \rightarrow g}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-2">
+                            <strong>Particle Phase:</strong>
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            $$
+                            \frac{\partial}{\partial t}(\alpha_p \rho_p h_p) + \boldsymbol{\nabla} \cdot (\alpha_p \rho_p \boldsymbol{u}_p h_p) = \alpha_p \frac{DP}{Dt} + 
+                            \alpha_p \boldsymbol{\tau}_p : \boldsymbol{\nabla} \boldsymbol{u}_p + H_{prop \rightarrow p} + \dot{q}'''_{g \rightarrow p}
+                            $$
+                        </p>
+                        <p class="text-base text-gray-700 leading-relaxed mb-6">
+                            where $h$ is the enthalpy, $\lambda$ is the thermal conductivity, $C_p$ is the specific heat, 
+                            $H_{\text{prop}\to k}$ is the enthalpy source term for the $k^{\text{th}}$ phase due to regression, and 
+                            $q'''_{i\to j}$ is the rate of heat transfer from the $i^{\text{th}}$ phase to the $j^{\text{th}}$ phase. 
+                        </p>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mt-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>Note:</strong> The source terms due to propellant regression are only relevant to the computational cells adjacent to the surface of the propellant bed. 
+                                For the remaining computational cells inside the rocket motor, only the source terms arising from particle–gas interactions are relevant.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -204,13 +302,20 @@
         <section id="closure-models" class="py-10 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-7xl mx-auto">
-                    <p class="text-2xl font-bold text-gray-900 mb-4 text-center">Closure Models</p>
-                    <p class="text-xl font-bold text-gray-900 leading-relaxed mb-4">1. Propellant Surface Regression Model</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">The propellant phase is stationary ($u_{prop}$ = 0). 
+                    <p class="text-2xl font-bold text-gray-900 mb-10">Closure Models</p>
+
+                    <!-- Propellant Regression Subsection -->
+                    <div id="propellant-regression" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Propellant Surface Regression Model</h3>
+                        <img src="images/PropellantBalance.jpg" alt="Propellant surface regression model illustration" class="mx-auto my-6 rounded-lg shadow-md w-full max-w-2xl">
+                        <figcaption class="text-center text-gray-600 text-sm italic mt-2 mb-6">
+                            Schematic of the propellant phase along with mass transfer through the burning surface
+                        </figcaption>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">The propellant phase is stationary ($u_{prop}$ = 0). 
                         Therefore, only mass and energy conservation equations are solved for the propellant phase.
                         The mass conservation equation for the propellant phase is written as:
                         $$
-                        \frac{d}{dt}(\alpha_{prop} \rho_{prop})  = -\dot{m}'''_{prop} \tag{8}
+                        \frac{d}{dt}(\alpha_{prop} \rho_{prop})  = -\dot{m}'''_{prop} 
                         $$
                         The propellant mass burning rate or propellant mass consumption rate is denoted as $\dot{m}'''_{prop}$, and 
                         is a function of propellant burning rate and the burning surface area. The burning rate of the propellant is
@@ -229,7 +334,7 @@
                         surface area is presented in detail $\underline{here}$. 
                         The energy conservation equation for the propellant phase is written as:
                         $$
-                        \frac{d}{dt}(\alpha_{prop} \rho_{prop} h_{prop})  = -\dot{m}'''_{prop}h_{prop} + \alpha_{prop}\frac{dP}{dt}\tag{8}
+                        \frac{d}{dt}(\alpha_{prop} \rho_{prop} h_{prop})  = -\dot{m}'''_{prop}h_{prop} + \alpha_{prop}\frac{dP}{dt}
                         $$
                         where, $h_{prop}$ is the enthalpy of the propellant phase. 
                         Expressing the energy equation in non-conservative form of the equation in terms of internal energy will lead 
@@ -238,9 +343,12 @@
                         to get converted to products at the interface and the rate of the reaction is dictated by the burning rate law 
                         which is one of the input to the model. Therefore, the energy equation for the propellant phase need not be solved. 
                     </p>
+                    </div>
                     
-                    <p class="text-xl font-bold text-gray-900 leading-relaxed mb-4">2. Combustion Model</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    <!-- Combustion Model Subsection -->
+                    <div id="combustion-model" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Combustion Model</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
                         The combustion of the propellant is modelled as a single step global reaction:
                         $$
                         \text{Propellant} \rightarrow \text{Gas phase} + \text{Particle phase} 
@@ -284,8 +392,12 @@
                         H_{prop \rightarrow p} = \dot{m}'''_{prop \rightarrow p}
                         $$
                     </p>
-                    <p class="text-xl font-bold text-gray-900 leading-relaxed mb-4">3. Drag Models</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    </div>
+
+                    <!-- Drag Models Subsection -->
+                    <div id="drag-models" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Drag Models</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
                         Various drag models are included in the library that provides a closure model for the drag coefficient between gas and particle
                         phase. The drag force is calculated from the drag coefficient as follows:
                         $$
@@ -304,8 +416,12 @@
                         </a>. Additionally, few standard drag models such as Schiller Naumann, Clift Gauvin, Gidaspow - Ergun WenYu and Henderson's drag model
                         are included with this library.   
                     </p>
-                    <p class="text-xl font-bold text-gray-900 leading-relaxed mb-4">4. Heat Transfer Models</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    </div>
+
+                    <!-- Heat Transfer Subsection -->
+                    <div id="heat-transfer" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Heat Transfer Models</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
                         The interphase heat transfer between gas and particle phases are modelled based on Ranz-Marshall correlation. To include rarefactional
                         effects, the correction proposed by Kavanau is used. The heat transfer between gas and particle phases is calculated as follows,
                         $$
@@ -314,8 +430,12 @@
                         where, $\text{Nu}$ is the Nusselt number calculated based on the heat transfer model. The library includes Kavanau Ranz Marshall correlation and 
                         Drake's heat transfer correlation. 
                     </p>
-                    <p class="text-xl font-bold text-gray-900 leading-relaxed mb-4">5. Particle-particle Interaction Models</p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    </div>
+
+                    <!-- Particle Interactions Subsection -->
+                    <div id="particle-interactions" class="mb-10 pt-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 text-blue-600">Particle-particle Interaction Models</h3>
+                        <p class="text-base text-gray-700 leading-relaxed mb-4">
                         The particle-particle interactions are modelled based on Kinetic Theory for Granular Flow  (KTGF). The solid pressure and solid shear stress 
                         is modelled based on the closure models which is a function of granular kinetic energy. A separate governing equation is solved for granular 
                         kinetic energy ($\Theta$) and is expressed as:
@@ -332,6 +452,7 @@
                         viscosity and solids pressure such as Gidaspow, Lun-Savage, Sinclair-Jackson and Carnahan-Starling are included in this library. The user can
                         choose one of the available models as per their requirements.  
                     </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -340,9 +461,8 @@
         <section id="solution-algo" class="py-10 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-7xl mx-auto">
-                    <p class="text-2xl font-bold text-gray-900 mb-4 text-center">Solution Algorithm</p>
-                    <img src="flowchart.png" alt="Flowchart illustrating solution algorithm" 
-                    style="max-width: 50%; height: auto; display: block; margin: 0 auto;"> 
+                    <p class="text-2xl font-bold text-gray-900 mb-10">Solution Algorithm</p>
+                    <img src="flowchart.png" alt="Flowchart illustrating solution algorithm" class="mx-auto my-6 rounded-lg shadow-md w-3/4">
                     <figcaption class="text-center text-gray-600 text-sm italic mt-2 mb-4">
                         Flowchart illustrating solution algorithm [Reprinted with permission from AIAA]
                     </figcaption>
@@ -351,6 +471,7 @@
         </section>
 
     </main>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -393,6 +514,75 @@
     </script>
     
     <script>
+        // Toggle sidebar menu items
+        function toggleTree(element) {
+            const listItem = element.parentElement;
+            listItem.classList.toggle('open');
+        }
+
+        // Smooth scrolling for sidebar links with offset for header
+        document.querySelectorAll('#main-sidebar a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    
+                    // Get the position of the target
+                    const targetPosition = target.getBoundingClientRect().top + window.scrollY;
+                    // Subtract header height (64px) and add some padding (20px)
+                    const offsetPosition = targetPosition - 64 - 20;
+                    
+                    // Scroll to the adjusted position
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Update active link as user scrolls
+        function updateActiveLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const links = document.querySelectorAll('#main-sidebar a[href^="#"]');
+            
+            // Remove active class from all links
+            links.forEach(link => link.classList.remove('active'));
+            
+            // Find the section currently in view
+            let currentSection = null;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                
+                // Check if section is near the top of viewport
+                if (rect.top < window.innerHeight * 0.3 && rect.bottom > 100) {
+                    currentSection = section;
+                }
+            });
+            
+            if (currentSection) {
+                const activeLink = document.querySelector(`#main-sidebar a[href="#${currentSection.id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                    
+                    // Expand parent item if it's a sub-link
+                    const parentLi = activeLink.closest('.nav-item');
+                    if (parentLi) {
+                        parentLi.classList.add('open');
+                    }
+                }
+            }
+        }
+
+        // Listen for scroll events on the window (body)
+        window.addEventListener('scroll', updateActiveLink);
+        
+        // Initial call to set active link
+        updateActiveLink();
+
         const menuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         menuButton.addEventListener('click', () => {

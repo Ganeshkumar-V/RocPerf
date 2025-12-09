@@ -896,3 +896,132 @@ pre.foam-code {
 .tutorial-page-wrapper .run-sim-guide .tip-box strong {
   color: #0d47a1; /* Dark blue text for emphasis */
 }
+/* style.css */
+
+/* --- GLOBAL LAYOUT --- */
+/* Allow the body to scroll normally */
+body {
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- SECTION 1: THEORETICAL FRAMEWORK (Full Width) --- */
+/* This ensures your existing framework section looks correct */
+.framework-section {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- SECTION 2: DOCS LAYOUT (Split View) --- */
+#docs-container {
+    display: flex;
+    width: 100%;
+    position: relative;
+    background-color: white;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    /* Constrain to match framework-section width */
+    max-width: 80rem; /* 7xl = 80rem */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- LEFT SIDEBAR (Sticky) --- */
+#docs-container .docs-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    
+    /* STICKY: Sticks to top after scrolling past framework */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 64px; /* Below header */
+    height: fit-content;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto; /* Scrollable internal menu only */
+    
+    background-color: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    padding: 1.5rem 1rem;
+    z-index: 20;
+    align-self: flex-start;
+}
+
+/* --- RIGHT CONTENT AREA (Normal flow) --- */
+#docs-container .docs-content {
+    flex-grow: 1;
+    padding: 2rem 1.5rem;
+    /* No fixed height or overflow - uses body scroll */
+    max-width: 100%;
+}
+
+/* Adjust nested container padding */
+#docs-container .docs-content .container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* --- NAVIGATION STYLES (Unchanged) --- */
+#docs-container .nav-tree { list-style: none; padding: 0; margin: 0; }
+#docs-container .nav-item { margin-bottom: 0.25rem; }
+
+#docs-container .nav-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.5rem 0.75rem; color: #4b5563; text-decoration: none;
+    border-radius: 0.375rem; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: background-color 0.2s;
+}
+
+#docs-container .nav-link:hover { background-color: #e5e7eb; color: #111827; }
+#docs-container .nav-link.active,
+#docs-container a.nav-sub-link.active { background-color: #eff6ff; color: #2563eb; font-weight: 600; }
+
+#docs-container .nav-sub {
+    list-style: none; padding-left: 1.25rem; margin-top: 0.25rem;
+    display: none; border-left: 1px solid #e5e7eb;
+}
+#docs-container .nav-sub-link {
+    display: block; padding: 0.4rem 0.75rem;
+    font-size: 0.9rem; color: #6b7280; text-decoration: none;
+}
+#docs-container .nav-sub-link:hover { color: #2563eb; }
+
+/* Chevron */
+#docs-container .chevron { transition: transform 0.2s; width: 16px; height: 16px; opacity: 0.5; }
+#docs-container .nav-item.open > .nav-link .chevron { transform: rotate(90deg); }
+#docs-container .nav-item.open > .nav-sub { display: block; }
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    #docs-container {
+        flex-direction: column;
+        height: auto;
+    }
+    #docs-container .docs-sidebar {
+        position: fixed; 
+        top: 64px; 
+        left: 0; 
+        height: auto;
+        max-height: calc(100vh - 64px);
+        transform: translateX(-100%); 
+        z-index: 50; 
+        width: 80%;
+        background: white; 
+        transition: transform 0.3s;
+        box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    }
+    #docs-container .docs-sidebar.show { 
+        transform: translateX(0); 
+    }
+    #docs-container .docs-content { 
+        margin-left: 0;
+        padding: 1.5rem;
+        height: auto;
+        overflow: visible;
+    }
+}

@@ -14,15 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type            gasParticleMultiphaseSystem;
+type    gasParticleMultiphaseSystem;
 
-phases          (gas particles);
+phases    (gas particles);
 
-particlePhase	particles;
+particlePhase    particles;
 
-gasPhase	gas;
+gasPhase    gas;
 
-propellantIndex -1;
+propellantIndex    -1;
 
 limitTemperature     false;  // To limit temperature wihtin limits (minTemp, maxTemp) change the following to true
 minTemp		           100;    // Minimum temperature limit
@@ -36,7 +36,7 @@ gas
     {
         d               2e-6;
     }
-    residualAlpha   1e-15;
+    residualAlpha    1e-15;
 }
 
 particles
@@ -138,7 +138,7 @@ turbulentDispersion
 ();
 
 // Minimum allowable pressure
-pMin            10;
+pMin    10;
 
 
 // ************************************************************************* //

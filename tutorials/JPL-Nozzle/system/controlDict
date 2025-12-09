@@ -14,11 +14,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rocketMotor;
+application    rocketMotor;
 
-startFrom       latestTime;
+startFrom    latestTime;
 
-startTime       0;
+startTime    0;
 
 stopAt          endTime;
 
@@ -48,7 +48,7 @@ adjustTimeStep  yes;
 
 maxCo           0.5;
 
-maxDeltaT       5e-6;
+maxDeltaT    0.000005;
 
 functions
 {
