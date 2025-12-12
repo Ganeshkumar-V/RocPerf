@@ -7,6 +7,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="preload" href="images/ALICE-Steady-Vorticity2.gif" as="image">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
@@ -415,7 +416,7 @@
                 <div class="acc-text-group">
                     <span class="acc-title">3. Solid Rocket Motor Internal Ballistic Simulation (ALICE motor) </span>
                     <span class="acc-desc">Statiscally steady internal ballistic simulation of solid rocket motor without propellant regression for ALICE propellants</span>
-                    <img src="images/ALICE-Steady-Vorticity2.gif" alt="Steady SRM Thumb" class="schematic-img">
+                    <img src="images/ALICE-Steady-Vorticity2.gif" alt="Steady SRM Thumb" class="schematic-img" loading="eager" fetchpriority="high">
                 </div>
             </button>
         
