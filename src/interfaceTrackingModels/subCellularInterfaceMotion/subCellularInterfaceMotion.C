@@ -70,7 +70,14 @@ Foam::interfaceTrackingModels::subCellularInterfaceMotion::subCellularInterfaceM
     (
       volScalarField
       (
-        IOobject("rb", pair_.phase1().mesh()),
+        IOobject
+        (
+          "rb", 
+          pair_.phase1().mesh().time().timeName(),
+          pair_.phase1().mesh(),
+          IOobject::NO_READ,
+          IOobject::AUTO_WRITE
+        ),
         pair_.phase1().mesh(),
         dimensionedScalar("", dimVelocity, 0.0)
       )

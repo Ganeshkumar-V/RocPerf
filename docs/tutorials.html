@@ -141,7 +141,7 @@
                     
                     <div class="row-split">
                         <div class="description">
-                            <h3>Problem Description</h3>
+                            <h3>Case Description</h3>
                             <p class="text-justify  ">
                                 This validation case simulates the inviscid transonic gas flow through a Convergent-Divergent (CD) nozzle (JPL nozzle). 
                                 The axisymmetric simulation aims to validate the solver's capability to simulate supersonic flows and capture shock waves in the flow field.
@@ -277,7 +277,7 @@
                     
                     <div class="row-split">
                         <div class="description">
-                            <h3>Problem Description</h3>
+                            <h3>Case Description</h3>
                             <p class="text-justify  ">
                                 This validation case simulates the inviscid transonic dusty gas flow in a Convergent-Divergent (CD) nozzle (JPL nozzle). 
                                 The axisymmetric simulation aims to validate the solver's capability to model gas-particle interactions.
@@ -413,10 +413,10 @@
         
             <button class="accordion">
                 <div class="acc-text-group">
-                    <span class="acc-title">3. Internal Flow of Solid Rocket Motor (Steady)</span>
-                    <span class="acc-desc">Steady-state internal ballistics simulation with mass injection from the burning surface.</span>
+                    <span class="acc-title">3. Solid Rocket Motor Internal Ballistic Simulation (ALICE motor) </span>
+                    <span class="acc-desc">Statiscally steady internal ballistic simulation of solid rocket motor without propellant regression for ALICE propellants</span>
+                    <img src="images/ALICE-Steady-Vorticity2.gif" alt="Steady SRM Thumb" class="schematic-img">
                 </div>
-                <img src="images/result_srm_steady_streamlines.png" alt="Steady SRM Thumb" class="acc-thumb">
             </button>
         
             <div class="panel">
@@ -424,14 +424,14 @@
                     
                     <div class="row-split">
                         <div class="description">
-                            <h3>Problem Description</h3>
+                            <h3>Case Description</h3>
+                            
                             <p>
-                                Simulation of the internal ballistics of a cylindrical grain solid rocket motor under steady-state conditions. 
-                                This case validates the solver's handling of mass injection from the burning surface and the subsequent flow development in the port area.
+                                
                             </p>
                         </div>
                         <div class="media-container">
-                            <img src="images/schematic_srm_steady.png" alt="SRM Geometry Schematic" class="schematic-img">
+                            <img src="images/IB-Steady-Mesh.gif" alt="SRM Geometry Schematic" class="schematic-img">
                             <p class="caption">Fig 3.1: Center-perforated grain geometry.</p>
                         </div>
                     </div>
@@ -465,8 +465,60 @@
         
             <button class="accordion">
                 <div class="acc-text-group">
-                    <span class="acc-title">4. Solid Rocket Motor with Propellant Regression</span>
-                    <span class="acc-desc">Advanced dynamic mesh simulation modeling grain regression and chamber pressure evolution.</span>
+                    <span class="acc-title">4. Solid Rocket Motor Internal Ballistic Simulation with propellant regression (ALICE motor)</span>
+                    <span class="acc-desc">Time resolved internal ballistic simulation of solid rocket motor with propellant regression for ALICE propellants.</span>
+                </div>
+                <img src="images/result_regression_time_evolution.gif" alt="Regression Thumb" class="acc-thumb">
+            </button>
+        
+            <div class="panel">
+                <div class="tutorial-content">
+                    
+                    <div class="row-split">
+                        <div class="description">
+                            <h3>Problem Description</h3>
+                            <p>
+                                This advanced case demonstrates the dynamic mesh capabilities of the framework. 
+                                It models the regression of the propellant grain over time using Saint-Robert's Law ($r = aP^n$). 
+                                The solver automatically updates the mesh topology at every time step.
+                            </p>
+                        </div>
+                        <div class="media-container">
+                            <img src="images/schematic_regression.png" alt="Regression Mesh Motion Schematic" class="schematic-img">
+                            <p class="caption">Fig 4.1: Moving mesh strategy.</p>
+                        </div>
+                    </div>
+        
+                    <h3>Case Setup & Parameters</h3>
+                    <table class="bc-table">
+                        <thead>
+                            <tr><th>Parameter</th><th>Setting / Model</th><th>Notes</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Mesh Motion</strong></td><td>Laplacian Displacement</td><td>Diffusivity: inverseDistance</td></tr>
+                            <tr><td><strong>Regression Model</strong></td><td>Saint-Robert's Law</td><td>$r = aP^n$</td></tr>
+                            <tr><td><strong>Time Step</strong></td><td>Adaptive</td><td>Max Co < 0.5</td></tr>
+                        </tbody>
+                    </table>
+        
+                    <div class="results-container">
+                        <h3>Results</h3>
+                        <p>Time evolution of the grain surface and chamber pressure.</p>
+                        <img src="images/result_regression_time_evolution.gif" alt="Regression Animation" class="result-img">
+                    </div>
+        
+                    <div class="github-link-container">
+                        <a href="https://github.com/Ganeshkumar-V/Propellant-Regression-Framework/tree/main/tutorials/SRM/regression" target="_blank" class="btn-github">
+                            View Case Files on GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <button class="accordion">
+                <div class="acc-text-group">
+                    <span class="acc-title">5. Internal Ballistic Simulation of NAWC motor no. 13</span>
+                    <span class="acc-desc">Time resolved internal ballistic simulation of Naval Air Warfare Center (NAWC) tactical motor no.13 with AP/HTPB propellant.</span>
                 </div>
                 <img src="images/result_regression_time_evolution.gif" alt="Regression Thumb" class="acc-thumb">
             </button>
