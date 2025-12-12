@@ -416,7 +416,12 @@
                 <div class="acc-text-group">
                     <span class="acc-title">3. Solid Rocket Motor Internal Ballistic Simulation (ALICE motor) </span>
                     <span class="acc-desc">Statiscally steady internal ballistic simulation of solid rocket motor without propellant regression for ALICE propellants</span>
-                    <img src="images/ALICE-Steady-Vorticity2.gif" alt="Steady SRM Thumb" class="schematic-img" loading="eager" fetchpriority="high">
+                    <div class="gif-wrapper relative inline-block">
+                        <div class="gif-placeholder absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-600">
+                            Loading...
+                        </div>
+                        <img src="images/ALICE-Steady-Vorticity2.gif" alt="Steady SRM Thumb" class="schematic-img gif-image" loading="eager" fetchpriority="high" style="display:none;">
+                    </div>
                 </div>
             </button>
         
@@ -613,6 +618,27 @@
             mobileMenu.classList.toggle('hidden');
         });
     </script>
+
+        <script>
+            // Show GIF and hide placeholder when image finishes loading
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.gif-image').forEach(function(img){
+                    function showImage(){
+                        const wrapper = img.closest('.gif-wrapper');
+                        if(!wrapper) return;
+                        const placeholder = wrapper.querySelector('.gif-placeholder');
+                        if(placeholder) placeholder.style.display = 'none';
+                        img.style.display = '';
+                    }
+
+                    img.addEventListener('load', showImage);
+                    // If already cached
+                    if(img.complete && img.naturalWidth !== 0){
+                        showImage();
+                    }
+                });
+            });
+        </script>
 
 <script>
     var acc = document.getElementsByClassName("accordion");

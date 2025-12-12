@@ -8,6 +8,7 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="preload" href="images/Integrated-video.gif" as="image">
 </head>
 <body class="bg-gray-100 text-gray-800">
 
@@ -112,15 +113,22 @@
                     
                     <!-- ADDED: GIF Placeholder -->
                     <div class="mb-12">
-                        <figure>
-                            <img src="images/Integrated-video.gif"  
-                                 alt="Simulation GIF placeholder"
-                                 class="w-full h-auto rounded-lg shadow-md mx-auto object-cover"
-                                 onerror="this.src='https://placehold.co/800x450/111827/4d5b7c?text=Error+Loading+GIF'">
-                            <figcaption class="mt-4 text-sm text-gray-600">
-                                Center-perforated Rocket Motor Firing Simulation
-                            </figcaption>
-                        </figure>
+                      <figure>
+                        <div class="hero-gif-wrapper relative w-full rounded-lg overflow-hidden shadow-md" style="min-height:360px;">
+                          <div class="hero-gif-placeholder absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-600 text-lg">
+                            Loading simulation preview...
+                          </div>
+                          <img src="images/Integrated-video.gif"  
+                             alt="Simulation GIF placeholder"
+                             class="hero-gif-image w-full h-auto object-cover"
+                             loading="eager" fetchpriority="high"
+                             style="display:none;"
+                             onerror="this.src='https://placehold.co/800x450/111827/4d5b7c?text=Error+Loading+GIF'">
+                        </div>
+                        <figcaption class="mt-4 text-sm text-gray-600">
+                          Center-perforated Rocket Motor Firing Simulation
+                        </figcaption>
+                      </figure>
                     </div>
 
                     <h2 class="text-3xl font-bold text-gray-900 mb-6">
@@ -680,6 +688,27 @@ $ cd Propellant-Regression-Framework</code></pre>
             });
         });
     </script>
+      <script>
+        // Reveal hero GIF when it's loaded (handles cached images)
+        document.addEventListener('DOMContentLoaded', function(){
+          const img = document.querySelector('.hero-gif-image');
+          if(!img) return;
+
+          function reveal(){
+            const wrapper = img.closest('.hero-gif-wrapper');
+            if(!wrapper) return;
+            const placeholder = wrapper.querySelector('.hero-gif-placeholder');
+            if(placeholder) placeholder.style.display = 'none';
+            img.style.display = '';
+          }
+
+          img.addEventListener('load', reveal);
+          // cached
+          if(img.complete && img.naturalWidth !== 0){
+            reveal();
+          }
+        });
+      </script>
     <script>
         function copyToClipboard(button) {
             // Get the text from the 'data-copy-text' attribute
