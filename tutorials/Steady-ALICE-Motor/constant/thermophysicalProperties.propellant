@@ -10,47 +10,45 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      thermophysicalProperties.propellant;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rocketMotor;
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
 
-startFrom       latestTime;
+mixture
+{
+    method 	NR;
+    specie
+    {
+        molWeight       108;
+    }
+    equationOfState
+    {
+        rho        1480;
+    }
+    thermodynamics
+    {
+        Hf          0;
+        Cp          4195;
+        Tref        0;
+        Href        0;
+    }
+    transport
+    {
+        mu          2.8291e-4;
+        Pr          2.289;
+    }
+}
 
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1;
-
-deltaT          1e-7;
-
-//writeControl    timeStep;
-writeControl    adjustableRunTime;
-
-writeInterval   1e-3;
-//writeInterval   1;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  12;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   12;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.8;
-transCo         0.8;
-
-maxDeltaT       2e-5;
 
 // ************************************************************************* //

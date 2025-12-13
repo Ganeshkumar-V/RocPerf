@@ -28,8 +28,8 @@ solvers
 
     p_rgh
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          GAMG;
+	smoother	DILU;
         preconditioner
         {
             preconditioner  DILU;
@@ -58,11 +58,8 @@ solvers
 
     "(h|e).*"
     {
-        //solver          GAMG;
-        solver          smoothSolver;
-	// solver		PBiCG;
-	// preconditioner  diagonal;
-        smoother        GaussSeidel;
+	solver		PBiCG;
+	preconditioner  diagonal;
         tolerance       1e-6;
         relTol          0;
         minIter         1;
@@ -99,7 +96,7 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    3;
+    nOuterCorrectors    5;
     nCorrectors         5;
     nNonOrthogonalCorrectors 0;
     nEnergyCorrectors   3;
@@ -110,17 +107,17 @@ PIMPLE
     {
         h.gas
         {
-                tolerance  1e-4;
+                tolerance  1e-5;
                 relTol      0;
         }
         h.particles
         {
-                tolerance  1e-3;
+                tolerance  1e-5;
                 relTol      0;
         }
         p_rgh
         {
-                tolerance   1e-4;
+                tolerance   1e-8;
                 relTol      0;
         }
      }
@@ -132,9 +129,8 @@ relaxationFactors
 {
     equations
     {
-        h.gas            0.7;
-	h.particles      0.7;
-	p_rgh		 0.5;
+        "h.*"            0.7;
+	p_rgh		 0.7;
     }
 }
 

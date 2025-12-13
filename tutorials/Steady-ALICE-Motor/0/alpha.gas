@@ -12,24 +12,19 @@ FoamFile
     arch        "LSB;label=32;scalar=64";
     class       volScalarField;
     location    "0";
-    object      alpha.particles;
+    object      alpha.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1;
 
 boundaryField
 {
     inlet
     {
-        type            massLoadingFraction;
-        name            particles;
-        gasPhase        gas;
-        particlePhase   particles;
-        massFraction    constant 0.3;
-        value           uniform 0;
+        type            zeroGradient;
     }
     "(outlet|outlet-front|outlet-top)"
     {
@@ -47,7 +42,7 @@ boundaryField
     {
         type            wedge;
     }
-    "(PCWall|nozzleWall|nozzleAtmWall|atmWall)"
+    "(PCWall|nozzleWall|nozzleAtmWall|atmWall|block2I1)"
     {
       $Wall;
     }}

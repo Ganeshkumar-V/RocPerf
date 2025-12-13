@@ -1,0 +1,184 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2112                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=64;scalar=64";
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      faceZones;
+    meta
+    {
+        names           12 ( block1block2I10MasterZone block1block2I10SlaveZone block1block2I10CutFaceZone PCWallblock3I11MasterZone PCWallblock3I11SlaveZone PCWallblock3I11CutFaceZone block3I2block4I12MasterZone block3I2block4I12SlaveZone block3I2block4I12CutFaceZone block4I2block5I13MasterZone block4I2block5I13SlaveZone block4I2block5I13CutFaceZone );
+    }
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+12
+(block1block2I10MasterZone
+{
+    type            faceZone;
+    faceLabels      List<label> 
+15
+(
+2872
+2874
+2876
+2878
+2880
+2882
+2884
+2886
+2888
+2890
+2892
+2894
+2896
+2898
+2899
+)
+;
+    flipMap         List<bool> 15{0};
+}
+block1block2I10SlaveZone
+{
+    type            faceZone;
+    faceLabels      List<label> 10(23025 23026 23027 23028 23029 23030 23031 23032 23033 23034);
+    flipMap         List<bool> 10{0};
+}
+block1block2I10CutFaceZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+PCWallblock3I11MasterZone
+{
+    type            faceZone;
+    faceLabels      List<label> 
+25
+(
+7752
+7754
+7756
+7758
+7760
+7762
+7764
+7766
+7768
+7770
+7772
+7774
+7776
+7778
+7780
+23035
+23036
+23037
+23038
+23039
+23040
+23041
+23042
+23043
+23044
+)
+;
+    flipMap         List<bool> 25{0};
+}
+PCWallblock3I11SlaveZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+PCWallblock3I11CutFaceZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+block3I2block4I12MasterZone
+{
+    type            faceZone;
+    faceLabels      List<label> 
+15
+(
+8342
+8344
+8346
+8348
+8350
+8352
+8354
+8356
+8358
+8360
+8362
+8364
+8366
+8368
+8369
+)
+;
+    flipMap         List<bool> 15{0};
+}
+block3I2block4I12SlaveZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+block3I2block4I12CutFaceZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+block4I2block5I13MasterZone
+{
+    type            faceZone;
+    faceLabels      List<label> 
+15
+(
+9125
+9127
+9129
+9131
+9133
+9135
+9137
+9139
+9141
+9143
+9145
+9147
+9149
+9151
+9152
+)
+;
+    flipMap         List<bool> 15{0};
+}
+block4I2block5I13SlaveZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+block4I2block5I13CutFaceZone
+{
+    type            faceZone;
+    faceLabels      List<label> 0();
+    flipMap         List<bool> 0();
+}
+)
+
+// ************************************************************************* //

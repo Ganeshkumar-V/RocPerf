@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2112                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=64;scalar=64";
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+8
+(
+    front
+    {
+        type            wedge;
+        inGroups        1(wedge);
+        nFaces          5755;
+        startFace       11168;
+    }
+    back
+    {
+        type            wedge;
+        inGroups        1(wedge);
+        nFaces          5755;
+        startFace       16923;
+    }
+    Wall
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          115;
+        startFace       22678;
+    }
+    nozzleWall
+    {
+        type            wall;
+        inGroups        1(wall);
+        nFaces          117;
+        startFace       22793;
+    }
+    inlet
+    {
+        type            patch;
+        nFaces          100;
+        startFace       22910;
+    }
+    outlet
+    {
+        type            patch;
+        nFaces          15;
+        startFace       23010;
+    }
+    block2I1
+    {
+        type            default;
+        nFaces          10;
+        startFace       23025;
+        faces           ( ( 6 10 7 6 ) );
+    }
+    PCWall
+    {
+        type            default;
+        nFaces          10;
+        startFace       23035;
+        faces           ( ( 9 11 8 9 ) );
+    }
+)
+
+// ************************************************************************* //

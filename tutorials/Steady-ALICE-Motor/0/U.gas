@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  v2112                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -9,36 +9,51 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    arch        "LSB;label=32;scalar=64";
-    class       volScalarField;
-    location    "0";
-    object      alpha.particles;
+    class       volVectorField;
+    object      U.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
     inlet
     {
-        type            massLoadingFraction;
-        name            particles;
-        gasPhase        gas;
-        particlePhase   particles;
-        massFraction    constant 0.3;
-        value           uniform 0;
+        type            gasFlowRateInletVelocity;
+	      phase		        gas;
+	      // rhoPropellant	   1570;
+	      // a		1.3;
+	      // n		0.5;
+	      // X		0.2806;
+	      rho		thermo:rho.gas;
+	      massFlowRate    table
+	      (
+	          (0  0.001)
+	          (0.01  0.0001)
+	      );
+        value           uniform (0 0 0);
     }
+
     "(outlet|outlet-front|outlet-top)"
     {
-        type            zeroGradient;
+        type               zeroGradient;
+	gamma		   1.3255;
+	psi		   thermo:psi.gas;
+	phi	    	   phi.gas;
+	rho		   thermo:rho.gas;
+	lInf	   	   10;
+	fieldInf	   (0 0 0);
+	value		   uniform (0 0 0);
     }
+
     Wall
     {
-        type            zeroGradient;
+        type               noSlip;
     }
+
     front
     {
         type            wedge;
@@ -47,10 +62,12 @@ boundaryField
     {
         type            wedge;
     }
-    "(PCWall|nozzleWall|nozzleAtmWall|atmWall)"
+    "(PCWall|nozzleWall|nozzleAtmWall|atmWall|block2I1)"
     {
-      $Wall;
-    }}
+        $Wall;
+    }
+
+  }
 
 
 // ************************************************************************* //

@@ -45,7 +45,7 @@ Foam::massLoadingFractionFvPatchScalarField::massLoadingFractionFvPatchScalarFie
     Name_("name"),
     gas_("gasPhase"),
     particle_("particlePhase"),
-    phi_(0.0)
+    Xp_()
 {}
 
 
@@ -59,9 +59,19 @@ Foam::massLoadingFractionFvPatchScalarField::massLoadingFractionFvPatchScalarFie
     fixedValueFvPatchScalarField(p, iF, dict, false),
     Name_(dict.get<word>("name")),
     gas_(dict.get<word>("gasPhase")),
-    particle_(dict.get<word>("particlePhase")),
-    phi_(dict.get<scalar>("massFraction"))
+    particle_(dict.get<word>("particlePhase"))
 {
+    if (dict.found("massFraction"))
+    {
+        Xp_ = Function1<scalar>::New("massFraction", dict, &db());
+    }
+    else
+    {
+        FatalIOErrorInFunction(dict)
+            << "Please supply 'massFraction' as a function of time" << nl
+            << exit(FatalIOError);
+    }
+
     if (dict.found("value"))
     {
         fvPatchField<scalar>::operator=
@@ -88,7 +98,7 @@ Foam::massLoadingFractionFvPatchScalarField::massLoadingFractionFvPatchScalarFie
     Name_(ptf.Name_),
     gas_(ptf.gas_),
     particle_(ptf.particle_),
-    phi_(ptf.phi_)
+    Xp_(ptf.Xp_.clone())
 {}
 
 
@@ -101,7 +111,7 @@ Foam::massLoadingFractionFvPatchScalarField::massLoadingFractionFvPatchScalarFie
     Name_(tppsf.Name_),
     gas_(tppsf.gas_),
     particle_(tppsf.particle_),
-    phi_(tppsf.phi_)
+    Xp_(tppsf.Xp_.clone())
 {}
 
 
@@ -115,7 +125,7 @@ Foam::massLoadingFractionFvPatchScalarField::massLoadingFractionFvPatchScalarFie
     Name_(tppsf.Name_),
     gas_(tppsf.gas_),
     particle_(tppsf.particle_),
-    phi_(tppsf.phi_)
+    Xp_(tppsf.Xp_.clone())
 {}
 
 
@@ -148,6 +158,9 @@ void Foam::massLoadingFractionFvPatchScalarField::updateCoeffs
         return;
     }
 
+    // Time
+    const scalar t = db().time().timeOutputValue();
+
     // Gas phase density
     const fvPatchScalarField& rhog
     (
@@ -179,16 +192,17 @@ void Foam::massLoadingFractionFvPatchScalarField::updateCoeffs
             IOobject::groupName("phi", particle_)
         )
     );
-	// Info << "rhopphip: " << rhop*phip << endl;
-	// Info << "rhogphig: " << rhog*phig << endl;
-	// Info << "sumphig: " << sum(phig) << endl;
-	// Info << "sumphip: " << sum(phip) << endl;
-	//Info << "phi_: " << phi_ << endl;
-	//Info << "Ratio: " << rhop*phip/(rhog*phig) << exit(FatalError);
+	
+    // // Adjusted to avoid FPE
+    const scalar Xp(Xp_->value(t));
     if (sum(phig) != 0)
-        operator==(1/(1 + ((1 - phi_)/max(phi_, 1e-15))*rhop*phip/(rhog*phig)));
+        operator==(1/(1 + ((1 - Xp)/max(Xp, 1e-15))*rhop*phip/(rhog*phig)));
     else
         operator==(this->patchInternalField());
+    
+    // No-FPE implementation - But seems not working! - Fix it in next issue
+    // const scalar Xp(Xp_->value(t));
+    // operator==(1 - 1/(1 + (Xp/(1 - Xp))*rhog*phig/(rhop*max(phip, VSMALL))));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
@@ -199,7 +213,7 @@ void Foam::massLoadingFractionFvPatchScalarField::write(Ostream& os) const
     os.writeEntry("name", Name_);
     os.writeEntry("gasPhase", gas_);
     os.writeEntry("particlePhase", particle_);
-    os.writeEntry("massFraction", phi_);
+    Xp_->writeData(os);
     writeEntry("value", os);
 }
 

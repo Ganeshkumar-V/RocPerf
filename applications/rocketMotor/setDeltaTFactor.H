@@ -17,11 +17,11 @@ if (adjustTimeStep)
 
         if (transition == 0)
         {
-            maxCo = pimple.dict().get<scalar>("maxCo");
+            maxCo = runTime.controlDict().get<scalar>("maxCo");
         }
         else
         {
-            maxCo = pimple.dict().get<scalar>("transCo");
+            maxCo = runTime.controlDict().get<scalar>("transCo");
         }
     }
     scalar maxDeltaTFact = maxCo/(CoNum + SMALL);

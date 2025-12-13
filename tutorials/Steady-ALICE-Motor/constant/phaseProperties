@@ -14,23 +14,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type            regressionMultiphaseSystem;
+type            gasParticleMultiphaseSystem;
 
-phases          (gas particles propellant);
+phases          (gas particles);
 
 particlePhase	particles;
 
 gasPhase	gas;
 
-propellantIndex 2; // index of the propellant phase in the phases list
+propellantIndex -1; // no propellant phase
 
-Xp      0; // mass fraction of the particle phase entering the domain due to regression
-
-Tad     2850; // Temperature of the gas and particles entering the domain due to regression
-
-Tset		2000; // dummy temperature set in the propellant cells
-
-propellantRho       1700; // density of the propellant phase
+limitTemperature     true;  // To limit temperature wihtin limits (minTemp, maxTemp) change the following to true
+minTemp		           300;    // Minimum temperature limit
+maxTemp		           2500;   // Maximum temperature limit
 
 gas
 {
@@ -38,7 +34,7 @@ gas
     diameterModel   constant;
     constantCoeffs
     {
-        d               2e-6;
+        d               80e-9;
     }
     residualAlpha   1e-15;
 }
@@ -49,7 +45,7 @@ particles
     diameterModel   constant;
     constantCoeffs
     {
-        d               2e-6;
+        d               80e-9;
     }
     residualAlpha   1e-15;
 }
@@ -60,32 +56,22 @@ propellant
     diameterModel   constant;
     constantCoeffs
     {
-        d           2e-6;
+        d           80e-9;
     }
     residualAlpha   1e-15;
 }
 
 interfaceTracking
-(
-  (particles in gas)
-  {
-    type            subCellularInterfaceMotion;
-    propellant      propellant;
-    n               0.461;
-    a               0.222;
-    f               1.0;
-    Pmin	          10;
-  }
-);
+();
 
 sharpInterfaceHeatTransfer
 (
   (particles in gas)
   {
-    type            RanzMarshall;
-    residualAlpha   1e-15;
+    type            KavanauRanzMarshall;
+    residualAlpha   1e-6;
     cutoff          1e-15;
-    gammaR          397;
+    gammaR          3697.6;
   }
 );
 
@@ -93,10 +79,10 @@ drag
 (
   (particles in gas)
   {
-    type            SchillerNaumann;
+    type            Loth;
     residualRe      1e-15;
-    R	 	    327;
-    gamma	    1.21;
+    R	 	    2854.4;
+    gamma	    1.2954;
     swarmCorrection
     {
     	type        none;

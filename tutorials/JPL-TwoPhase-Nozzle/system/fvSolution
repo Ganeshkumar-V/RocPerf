@@ -105,8 +105,6 @@ PIMPLE
     nEnergyCorrectors   3;
     stopIfNotConverged  false;
     transonic		yes;
-    transCo		0.1;
-    maxCo		0.5;
     partialElimination  false;
     residualControl
     {

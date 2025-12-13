@@ -18,7 +18,7 @@ FoamFile
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1e-15;
 
 boundaryField
 {
@@ -28,8 +28,15 @@ boundaryField
         name            particles;
         gasPhase        gas;
         particlePhase   particles;
-        massFraction    constant 0.3;
-        value           uniform 0;
+        massFraction    table
+	      (
+	          (0.0003  0)
+	          (0.0004  0.1)
+	          (0.0005  0.2)
+	          (0.0006  0.4)
+	          (0.0007  0.7194)
+	      );
+	      value		        uniform 1e-15;
     }
     "(outlet|outlet-front|outlet-top)"
     {
@@ -47,7 +54,7 @@ boundaryField
     {
         type            wedge;
     }
-    "(PCWall|nozzleWall|nozzleAtmWall|atmWall)"
+    "(PCWall|nozzleWall|nozzleAtmWall|atmWall|block2I1)"
     {
       $Wall;
     }}

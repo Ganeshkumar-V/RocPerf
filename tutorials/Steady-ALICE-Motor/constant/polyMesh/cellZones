@@ -9,48 +9,13 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    arch        "LSB;label=32;scalar=64";
-    class       volScalarField;
-    location    "0";
-    object      alpha.particles;
+    arch        "LSB;label=64;scalar=64";
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      cellZones;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    inlet
-    {
-        type            massLoadingFraction;
-        name            particles;
-        gasPhase        gas;
-        particlePhase   particles;
-        massFraction    constant 0.3;
-        value           uniform 0;
-    }
-    "(outlet|outlet-front|outlet-top)"
-    {
-        type            zeroGradient;
-    }
-    Wall
-    {
-        type            zeroGradient;
-    }
-    front
-    {
-        type            wedge;
-    }
-    back
-    {
-        type            wedge;
-    }
-    "(PCWall|nozzleWall|nozzleAtmWall|atmWall)"
-    {
-      $Wall;
-    }}
-
+0()
 
 // ************************************************************************* //

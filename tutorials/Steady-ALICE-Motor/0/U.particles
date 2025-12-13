@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  v2112                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -9,36 +9,42 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    arch        "LSB;label=32;scalar=64";
-    class       volScalarField;
-    location    "0";
-    object      alpha.particles;
+    class       volVectorField;
+    object      U.particles;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
     inlet
     {
-        type            massLoadingFraction;
-        name            particles;
-        gasPhase        gas;
-        particlePhase   particles;
-        massFraction    constant 0.3;
-        value           uniform 0;
+        type               noSlip;
     }
+    inlet
+    {
+        type               sameAs;
+	field		   U.gas;
+        a		   0.00992;
+	n		   0.405;
+        value              uniform (0 0 0);
+    }
+
     "(outlet|outlet-front|outlet-top)"
     {
-        type            zeroGradient;
+        type               inletOutlet;
+	inletValue	   uniform (0 0 0);
+	value		   uniform (0 0 0);
     }
+
     Wall
     {
-        type            zeroGradient;
+        type               noSlip;
     }
+
     front
     {
         type            wedge;
@@ -47,10 +53,11 @@ boundaryField
     {
         type            wedge;
     }
-    "(PCWall|nozzleWall|nozzleAtmWall|atmWall)"
+    "(PCWall|nozzleWall|nozzleAtmWall|atmWall|block2I1)"
     {
-      $Wall;
-    }}
+          $Wall;
+    }
+}
 
 
 // ************************************************************************* //

@@ -88,6 +88,7 @@ SourceFiles
 #define sameAsFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -114,7 +115,7 @@ class massLoadingFractionFvPatchScalarField
         word particle_;
 
         //- mass fraction
-        scalar phi_;
+        autoPtr<Function1<scalar>> Xp_;
 
 
 public:

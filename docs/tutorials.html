@@ -316,6 +316,8 @@
                             <tr><td><strong>$\boldsymbol{u}_p$</strong></td><td>sameAs - gas phase ($\boldsymbol{u}_g = \boldsymbol{u}_p$)</td><td>outletInlet (no reverse flow)</td><td>Slip</td><td>cyclic</td></tr>
                             <tr><td><strong>$T_g$</strong></td><td>Total Temperature (555 K)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
                             <tr><td><strong>$T_p$</strong></td><td>sameAs - gas phase ($T_p = T_g$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_p$</strong></td><td>massLoadingFraction ($X_p = 0.3$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
                         </tbody>
                     </table>
                     <h3>Numerical Schemes</h3>
@@ -415,7 +417,7 @@
             <button class="accordion">
                 <div class="acc-text-group">
                     <span class="acc-title">3. Solid Rocket Motor Internal Ballistic Simulation (ALICE motor) </span>
-                    <span class="acc-desc">Statiscally steady internal ballistic simulation of solid rocket motor without propellant regression for ALICE propellants</span>
+                    <span class="acc-desc">Statistically steady internal ballistic simulation of solid rocket motor without propellant regression for ALICE propellants</span>
                     <div class="gif-wrapper relative inline-block">
                         <div class="gif-placeholder absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-600">
                             Loading...
@@ -431,38 +433,121 @@
                     <div class="row-split">
                         <div class="description">
                             <h3>Case Description</h3>
-                            
                             <p>
-                                
+                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a 
+                                lab-scale rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. Rather than 
+                                modeling the transient process of propellant grain regression, this simulation focuses on a 
+                                statistically steady instant during the firing duration of the rocket motor. By treating the 
+                                grain geometry as fixed and the burning surface as a mass injection boundary, the simulation  
+                                provides a high-fidelity 'snapshot' of the flow dynamics inside the rocket motor. The 2D axisymmetric 
+                                mesh and the boundaries of the lab-scale rocket motor is shown in figure 3.1.    
                             </p>
                         </div>
                         <div class="media-container">
                             <img src="images/IB-Steady-Mesh.gif" alt="SRM Geometry Schematic" class="schematic-img">
-                            <p class="caption">Fig 3.1: Center-perforated grain geometry.</p>
+                            <p class="caption">Fig 3.1: 2D Axisymmetric Mesh and Boundary Conditions of the Lab-Scale Rocket Motor. </p>
+                        </div>
+                        <div class="description">
+                            <p>
+                                For the steady-state simulation of the ALICE propellant lab-scale motor, the gas phase mass flow rate at the 
+                                propellant grain interface is set to $0.1 \text{ g/s}$ with an associated particle mass fraction of $0.7194$.
+                                The adibatic flame temperature of ALICE propellant with equivalence ratio of $0.943$ is $2270 \text{ K}$ (when combustion
+                                efficiency is $70 \%$). The gas and particle phase are assumed to enter the simulation domain with same velocities 
+                                and at a temperature of $2270 \text{ K}$. The particle diameter is taken to be $80 \text{ nm}$. 
+                                Thermophysical properties for both phases are assumed constant, with the gas phase defined by a specific heat 
+                                of $x \text{ J/kg}\cdot\text{K}$, a molecular weight of $x \text{ g/mol}$, a dynamic viscosity of $x$, and a 
+                                thermal conductivity of $y$. The particle phase density is $x \text{ kg/m}^3$ and the 
+                                specific heat is $x \text{ kJ/kg}\cdot\text{K}$. Interphase momentum exchange is governed by the Loth drag model 
+                                to account for compressibility and rarefaction effects, while the gas-particle thermal exchange is modeled via 
+                                the Ranz-Marshall correlation, modified by Kavanau’s correction factor to incorporate rarefactional influences.
+                            </p>
                         </div>
                     </div>
         
-                    <h3>Case Setup & Boundary Conditions</h3>
+                    <h3>Boundary Conditions</h3>
                     <table class="bc-table">
                         <thead>
-                            <tr><th>Patch Name</th><th>Condition Type</th><th>Details</th></tr>
+                            <tr><th>Variables</th><th>Inlet/Propellant surface</th><th>Outlet</th><th>Wall</th><th>Wedge faces</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>Burning Surface</strong></td><td>FlowRateInletVelocity</td><td>Mass flux based on burn rate</td></tr>
-                            <tr><td><strong>Head End</strong></td><td>No-Slip Wall</td><td>Adiabatic</td></tr>
-                            <tr><td><strong>Nozzle Exit</strong></td><td>Supersonic Outlet</td><td>ZeroGradient</td></tr>
+                            <tr><td><strong>$P$</strong></td><td>fixedFluxPressure </td><td>zeroGradient</td><td>fixedFluxPressure</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\boldsymbol{u}_g$</strong></td><td>gasFlowRateInletVelocity ($0.1 \text{ g/s}$)</td><td>zeroGradient</td><td>noSlip</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\boldsymbol{u}_p$</strong></td><td>sameAs - gas phase ($\boldsymbol{u}_g = \boldsymbol{u}_p$)</td><td>outletInlet (no reverse flow)</td><td>noSlip</td><td>cyclic</td></tr>
+                            <tr><td><strong>$T_g$</strong></td><td> $2270 \text{ K}$</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$T_p$</strong></td><td>sameAs - gas phase ($T_p = T_g$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_p$</strong></td><td>massLoadingFraction ($X_p = 0.7194$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
                         </tbody>
                     </table>
-        
-                    <div class="results-container">
-                        <h3>Results</h3>
-                        <p>Streamlines and pressure contours inside the combustion chamber.</p>
-                        <img src="images/result_srm_steady_streamlines.png" alt="SRM Streamlines Result" class="result-img">
+                    <h3>Numerical Schemes</h3>
+                    The convective terms are discretized using  second order NVD scheme - <code>limitedLinear 1.0</code>. The generalized <code>Crank Nicolson</code> scheme is used for time integration for second order 
+                    accuracy and stability.
+                    
+                    <div class="run-sim-guide">
+  
+                        <h3>Instructions to Run the Simulation</h3>
+                      
+                        <div class="sim-step">
+                          <span class="step-label">1. Environment Setup</span>
+                          <p>Before beginning, ensure you source the native <strong>OpenFOAM-v2112 bashrc</strong> file and the <strong>RocPerf-CFD bashrc</strong> file.</p>
+                        </div>
+                      
+                        <div class="sim-step">
+                          <span class="step-label">2. Prepare the Case</span>
+                          <p>The case file is available in the directory <code>tutorials/JPL-TwoPhase-Nozzle</code>. Copy the case file to your working directory. To mesh the geometry, run:</p>
+                          <code class="cmd-block">blockMesh</code>
+                        </div>
+                      
+                        <div class="sim-step">
+                          <span class="step-label">3. Run the Simulation</span>
+                          <p>You can run the simulation in either serial or parallel mode:</p>
+                          
+                          <p><strong>Option A: Serial Run</strong></p>
+                          <code class="cmd-block">rocketMotor</code>
+                      
+                          <p><strong>Option B: Parallel Run</strong></p>
+                          <p>First, perform mesh decomposition, then run with MPI (default is 8 processors):</p>
+                          <code class="cmd-block">decomposePar<br>mpirun -np 8 rocketMotor -parallel</br></code>
+                          <p><small><em>Note: The number of processors can be adjusted in the <code>decomposeParDict</code> file.</em></small></p>
+                        </div>
+                      
+                        <div class="tip-box">
+                          <div>
+                            <strong>💡 Tip for Higher Resolution:</strong><br>
+                            To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
+                          </div>
+                        </div>
+                      
+                      </div>  
+                    <div>
+                        <h3 class="font-bold">References</h3>
+                        <ul class="list-disc list-outside space-y-3 pl-5 leading-relaxed">
+                            <li>
+                                Moukalled, F., Darwish, M., and Sekar, B., “A Pressure-Based Algorithm for Multi-Phase Flow at All Speeds,” 
+                                Journal of Computational Physics, Vol. 190, No. 2, 2003, pp. 550–571. doi:<a href="https://doi.org/10.1016/S0021-9991(03)00297-3" target="_blank" rel="noopener noreferrer" class="text-blue-700 underline">
+                                10.1016/S0021-9991(03)00297-3</a>.
+                            </li>
+                            <li>
+                                Back, L., and Cuffel, R., “Detection of Oblique Shocks in a Conical Nozzle with a Circular-Arc Throat,” 
+                                AIAA Journal, Vol. 4, No. 12, 1966, pp. 2219–2221. doi:<a href="https://doi.org/10.2514/3.3881" target="_blank" rel="noopener noreferrer" class="text-blue-700 underline">
+                                10.2514/3.3881</a>.
+                            </li>
+                            <li>
+                                Chang, H. T., Hourng, L. W., Chien, L. C., and Chien, L. C., “Application of Flux-Vector-Splitting Scheme 
+                                to a Dilute Gas-Particle JPL Nozzle Flow,” International Journal for Numerical Methods in Fluids, 
+                                Vol. 22, No. 10, 1996, pp. 921–935. doi:<a href="https://doi.org/10.1002/(SICI)1097-0363(19960530)22" target="_blank" rel="noopener noreferrer" class="text-blue-700 underline">
+                                10.1002/(SICI)1097-0363(19960530)22</a>.
+                            </li>
+                        </ul>
                     </div>
         
                     <div class="github-link-container">
-                        <a href="https://github.com/Ganeshkumar-V/Propellant-Regression-Framework/tree/main/tutorials/SRM/steady" target="_blank" class="btn-github">
-                            View Case Files on GitHub
+                        <a href="https://github.com/Ganeshkumar-V/Propellant-Regression-Framework/tree/master/tutorials/JPL-TwoPhase-Nozzle" 
+                        target="_blank" class="inline-flex items-center bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg">
+                            <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                            </svg>
+                            <span>View Case Files on GitHub</span>
                         </a>
                     </div>
                 </div>

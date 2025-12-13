@@ -16,7 +16,7 @@ FoamFile
 
 application     rocketMotor;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -26,11 +26,9 @@ endTime         1;
 
 deltaT          1e-7;
 
-//writeControl    timeStep;
 writeControl    adjustableRunTime;
 
-writeInterval   1e-3;
-//writeInterval   1;
+writeInterval   1e-4;
 
 purgeWrite      0;
 
@@ -48,9 +46,8 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           0.8;
-transCo         0.8;
+maxCo           0.5;
+transCo           0.5;
 
-maxDeltaT       2e-5;
-
+maxDeltaT       1e-6;
 // ************************************************************************* //
