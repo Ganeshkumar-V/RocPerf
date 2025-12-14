@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>Theory - RocPerf-CFD</title>
+    <title>Theory - RocPerf</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
@@ -35,7 +35,7 @@
     <header class="shadow-md sticky top-0 z-40">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <!-- Project Title -->
-            <a href="index.html" class="text-2xl font-bold text-white">RocPerf-CFD</a>
+            <a href="index.html" class="text-2xl font-bold text-white">RocPerf</a>
 
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
@@ -53,7 +53,7 @@
                     </a>
                     
                     <div class="absolute -left-4 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                        <a href="index.html#about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">About RocPerf-CFD</a>
+                        <a href="index.html#about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">About RocPerf</a>
                         <a href="index.html#install" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Quick Installation</a>
                         <a href="index.html#contact" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Contact</a>
                         <a href="index.html#citation" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Citation</a>
@@ -334,8 +334,8 @@
                         where, $r_b$ is the burning rate of the propellant with the units of cm/s and $s_b$ is the burning surface area
                         per unit volume of the propellant. The burning rate pressure exponent is denoted as $n$ and the pre-exponential factor 
                         is denoted as $a$. The pressure is substituted in the units of MPa in the burning rate expression. The pre-exponential
-                        factor and the burning rate pressure exponent are one of the inputs to the program. The algorithm to find the burning 
-                        surface area is presented in detail $\underline{here}$. 
+                        factor and the burning rate pressure exponent are one of the inputs to the program. The available surface regression 
+                        model can be found <a href="program.html#interface-tracking-model" class="text-blue-700 underline">here</a>.
                         The energy conservation equation for the propellant phase is written as:
                         $$
                         \frac{d}{dt}(\alpha_{prop} \rho_{prop} h_{prop})  = -\dot{m}'''_{prop}h_{prop} + \alpha_{prop}\frac{dP}{dt}
@@ -417,8 +417,9 @@
                         to inertial effects. The drag model that includes all these effects is developed by 
                         <a href="https://doi.org/10.2514/1.J060153" target="_blank" rel="noopener noreferrer" class="text-blue-700 underline">
                             Eric Loth et. al (2021)
-                        </a>. Additionally, few standard drag models such as Schiller Naumann, Clift Gauvin, Gidaspow - Ergun WenYu and Henderson's drag model
-                        are included with this library.   
+                        </a>. For detailed information about the available heat transfer models and their implementation, refer to <a href="program.html#particle-drag-model" class="text-blue-700 underline">Particle Drag Models</a>. 
+                        <!-- Additionally, few standard drag models such as Schiller Naumann, Clift Gauvin, Gidaspow - Ergun WenYu and Henderson's drag model
+                        are included with this library.    -->
                     </p>
                     </div>
 
@@ -431,8 +432,10 @@
                         $$
                         Q_{HT, p} = -Q_{HT, g} = 6\frac{\alpha_p\lambda_g}{d_p^2}\text{Nu}(T_g - T_p)
                         $$ 
-                        where, $\text{Nu}$ is the Nusselt number calculated based on the heat transfer model. The library includes Kavanau Ranz Marshall correlation and 
-                        Drake's heat transfer correlation. 
+                        where, $\text{Nu}$ is the Nusselt number calculated based on the heat transfer model. 
+                        For detailed information about the available heat transfer models and their implementation, refer to <a href="program.html#heat-transfer-model" class="text-blue-700 underline">Heat Transfer Models</a>. 
+                        <!-- The library includes Kavanau Ranz Marshall correlation and 
+                        Drake's heat transfer correlation.  -->
                     </p>
                     </div>
 
@@ -451,10 +454,45 @@
                         The first term in the right-hand side of the equation denotes the production of fluctuating energy for the particle phase through stress; 
                         the second term is the diffusion of the granular energy; the third term is the dissipation of the fluctuating energy due to inelastic collisions 
                         between particles and the fourth term is the production or destruction of energy due to drag force fluctuations exerted on the particle. 
-                        The library consists of two granular pressure model: 1. Lun's model and 2. Syamlal-Rogers-OBrien model. The viscosity and conductivity models 
-                        proposed by Hrenya-Sinclair, Gidaspow and Syamlal are included in the library. The radial distribution functions required to compute the 
-                        viscosity and solids pressure such as Gidaspow, Lun-Savage, Sinclair-Jackson and Carnahan-Starling are included in this library. The user can
-                        choose one of the available models as per their requirements.  
+                        The following are the available KTGF models that are mirrored from OpenFOAM-v2112. 
+                        <table class="ktgf-model-table">
+                            <thead>
+                              <tr>
+                                <th style="width: 25%;">Category</th>
+                                <th style="width: 35%;">Available Models</th>
+                                <th style="width: 40%;">Key References</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><strong>Granular Pressure</strong></td>
+                                <td>Lun's Model, Syamlal-Rogers-O'Brien</td>
+                                <td class="ref-list">
+                                  • <a href="https://doi.org/10.1017/S0022112084000586" target="_blank">Lun et al. (1984)</a><br>
+                                  • <a href="https://mfix.netl.doe.gov/doc/mfix-archive/mfix_legacy_manual/Theory.pdf" target="_blank">Syamlal et al. (1993)</a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><strong>Viscosity &amp; Conductivity</strong></td>
+                                <td>Hrenya-Sinclair, Gidaspow, Syamlal</td>
+                                <td class="ref-list">
+                                  • <a href="https://doi.org/10.1002/aic.690430402" target="_blank">Hrenya &amp; Sinclair (1997)</a><br>
+                                  • <a href="https://books.google.com/books?id=DTAFZ9rIfQwC" target="_blank">Gidaspow (1994)</a><br>
+                                  • <a href="https://mfix.netl.doe.gov/doc/mfix-archive/mfix_legacy_manual/Theory.pdf" target="_blank">Syamlal et al. (1993)</a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><strong>Radial Distribution</strong></td>
+                                <td>Gidaspow, Lun-Savage, Sinclair-Jackson, Carnahan-Starling</td>
+                                <td class="ref-list">
+                                  • <a href="https://books.google.com/books?id=DTAFZ9rIfQwC" target="_blank">Gidaspow (1994)</a><br>
+                                  • <a href="https://doi.org/10.1007/BF01182538" target="_blank">Lun &amp; Savage (1986)</a><br>
+                                  • <a href=" https://doi.org/10.1002/aic.690350908" target="_blank">Sinclair &amp; Jackson (1989)</a><br>
+                                  • <a href="https://doi.org/10.1063/1.1672048" target="_blank">Carnahan &amp; Starling (1969)</a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                     </p>
                     </div>
                 </div>

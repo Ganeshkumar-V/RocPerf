@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>Theory - RocPerf-CFD</title>
+    <title>Theory - RocPerf</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
@@ -57,7 +57,7 @@
     <header class="shadow-md sticky top-0 z-40">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <!-- Project Title -->
-            <a href="index.html" class="text-2xl font-bold text-white">RocPerf-CFD</a>
+            <a href="index.html" class="text-2xl font-bold text-white">RocPerf</a>
 
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
@@ -75,7 +75,7 @@
                     </a>
                     
                     <div class="absolute -left-4 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                        <a href="index.html#about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">About RocPerf-CFD</a>
+                        <a href="index.html#about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">About RocPerf</a>
                         <a href="index.html#install" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Quick Installation</a>
                         <a href="index.html#contact" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Contact</a>
                         <a href="index.html#citation" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Citation</a>
@@ -131,7 +131,7 @@
         <section id="libraries" class="bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-7xl mx-auto">
-                    <p class="text-2xl font-bold text-gray-900 mb-4">Libraries and Solver</p>
+                    <p class="text-2xl font-bold text-gray-900 mb-4">Libraries and Models</p>
                     <p class="text-lg text-gray-700 leading-relaxed mb-4">The main application is <strong>rocketMotor</strong>
                         which depends on several libraries including the base libraries of OpenFOAM-v2112. The solver is developed
                         based on the native OpenFOAM v2112 solver "reactingMultiphaseEulerFoam". This framework has an additional
@@ -153,37 +153,231 @@
                     } 
                   } }%%
                 flowchart LR
+
+                %% Left column: base libraries and multiphase group
                 subgraph OpenFOAM_Base_Group [<strong>OpenFOAM v2112 Base Libraries</strong>]
-                    List["libfiniteVolume.so <br/> libOpenFOAM.so <br/> libfluidThermophysicalModels.so <br/> libreactionThermophysicalModels.so <br/> libcompressibleTransportModels.so <br/> libspecie.so <br/> libcompressibleTurbulenceModels.so <br/> libturbulenceModels.so <br/> libthermophysicalProperties.so <br/> libcombustionModels.so <br/> libmeshTools.so <br/> libsurfMesh.so <br/> libdynamicMesh.so"]
+                    List["libfiniteVolume.so<br/>libOpenFOAM.so<br/>libfluidThermophysicalModels.so<br/>libreactionThermophysicalModels.so<br/>libcompressibleTransportModels.so<br/>libspecie.so<br/>libcompressibleTurbulenceModels.so<br/>libturbulenceModels.so<br/>libthermophysicalProperties.so<br/>libcombustionModels.so<br/>libmeshTools.so<br/>libsurfMesh.so<br/>libdynamicMesh.so"]
                     style List text-align:left
                 end
 
                 subgraph OpenFOAM_Multiphase_Group [<strong>OpenFOAM v2112 Multiphase Library</strong>]
                     B["libreactingMultiphaseSystem.so"]
                 end
-                
-                subgraph Software_Group [<strong>RocPerf-CFD Framework</strong>]
-                    C["<strong>source library</strong> <br/> (libpropellantRegressionPhaseSystem.so)"]
-                    D["<div style='padding: 10px 50px'><span style='font-size:30px; font-weight:bold'>rocketMotor</span> <br/> (Main Application)</div>"]
+
+                %% Right column: RocPerf framework containing source library and main app
+                subgraph RocPerf_Group [<strong>RocPerf Framework</strong>]
+                    direction TB
+                    C["<strong>Updates to the base library</strong><br/>(libpropellantRegressionPhaseSystem.so)<br/>Particle Drag Models<br/>Heat Transfer Models<br/>Interface Tracking Model"]
+                    D["<div style='padding: 8px 40px'><span style='font-size:28px; font-weight:bold'>rocketMotor</span><br/>(Main Application)</div>"]
                 end
 
-                List -->|Mesh, Thermophysical and <br/> Transport properties| C
-                B -->|Phase Models, Phase System <br/> and Phase Pair| C
-                C -->|Multiphase Systems <br/> Interphase Models| D
+                %% Connections
+                List -->|Mesh, Thermophysical &amp;<br/>Transport properties| C
+                B -->|Phase Models, Phase System &amp;<br/>Phase Pair| C
+                C -->|Multiphase Systems &amp;<br/>Interphase Models| D
 
-                %% Subgraphs (Outer Boxes)
+                %% Styling - keep the original color scheme
                 style OpenFOAM_Base_Group fill:#fff8e1,stroke:#ffa000,stroke-width:2px;
                 style OpenFOAM_Multiphase_Group fill:#fff8e1,stroke:#ffa000,stroke-width:2px;
-                
-                        
-                %% Nodes (Inner Boxes)
                 style List fill:#ffe0b2,stroke:#ffa000,stroke-width:1px;
                 style B fill:#ffe0b2,stroke:#ffa000,stroke-width:1px;
                 style C fill:#eceff1,stroke:#78909c,stroke-width:2px;
                 style D fill:#c5e1a5,stroke:#7cb342,stroke-width:4px;
-                        
+
                 %% Link Styling 
                 linkStyle 0,1,2 stroke:#000000,stroke-width:2px,fill:none,color:#000000
+            </div>
+
+            <div class="cfd-drag-section-wrapper" id="particle-drag-model">
+                <details class="drag-model-accordion">
+                    <summary class="accordion-header">
+                        <span class="header-text">Particle Drag Model</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </summary>
+            
+                    <div class="accordion-content">
+                        <div class="model-flex-row">
+                            <div class="code-card">
+                                <div class="code-header">particleDragModel.C</div>
+                                <pre class="code-content"><code><span class="cpp-type">Foam::tmp</span>&lt;<span class="cpp-type">Foam::volScalarField</span>&gt; <span class="cpp-func">Foam::particleDragModel::Ki</span>() <span class="cpp-key">const</span>
+{
+    <span class="cpp-key">const</span> <span class="cpp-type">tmp</span>&lt;<span class="cpp-type">volScalarField</span>&gt; <span class="cpp-var">tmu</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">continuous</span>().<span class="cpp-func">nu</span>()*<span class="cpp-var">pair_</span>.<span class="cpp-func">continuous</span>().<span class="cpp-func">rho</span>());
+    <span class="cpp-type">volScalarField</span> <span class="cpp-var">muc</span>(<span class="cpp-var">tmu</span>());
+
+    <span class="cpp-key">if</span> (<span class="cpp-func">isInviscid</span>())
+    {
+        <span class="cpp-key">const</span> <span class="cpp-type">tmp</span>&lt;<span class="cpp-type">volScalarField</span>&gt; <span class="cpp-var">tmc</span>(<span class="cpp-func">mu</span>());
+        <span class="cpp-var">muc</span> = <span class="cpp-var">tmc</span>();
+    }
+    <span class="cpp-key">return</span>
+        <span class="cpp-num">0.75</span>*<span class="cpp-var">factor_</span>
+        *<span class="cpp-func">CdRe</span>()
+        *<span class="cpp-var">muc</span>
+        /<span class="cpp-func">sqr</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">dispersed</span>().<span class="cpp-func">d</span>());
+}</code></pre>
+                            </div>
+            
+                            <div class="details-card">
+                                <div class="info-item note">
+                                    <ul class="list-disc list-outside space-y-3 pl-5 leading-relaxed">
+                                        <li> 
+                                            <code>particleDragModel</code> is the base class which is derived by all the drag 
+                                            models for the drag coefficient implementation.
+                                        </li>
+                                        <li>
+                                            The drag parameter $\delta$ is implemented within the function <code>K()</code> present in 
+                                            <code>particleDragModel.C</code>.
+                                        </li>
+                                        $$
+                                            \delta = \frac{3}{4} \frac{\alpha_p\mu_c}{d_p^2} C_D Re_p
+                                        $$
+                                        <li>
+                                            The dimensionless drag coefficient term, $C_D Re_p$, is computed 
+                                            according to the specific drag model selected at runtime 
+                                            (from <code>phaseProperties</code> file).
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="table-section">
+                            <h3 class="table-title">Available Drag Models</h3>
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Drag Models</th>
+                                        <th>Source File</th>
+                                        <th>Model/References</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr><td><strong>Schiller-Naumann</strong></td><td><code>SchillerNaumann.C</code></td><td>$C_D  = \frac{24}{Re_p}\left(1.0 + 0.15(Re_p)^{0.687}\right)$</td></tr>
+                                    <tr><td><strong>Clift-Gauvin</strong></td><td><code>CliftGauvin.C</code></td><td>$C_D  = \frac{24}{Re_p}\left(1.0 + 0.15(Re_p)^{0.687} + \frac{0.42}{1 + 42500/Re_p^{1.16}}\right)$</td></tr>
+                                    <tr><td><strong>Clift-Gauvin (for inviscid simulations)</strong></td><td><code>CliftGauvinInviscid.C</code></td><td>Same as Clift-Gauvin drag model with viscosity of gas phase computed based on sutherland correlation.</td></tr>
+                                    <tr><td><strong>Gidaspow Ergun Wen-Yu</strong></td><td><code>GidaspowErgunWenYu.C</code></td><td><a class="text-blue-600 hover:underline" href="https://www.google.co.in/books/edition/Multiphase_Flow_and_Fluidization/DTAFZ9rIfQwC?hl=en&gbpv=0" target="_blank" rel="noopener noreferrer">Gidaspow (1994)</a></td></tr>
+                                    <tr><td><strong>Henderson</strong></td><td><code>Henderson.C</code></td><td><a class="text-blue-600 hover:underline" href="https://doi.org/10.2514/3.61409" target="_blank" rel="noopener noreferrer">Henderson (1976)</a></td></tr>
+                                    <tr><td><strong>Eric Loth</strong></td><td><code>Loth.C</code></td><td><a class="text-blue-600 hover:underline" href="https://doi.org/10.2514/1.J060153" target="_blank" rel="noopener noreferrer">Loth et. al., (2008)</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="cfd-drag-section-wrapper" id="heat-transfer-model">
+                <details class="drag-model-accordion">
+                    <summary class="accordion-header">
+                        <span class="header-text">Heat Transfer Model</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </summary>
+            
+                    <div class="accordion-content">
+                        <div class="model-flex-row">
+                            <div class="code-card">
+                                <div class="code-header">RanzMarshall.C</div>
+                                <pre class="code-content"><code><span class="cpp-type">Foam::tmp</span>&lt;<span class="cpp-type">Foam::volScalarField</span>&gt; 
+<span class="cpp-func">Foam::sharpInterfaceHeatTransferModels::RanzMarshall::K</span>(<span class="cpp-key">const</span> <span class="cpp-type">scalar</span> <span class="cpp-var">residualAlpha</span>) <span class="cpp-key">const</span>
+{
+    <span class="cpp-type">volScalarField</span> <span class="cpp-var">Nu</span>(<span class="cpp-func">scalar</span>(<span class="cpp-num">2</span>) + <span class="cpp-num">0.6</span>*<span class="cpp-func">sqrt</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">Re</span>())*<span class="cpp-func">cbrt</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">Pr</span>()));
+
+    <span class="cpp-key">return</span>
+        <span class="cpp-num">6.0</span>
+        *<span class="cpp-var">pair_</span>.<span class="cpp-func">dispersed</span>()*<span class="cpp-func">pos</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">dispersed</span>() - <span class="cpp-var">cutoff</span>)
+        *<span class="cpp-var">pair_</span>.<span class="cpp-func">continuous</span>().<span class="cpp-func">kappa</span>()
+        *<span class="cpp-var">Nu</span>
+        /<span class="cpp-func">sqr</span>(<span class="cpp-var">pair_</span>.<span class="cpp-func">dispersed</span>().<span class="cpp-func">d</span>());
+}</code></pre>
+                            </div>
+            
+                            <div class="details-card">
+                                <div class="info-item note">
+                                    The heat transfer coefficients are calculated within their respective <code>sharpInterfaceHeatTransferModel</code> 
+                                    source files. The implementation of the heat transfer parameter based on the 
+                                    Ranz-Marshall correlation is shown in the code snippet.
+                                    $$
+                                        \mathcal{H} = 6 \text{Nu} \frac{\alpha_p\lambda_c}{d_p^2}
+                                    $$
+                                    According to RanzMarshall correlation, the Nusselt number is computed as, 
+                                    $$
+                                        \text{Nu} = 2.0 + 0.6(Re_p)^{1/2}(Pr)^{1/3}
+                                    $$
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="table-section">
+                            <h3 class="table-title">Available Heat Transfer Models</h3>
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Model Name</th>
+                                        <th>Source File</th>
+                                        <th>Nusselt Relation ($Nu$)/References</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Ranz-Marshall</strong></td>
+                                        <td><code>RanzMarshall.C</code></td>
+                                        <td>$\text{Nu} = 2 + 0.6 Re_p^{1/2} Pr^{1/3}$</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Kavanau-Ranz-Marshall</strong></td>
+                                        <td><code>KavanauRanzMarshall.C</code></td>
+                                        <td>$\text{Nu} = \frac{\text{Nu}_0}{1 + 3.42\frac{M_p}{Re_pPr}\text{Nu}_0}$ where, $\text{Nu}_0$ is the Nusselt number computed from Ranz-Marshall correlation</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>DrakeInviscid (for inviscid simulations)</strong></td>
+                                        <td><code>DrakeInviscid.C</code></td>
+                                        <td>$\text{Nu} = 2 + 0.459 Re_p^{0.55} Pr^{0.33}$ and viscosity of the gas phase is computed from sutherland correlation.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="cfd-drag-section-wrapper" id="interface-tracking-model">
+                <details class="drag-model-accordion">
+                    <summary class="accordion-header">
+                        <span class="header-text">Interface Tracking Model</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </summary>
+            
+                    <div class="accordion-content">
+                        <div style="margin-bottom: 25px;">
+                            <h3 style="color: #0056b3; margin-bottom: 8px; font-size: 1.1em;">subCellularInterfaceMotion</h3>
+                            <p style="margin: 0;">
+                                A simple surface regression algorithm based on the empirical burning rate law, employing sub-grid level 
+                                interface tracking. The algorithm identifies the interface location from the propellant phase volume fraction 
+                                field and calculates rate of regression based on the local pressure (burning rate law) at each time step. 
+                                The routine is invoked by the <code>regress()</code> function in the <code>subCellularInterfaceMotion.C</code>.
+                                This process updates the propellant phase volume fraction and the mass burning rate, which are subsequently integrated 
+                                as source terms into the governing equations. For further implementation details, users are encouraged to 
+                                review the source code directly.
+                            </p>
+                        </div>
+            
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            
+                        <div>
+                            <h3 style="color: #0056b3; margin-bottom: 8px; font-size: 1.1em;">entrainedInterfaceMotion</h3>
+                            <p style="margin: 0;">
+                                This model facilitates the tracking of dual interfaces, making it particularly effective for simulations where particles 
+                                are retained within the propellant bed. Extending the logic of the <code>subCellularInterfaceMotion</code> algorithm, 
+                                this approach independently tracks both the flame surface and the bed surface. The flame surface regresses according 
+                                to the burning rate law, while the regression of the bed surface is governed by the fraction of particles retained from the flame.
+                                Consequently, this model requires the mass retention fraction as an additional input parameter. The algorithm is 
+                                implemented within the <code>regress()</code> function in the <code>entrainedInterfaceMotion.C</code>. For further
+                                information on particle retainment model, the users are referred to 
+                                <a class="text-blue-600 hover:underline" href="https://doi.org/10.2514/1.B39541" target="_blank" rel="noopener noreferrer">Venukumar et. al., (2025)</a> 
+                            </p>
+                        </div>
+                    </div>
+                </details>
             </div>
         </section>
 

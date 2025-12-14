@@ -1,4 +1,4 @@
-# RocPerf-CFD
+# RocPerf
 
 ![Simulation GIF](docs/media.gif)
 
