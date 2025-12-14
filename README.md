@@ -1,28 +1,11 @@
-# RocPerf
+# RocPerf: An OpenFOAM-based software tool for internal ballistic simulations of solid rocket motors.
 
 ![Simulation GIF](docs/media.gif)
 
-This repository provides an OpenFOAM-based collection of applications, libraries, and utilities for simulating rocket motor firing, specializing in propellant regression and particle-laden flows. The framework's core is the `rocketMotor` application, which handles propellant surface regression (for center-perforated and end-burning configurations) and various models for gas-particle interactions.  The suite also supports CD nozzle simulations (both single-phase gas and two-phase gas-particle flows). To accelerate research, this project includes a set of tutorial and validation cases, specialized boundary conditions for propulsion, and utilities for performance-parameter extraction and to setup initial-conditions.
+RocPerf is a comprehensive, OpenFOAM-based framework for simulating high-speed, gas-particle multiphase flows, capturing the time-resolved evolution of flow fields over the firing duration of rocket motors.
 
-This codebase is provided as source and is intended to be built and run on Linux platforms with a compatible C++ toolchain and OpenFOAM build tools.
-
-## ✨ Key Features
-
-* **Core Application:** `applications/rocketMotor/rocketMotor` - a
-  specialised application for rocket motor simulations, propellant
-  regression handling, and CD nozzle flows.
-
-* **Multiphase Models:** Includes various models to capture gas-particle inerphase momentum and energy interactions.
-
-* **Custom Libraries:** Specialized boundary conditions (`fvPatchFields`)
-  tailored for the propulsion community.
-
-* **Post-Processing:** A collection of `functionObjects` (thrust,
-  vorticity/stream function, etc.) and utilities for performance
-  parameter extraction and field initialization.
-
-* **Build System:** Platform-specific makefiles (`platforms/`) and per-target
-  Makefiles (`Make/`) for `wmake`.
+It's a powerful tool for researchers and engineers to study complex internal ballistics, capture propellant regression, and accurately evaluate key performance metrics like thrust, C*, and Isp.
+Check out more information in the github pages: https://ganeshkumar-v.github.io/RocPerf/ 
 
 ## 🛠️ Requirements
 
@@ -43,8 +26,8 @@ Note: This repository contains a `bashrc` at the project root to set up the envi
 2. Clone the repository in your preferred parent directory (e.g., your projects folder), then enter the project directory:
 
     ```sh
-    git clone https://github.com/Ganeshkumar-V/Propellant-Regression-Framework.git
-    cd Propellant-Regression-Framework
+    git clone https://github.com/Ganeshkumar-V/RocPerf.git
+    cd RocPerf
     ```
 
 3.  Source the project `bashrc` to set up the environment:
@@ -61,45 +44,6 @@ Note: This repository contains a `bashrc` at the project root to set up the envi
 
     (Optional: run `./Allwclean` before building to clean the project.)
 
-## 🎓 Tutorial Case Files
-
-This repository provides four sample cases under `tutorials/`:
-
-* CD nozzle — gas phase
-
-* CD nozzle — gas + particle two-phase
-
-* Rocket motor — with propellant regression
-
-* Rocket motor — without propellant regression
-
-Each tutorial folder contains a `README` with case-specific setup, runtime, and post-processing instructions.
-
-## 🗺️ Repository Layout
-
-* `applications/` — Custom applications (e.g., `rocketMotor`).
-
-* `src/` — Source modules (`functionObjects`, `fvPatchFields`, `interfacialModels`, etc.).
-
-* `utilities/` — Additional tools and post-processing utilities.
-
-* `platforms/` — Platform-specific compilation configurations.
-
-* `Make/` — Per-module build configurations used by `wmake`/`Allwmake`.
-
-* `bashrc` — Environment setup script.
-
-* `LICENSE` — GNU General Public License v3 (GPL-3.0).
-## 🧪 Tests and Validation
-
-A `validation/` directory will be added, containing full validation cases and reference data.
-
-* `validation/JPL-gas-particle-nozzle` — Gas–particle JPL nozzle flow validation case.
-
-* `validation/NASA-CDV` — NASA CDV validation case.
-
-Each case includes a `README` describing setup, run commands, and post-processing.
-
 ## 🤝 Contributing
 
 Contributions are welcome. Please open an issue to describe the change, then fork the repository and create a pull request. Follow the existing code style and respect the project's license (GPL-3.0).
@@ -112,7 +56,7 @@ This software is an independent project and is not affiliated with, endorsed by,
 
 ## 🧑‍🔬 Authors and Acknowledgements
 
-* **Original author:** Ganeshkumar V
+* **Lead Developer:** Ganeshkumar V
 
 * **Developed under the supervision of:** Prof. Dilip Srinivas Sundaram
 
@@ -138,6 +82,5 @@ doi = {10.2514/1.B39541}
 ```
 
 ## 📬 Contact
-
 
 If you encounter problems, please open an issue on the repository.
