@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Propellant-Regression-Framework: Propellant Regression Framework</title>
+<title>Propellant-Regression-Framework: RocPerf-CFD</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -13,34 +13,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<style>
-  .flowchart-wrapper {
-      display: flex;
-      justify-content: center; /* This centers your flowchart */
-  }
-  .flowchart-wrapper .mermaid {
-      min-width: 600px;  /* Adjust this value as needed */
-      max-width: 100%; /* Allows it to be responsive */
-  }
-  /* Make Mermaid-rendered SVGs fill the mermaid container */
-  .mermaid svg {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: none !important;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-  }
-
-  /* Trial dimensions: adjust these values (height / max-width) as needed */
-  .mermaid {
-      width: 100%;            /* use most of the page width */
-      max-width: 1800px;    /* cap width to avoid overly wide diagrams */
-      height: 50vh;         /* try 60vh, 70vh, 80vh or px values like 700px */
-      margin: 0 auto 2rem auto;
-      overflow: visible;    /* allow svg to be visible if larger */
-  }
-</style>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -91,150 +63,77 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Propellant Regression Framework </div>  </div>
+<div class="title">RocPerf-CFD </div>  </div>
 </div><!--header-->
-<div class="mermaid">
-  flowchart TD
-  %% External Dependency
-  OpenFOAMEnv["OpenFOAM Environment\n(libOpenFOAM, libfiniteVolume, MPI)"]:::external
-
-  %% Build System
-  subgraph "Build System" 
-      direction TB
-      Allwmake["Allwmake"]:::build
-      Allwclean["Allwclean"]:::build
-      Bashrc["bashrc"]:::build
-      subgraph "Per-module Make Configs"
-          direction TB
-          MakeSrc["src/Make"]:::build
-          MakeSrcFiles["src/Make/files"]:::build
-          MakeSrcOptions["src/Make/options"]:::build
-          MakeApp["applications/rocketMotor/Make"]:::build
-          MakeAppFiles["applications/rocketMotor/Make/files"]:::build
-          MakeAppOpts["applications/rocketMotor/Make/options"]:::build
-          MakeUtil1["utilities/ReynoldsNumber/Make"]:::build
-          MakeUtil2["utilities/mapVolFields/Make"]:::build
-          MakeUtil3["utilities/postProcessRocket/Make"]:::build
-      end
-  end
-
-  %% Core Libraries
-  subgraph "Core Libraries" 
-      direction TB
-      subgraph "Physics Models"
-          PhaseSystems["PhaseSystems"]:::core
-          Interfacial["interfacialModels"]:::core
-          Turbulence["multiphaseCompressibleTurbulenceModels"]:::core
-          PhaseModel["phaseModel"]:::core
-          InterfaceTrack["interfaceTrackingModels"]:::core
-          SharpHeat["sharpInterfaceHeatTransferModels"]:::core
-      end
-      subgraph "Boundary Conditions"
-          fvPatchFields["fvPatchFields"]:::core
-      end
-      FunctionObjs["functionObjects"]:::core
-      MultiPhaseSys["multiphaseSystem"]:::core
-  end
-
-  %% Applications
-  subgraph "Applications"
-      rocketMotor["rocketMotor (solver)"]:::app
-  end
-
-  %% Utilities
-  subgraph "Utilities"
-      direction TB
-      UtilRe["ReynoldsNumber"]:::util
-      UtilMap["mapVolFields"]:::util
-      UtilPost["postProcessRocket"]:::util
-      UtilCons["rocketConservation"]:::util
-      UtilSetAlpha["setMultipleAlphaField"]:::util
-      UtilInit["setRocketInitField"]:::util
-      UtilStream["streamFunction"]:::util
-  end
-
-  %% Data: Case Definitions & Outputs
-  subgraph "Data"
-      direction TB
-      CaseDefs["Case Definitions\n(tutorials/)"]:::data
-      SimOutputs["Simulation Outputs\n(time directories)"]:::data
-  end
-
-  %% Build-time Flow
-  OpenFOAMEnv -->|"setup env"| Allwmake
-  Allwmake -->|"invoke wmake"| MakeSrc
-  Allwmake --> MakeApp
-  Allwmake --> MakeUtil1
-  MakeSrc --> PhaseSystems
-  MakeSrc --> Interfacial
-  MakeSrc --> Turbulence
-  MakeSrc --> PhaseModel
-  MakeSrc --> InterfaceTrack
-  MakeSrc --> SharpHeat
-  MakeSrc --> fvPatchFields
-  MakeSrc --> FunctionObjs
-  MakeSrc --> MultiPhaseSys
-  MakeApp --> rocketMotor
-  MakeUtil1 --> UtilRe
-  MakeUtil2 --> UtilMap
-  MakeUtil3 --> UtilPost
-
-  %% Runtime Flow
-  CaseDefs -->|"read case files"| rocketMotor
-  rocketMotor -->|"link & invoke core libs"| PhaseSystems
-  rocketMotor --> Interfacial
-  rocketMotor --> Turbulence
-  rocketMotor --> PhaseModel
-  rocketMotor --> fvPatchFields
-  rocketMotor --> MultiPhaseSys
-  rocketMotor -->|"write fields"| SimOutputs
-  SimOutputs -->|"post-process"| UtilRe
-  SimOutputs --> UtilMap
-  SimOutputs --> UtilPost
-  SimOutputs --> UtilCons
-  SimOutputs --> UtilSetAlpha
-  SimOutputs --> UtilInit
-  SimOutputs --> UtilStream
-
-  %% Click Events
-  click Allwmake "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/./Allwmake"
-  click Allwclean "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/./Allwclean"
-  click Bashrc "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/./bashrc"
-  click MakeSrc "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/Make"
-  click MakeSrcFiles "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/Make/files"
-  click MakeSrcOptions "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/Make/options"
-  click MakeApp "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/applications/rocketMotor/Make"
-  click MakeAppFiles "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/applications/rocketMotor/Make/files"
-  click MakeAppOpts "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/applications/rocketMotor/Make/options"
-  click MakeUtil1 "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/ReynoldsNumber/Make"
-  click MakeUtil2 "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/mapVolFields/Make"
-  click MakeUtil3 "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/postProcessRocket/Make"
-  click rocketMotor "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/applications/rocketMotor"
-  click PhaseSystems "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/PhaseSystems"
-  click Interfacial "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/interfacialModels"
-  click Turbulence "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/multiphaseCompressibleTurbulenceModels"
-  click PhaseModel "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/phaseModel"
-  click InterfaceTrack "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/interfaceTrackingModels"
-  click SharpHeat "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/sharpInterfaceHeatTransferModels"
-  click fvPatchFields "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/fvPatchFields"
-  click FunctionObjs "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/functionObjects"
-  click MultiPhaseSys "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/src/multiphaseSystem"
-  click UtilRe "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/ReynoldsNumber"
-  click UtilMap "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/mapVolFields"
-  click UtilPost "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/postProcessRocket"
-  click UtilCons "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/rocketConservation"
-  click UtilSetAlpha "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/setMultipleAlphaField"
-  click UtilInit "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/setRocketInitField"
-  click UtilStream "https://github.com/ganeshkumar-v/propellant-regression-framework/tree/master/utilities/streamFunction"
-
-  %% Styles
-  classDef external fill:#CCCCCC,stroke:#333,stroke-width:1px
-  classDef build fill:#ADD8E6,stroke:#000,stroke-width:1px
-  classDef core fill:#90EE90,stroke:#000,stroke-width:1px
-  classDef app fill:#FFA500,stroke:#000,stroke-width:1px
-  classDef util fill:#D8BFD8,stroke:#000,stroke-width:1px
-  classDef data fill:#FFFFE0,stroke:#000,stroke-width:1px
-</div>
+<div class="contents">
+<div class="textblock"><p><img src="docs/media.gif" alt="Simulation GIF" class="inline"/></p>
+<p>This repository provides an OpenFOAM-based collection of applications, libraries, and utilities for simulating rocket motor firing, specializing in propellant regression and particle-laden flows. The framework's core is the <code>rocketMotor</code> application, which handles propellant surface regression (for center-perforated and end-burning configurations) and various models for gas-particle interactions. The suite also supports CD nozzle simulations (both single-phase gas and two-phase gas-particle flows). To accelerate research, this project includes a set of tutorial and validation cases, specialized boundary conditions for propulsion, and utilities for performance-parameter extraction and to setup initial-conditions.</p>
+<p>This codebase is provided as source and is intended to be built and run on Linux platforms with a compatible C++ toolchain and OpenFOAM build tools.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+✨ Key Features</h1>
+<ul>
+<li><b>Core Application:</b> <code>applications/rocketMotor/rocketMotor</code> - a specialised application for rocket motor simulations, propellant regression handling, and CD nozzle flows.</li>
+<li><b>Multiphase Models:</b> Includes various models to capture gas-particle inerphase momentum and energy interactions.</li>
+<li><b>Custom Libraries:</b> Specialized boundary conditions (<code>fvPatchFields</code>) tailored for the propulsion community.</li>
+<li><b>Post-Processing:</b> A collection of <code>functionObjects</code> (thrust, vorticity/stream function, etc.) and utilities for performance parameter extraction and field initialization.</li>
+<li><b>Build System:</b> Platform-specific makefiles (<code>platforms/</code>) and per-target Makefiles (<code>Make/</code>) for <code>wmake</code>.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
+🛠️ Requirements</h1>
+<ul>
+<li><b>Platform:</b> Linux</li>
+<li><b>Core:</b> OpenFOAM (developed and tested on <b>v2112</b>. This version is recommended, though it may work on other versions.)</li>
+<li><b>Compiler:</b> C++ (GCC or Intel)</li>
+<li><b>Build System:</b> <code>make</code> and OpenFOAM toolchain (wmake, Allwmake)</li>
+</ul>
+<p>Note: This repository contains a <code>bashrc</code> at the project root to set up the environment. The <code>platforms/</code> directory contains the library and the applications build on this project</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+🚀 Quick Start — Compilation</h1>
+<ol type="1">
+<li>Ensure OpenFOAM v2112 is installed and source its environment before building this project.</li>
+<li><p class="startli">Clone the repository in your preferred parent directory (e.g., your projects folder), then enter the project directory:</p>
+<p class="startli">```sh git clone <a href="https://github.com/Ganeshkumar-V/Propellant-Regression-Framework.git">https://github.com/Ganeshkumar-V/Propellant-Regression-Framework.git</a> cd Propellant-Regression-Framework ```</p>
+</li>
+<li><p class="startli">Source the project <code>bashrc</code> to set up the environment:</p>
+<p class="startli">```sh source bashrc ```</p>
+</li>
+<li><p class="startli">Compile the libraries, applications, and utilities:</p>
+<p class="startli">```sh ./Allwmake ```</p>
+<p class="startli">(Optional: run <code>./Allwclean</code> before building to clean the project.)</p>
+</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md4"></a>
+🎓 Tutorial Case Files</h1>
+<p>This repository provides four sample cases under <code>tutorials/</code>:</p>
+<ul>
+<li>CD nozzle — gas phase</li>
+<li>CD nozzle — gas + particle two-phase</li>
+<li>Rocket motor — with propellant regression</li>
+<li>Rocket motor — without propellant regression</li>
+</ul>
+<p>Each tutorial folder contains a <code>README</code> with case-specific setup, runtime, and post-processing instructions.</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+🗺️ Repository Layout</h1>
+<ul>
+<li><code>applications/</code> — Custom applications (e.g., <code>rocketMotor</code>).</li>
+<li><code>src/</code> — Source modules (<code>functionObjects</code>, <code>fvPatchFields</code>, <code>interfacialModels</code>, etc.).</li>
+<li><code>utilities/</code> — Additional tools and post-processing utilities.</li>
+<li><code>platforms/</code> — Platform-specific compilation configurations.</li>
+<li><code>Make/</code> — Per-module build configurations used by <code>wmake</code>/<code>Allwmake</code>.</li>
+<li><code>bashrc</code> — Environment setup script.</li>
+<li><code>LICENSE</code> — GNU General Public License v3 (GPL-3.0). </li>
+</ul>
+<h1><a class="anchor" id="autotoc_md6"></a>
+🧪 Tests and Validation</h1>
+<p>A <code>validation/</code> directory will be added, containing full validation cases and reference data.</p>
+<ul>
+<li><code>validation/JPL-gas-particle-nozzle</code> — Gas–particle JPL nozzle flow validation case.</li>
+<li><code>validation/NASA-CDV</code> — NASA CDV validation case.</li>
+</ul>
+<p>Each case includes a <code>README</code> describing setup, run commands, and post-processing.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
+🤝 Contributing</h1>
+<p>Contributions are welcome. Please open an issue to describe the change, then fork the repository and create a pull request. Follow the existing code style and respect the project's license (GPL-3.0).</p>
 <h1><a class="anchor" id="autotoc_md8"></a>
 📄 License</h1>
 <p>Distributed under the GNU General Public License v3 (GPL-3.0). See the <code>LICENSE</code> file for the full text.</p>
@@ -271,154 +170,5 @@ Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-        /* Initialize mermaid with responsive layout option */
-        mermaid.initialize({ startOnLoad: true, flowchart: { useMaxWidth: true } });
-
-        /*
-         After mermaid renders the diagram(s) it inserts an <svg> with width/height attributes.
-         To ensure the diagram scales when the page is zoomed, convert width/height to a viewBox
-         and make the SVG responsive. We run once on DOMContentLoaded and also watch for changes
-         because mermaid may render asynchronously.
-        */
-        document.addEventListener('DOMContentLoaded', function () {
-            function makeSvgResponsive() {
-                document.querySelectorAll('.mermaid svg').forEach(svg => {
-                    try {
-                        // If there's already a viewBox, assume it's responsive enough
-                        if (!svg.getAttribute('viewBox')) {
-                            const width = svg.getAttribute('width');
-                            const height = svg.getAttribute('height');
-                            if (width && height) {
-                                svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-                                svg.removeAttribute('width');
-                                svg.removeAttribute('height');
-                                svg.style.width = '100%';
-                                svg.style.height = 'auto';
-                            }
-                        }
-                    } catch (e) {
-                        // ignore any invalid SVGs
-                    }
-                });
-            }
-
-            // Initial attempt (mermaid may have already rendered)
-            makeSvgResponsive();
-
-            // Retry shortly after in case mermaid renders after DOMContentLoaded
-            setTimeout(makeSvgResponsive, 500);
-
-            // Observe DOM changes to the mermaid container and adjust newly added SVGs
-            const mermaidContainers = document.querySelectorAll('.mermaid');
-            mermaidContainers.forEach(container => {
-                const observer = new MutationObserver(() => makeSvgResponsive());
-                observer.observe(container, { childList: true, subtree: true });
-            });
-        });
-    </script>
-    
-    <!-- svg-pan-zoom: enable interactive pan/zoom for rendered SVG diagrams -->
-    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
-    <script>
-        // Initialize svg-pan-zoom on every mermaid SVG once it's available
-        function initPanZoomForMermaid(svg) {
-            try {
-                // If svg-pan-zoom instance already attached, return
-                if (svg._svgPanZoom) return;
-
-                // create an instance with reasonable defaults
-                const instance = svgPanZoom(svg, {
-                    zoomEnabled: true,
-                    controlIconsEnabled: false,
-                    fit: true,
-                    center: true,
-                    minZoom: 0.25,
-                    maxZoom: 10,
-                    dblClickZoomEnabled: true,
-                    mouseWheelZoomEnabled: true
-                });
-
-                // store reference so we don't re-init
-                svg._svgPanZoom = instance;
-
-                // Adjust initial zoom so the diagram fills the container width
-                function adjustInitialZoom() {
-                    try {
-                        instance.resize();
-
-                        // Prefer computing scale from SVG viewBox to fill parent width
-                        let vb = null;
-                        try { vb = svg.viewBox && svg.viewBox.baseVal ? svg.viewBox.baseVal : null; } catch(e) { vb = null; }
-
-                        const container = svg.parentElement || svg;
-                        const containerWidth = container.clientWidth || container.getBoundingClientRect().width || 0;
-
-                        if (vb && vb.width && containerWidth > 0) {
-                            // target scale to fill width
-                            const rawScale = containerWidth / vb.width;
-                            const min = 0.25, max = 10;
-                            const target = Math.min(max, Math.max(min, rawScale));
-
-                            // apply target zoom and center
-                            try { instance.zoom(target); } catch (e) { /* ignore */ }
-                            try { instance.center(); } catch (e) { /* ignore */ }
-                        } else {
-                            // fallback to fit/center
-                            try { instance.fit(); instance.center(); } catch (e) { /* ignore */ }
-                        }
-                    } catch (e) {
-                        // retry once after a short delay
-                        setTimeout(() => {
-                            try { adjustInitialZoom(); } catch (e) {}
-                        }, 120);
-                    }
-                }
-
-                // run adjustment now
-                adjustInitialZoom();
-            } catch (e) {
-                // fail silently
-                console.warn('svg-pan-zoom init failed', e);
-            }
-        }
-
-        // Watch for mermaid SVGs (handles async render)
-        function watchMermaidSvgs() {
-            document.querySelectorAll('.mermaid svg').forEach(svg => {
-                // ensure viewBox exists (makes svg responsive)
-                if (!svg.getAttribute('viewBox')) {
-                    const w = svg.getAttribute('width');
-                    const h = svg.getAttribute('height');
-                    if (w && h) {
-                        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-                        svg.removeAttribute('width');
-                        svg.removeAttribute('height');
-                    }
-                }
-                initPanZoomForMermaid(svg);
-            });
-
-            // Observe for newly injected SVGs
-            document.querySelectorAll('.mermaid').forEach(container => {
-                if (container._mermaidObserver) return;
-                const mo = new MutationObserver(() => {
-                    // delay slightly to let mermaid finish writing SVG
-                    setTimeout(() => watchMermaidSvgs(), 50);
-                });
-                mo.observe(container, { childList: true, subtree: true });
-                container._mermaidObserver = mo;
-            });
-        }
-
-        // Run after DOM is ready and after mermaid initializations
-        document.addEventListener('DOMContentLoaded', () => {
-            // small delay for mermaid to render
-            setTimeout(() => watchMermaidSvgs(), 250);
-            // retry once later
-            setTimeout(() => watchMermaidSvgs(), 1000);
-        });
-    </script>
 </body>
 </html>

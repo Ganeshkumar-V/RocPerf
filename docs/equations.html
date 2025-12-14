@@ -181,6 +181,10 @@
                     <li class="nav-item">
                          <a href="#solution-algo" class="nav-link">Solution Algorithm</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="#numerical-methods" class="nav-link">Numerical Methods</a>
+                   </li>
                 </ul>
             </nav>
         </aside>
@@ -466,6 +470,19 @@
                     <figcaption class="text-center text-gray-600 text-sm italic mt-2 mb-4">
                         Flowchart illustrating solution algorithm [Reprinted with permission from AIAA]
                     </figcaption>
+                </div>
+            </div>
+        </section>
+
+        <!--Numerical Methods-->
+        <section id="numerical-methods" class="py-10 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-7xl mx-auto">
+                    <p class="text-2xl font-bold text-gray-900 mb-10">Numerical Methods</p>
+                    The governing equations are discretized using the Finite Volume Method (FVM) framework inherent to OpenFOAM. 
+                    Consequently, the solver maintains full compatibility with the extensive library of numerical schemes for 
+                    spatial and temporal derivatives implemented within the OpenFOAM environment. Users may utilize the run-time 
+                    selection mechanism to specify these schemes via the fvSchemes dictionary, without recompiling the source code.
                 </div>
             </div>
         </section>

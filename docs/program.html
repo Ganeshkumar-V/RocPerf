@@ -363,10 +363,10 @@
                                 <strong style="color: #c9d1d9;">Pressure Poisson Equation:</strong><br>
                                 The equation for the common pressure $P$ is constructed based on the total predicted flux and the 
                                 compressibility terms of the gas and particle phases.
-                                <br>
+                                <!-- <br>
                                 <a href="#" style="display: inline-block; margin-top: 8px; font-size: 0.85em; color: #58a6ff; text-decoration: none; border: 1px solid rgba(88,166,255,0.3); padding: 4px 12px; border-radius: 20px;">
                                     📄 Check Detailed Derivation
-                                </a>
+                                </a> -->
                             </li>
                     
                             <li>
@@ -541,14 +541,43 @@
                                     </td>
                                 </tr>
 
+                                <tr>
+                                    <td class="bc-name">transonic</td>
+                                    <td class="bc-desc">
+                                        The pressure outlet boundary condition that switches from back pressure condition to extrapolation
+                                        condition as the flow transitions from subsonic to supersonic flow at the outlet or vice versa from 
+                                        extrapolation condition to back pressure condition. 
+                                    </td>
+                                    <td class="bc-fields">
+                                        $P$ <br>
+                                        <span style="font-size:0.9em; color:#666;">(scalar)</span>
+                                    </td>
+                                    <td class="bc-usage">
+                                        <div class="foam-code-wrapper">
+                                            <button class="bc-copy-btn" onclick="copyFoamCode(this)">Copy</button>
+                                            <pre class="foam-code">
+<span class="f-key">outlet</span>
+{
+    <span class="f-key">type</span>    <span class="f-val">transonic</span>;
+    <span class="f-key">backPressure</span>   <span class="f-val">101325</span>; // back pressure / atmospheric pressure
+    <span class="f-key">gas</span>   <span class="f-val">gas</span>; // name of the gas phase
+    <span class="f-key">gamma</span>   <span class="f-val">1.4</span>; // specific heat ratio
+    <span class="f-key">R</span>   <span class="f-val">287</span>; // gas constant
+    <span class="f-key">supersonic</span>   <span class="f-val">false</span>; // 'true' if the flow is already supersonic and 
+    <span class="f-key"></span>   <span class="f-val"></span>                 //  expect it to change to subsonic
+    <span class="f-key">value</span>   <span class="f-val">uniform 101325</span>;
+}</pre>
+                                        </div>
+                                    </td>
+                                </tr>
+
                             </tbody>
                         </table>
                     </div>
                     
                     <p class="text-lg text-gray-700 leading-relaxed py-8">
-                        In addition to the stable boundary conditions listed above, there are additional 
-                        boundary conditions are currently experimental and will be included in the stable distribution in 
-                        future releases.
+                        In addition to the above boundary conditions, there are additional boundary conditions are currently in 
+                        developmental stage and will be included in the future releases.
                     </p>
 
                 </div>

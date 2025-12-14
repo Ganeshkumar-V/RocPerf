@@ -107,9 +107,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae01b3f86029b2a885ee53373a92fcf45"><td class="memItemLeft" align="right" valign="top"><a id="ae01b3f86029b2a885ee53373a92fcf45"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>PropellantRegressionPhaseSystem</b> (const fvMesh &amp;)</td></tr>
 <tr class="separator:ae01b3f86029b2a885ee53373a92fcf45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea95896d58df35bc76b17dab41f80bc6"><td class="memItemLeft" align="right" valign="top"><a id="aea95896d58df35bc76b17dab41f80bc6"></a>
-const saturationModel &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>saturation</b> () const</td></tr>
-<tr class="separator:aea95896d58df35bc76b17dab41f80bc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7651da5b65a1e3105d9da661ffd6a9c"><td class="memItemLeft" align="right" valign="top"><a id="ab7651da5b65a1e3105d9da661ffd6a9c"></a>
 virtual tmp&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dmdt</b> (const phasePairKey &amp;key) const</td></tr>
 <tr class="separator:ab7651da5b65a1e3105d9da661ffd6a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,52 +158,30 @@ virtual tmp&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="b
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a8faf9bafba6073795a6c6d239a8bf724"><td class="memItemLeft" align="right" valign="top"><a id="a8faf9bafba6073795a6c6d239a8bf724"></a>
-dictionary&#160;</td><td class="memItemRight" valign="bottom"><b>molecularWeights_</b></td></tr>
-<tr class="separator:a8faf9bafba6073795a6c6d239a8bf724"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a298e6563c91f6d0cfda40fa19c514f84"><td class="memItemLeft" ><a id="a298e6563c91f6d0cfda40fa19c514f84"></a>
-struct {</td></tr>
-<tr class="memitem:ac87452ed424cfd3ce5380f5de6e591a4"><td class="memItemLeft" >
-&#160;&#160;&#160;scalar&#160;&#160;&#160;<b>Al</b></td></tr>
-<tr class="separator:ac87452ed424cfd3ce5380f5de6e591a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6746b6fa78a277ba6e7b1814fcbba68f"><td class="memItemLeft" >
-&#160;&#160;&#160;scalar&#160;&#160;&#160;<b>Al2O3</b></td></tr>
-<tr class="separator:a6746b6fa78a277ba6e7b1814fcbba68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14269b1f7f9bf574ba56e173cb5a6086"><td class="memItemLeft" >
-&#160;&#160;&#160;scalar&#160;&#160;&#160;<b>H2O</b></td></tr>
-<tr class="separator:a14269b1f7f9bf574ba56e173cb5a6086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84cb4519154d430f1e4e702f0bdab362"><td class="memItemLeft" >
-&#160;&#160;&#160;scalar&#160;&#160;&#160;<b>H2</b></td></tr>
-<tr class="separator:a84cb4519154d430f1e4e702f0bdab362"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a298e6563c91f6d0cfda40fa19c514f84"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><b>MW_</b></td></tr>
-<tr class="separator:a298e6563c91f6d0cfda40fa19c514f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9d23db92d8f326636175ff2d9103cb8"><td class="memItemLeft" align="right" valign="top"><a id="ae9d23db92d8f326636175ff2d9103cb8"></a>
-scalar&#160;</td><td class="memItemRight" valign="bottom"><b>AAlC_</b></td></tr>
-<tr class="separator:ae9d23db92d8f326636175ff2d9103cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0b4dcdc0fefc0b076bf117d93bbac32"><td class="memItemLeft" align="right" valign="top"><a id="af0b4dcdc0fefc0b076bf117d93bbac32"></a>
-scalar&#160;</td><td class="memItemRight" valign="bottom"><b>eqR_</b></td></tr>
-<tr class="separator:af0b4dcdc0fefc0b076bf117d93bbac32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0618539fa5b9b694c1c44bd2f2671604"><td class="memItemLeft" align="right" valign="top"><a id="a0618539fa5b9b694c1c44bd2f2671604"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>solveParticle</b></td></tr>
+<tr class="separator:a0618539fa5b9b694c1c44bd2f2671604"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b00cbadf67ccfb15dc78425dcb2d82f"><td class="memItemLeft" align="right" valign="top"><a id="a4b00cbadf67ccfb15dc78425dcb2d82f"></a>
 volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>Tad</b></td></tr>
 <tr class="separator:a4b00cbadf67ccfb15dc78425dcb2d82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6f4534984a47788c01f8de4cf350f56"><td class="memItemLeft" align="right" valign="top"><a id="aa6f4534984a47788c01f8de4cf350f56"></a>
-scalar&#160;</td><td class="memItemRight" valign="bottom"><b>zeta</b></td></tr>
-<tr class="separator:aa6f4534984a47788c01f8de4cf350f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0adbdf810d4fe491e1368e3206d48dc2"><td class="memItemLeft" align="right" valign="top"><a id="a0adbdf810d4fe491e1368e3206d48dc2"></a>
+volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>Hs1</b></td></tr>
+<tr class="separator:a0adbdf810d4fe491e1368e3206d48dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04a8451040274f8180b583c712ba1df0"><td class="memItemLeft" align="right" valign="top"><a id="a04a8451040274f8180b583c712ba1df0"></a>
+volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>Hs2</b></td></tr>
+<tr class="separator:a04a8451040274f8180b583c712ba1df0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63bd24e90a8d63d3034cca13b505336"><td class="memItemLeft" align="right" valign="top"><a id="af63bd24e90a8d63d3034cca13b505336"></a>
+volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>RTf</b></td></tr>
+<tr class="separator:af63bd24e90a8d63d3034cca13b505336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e3b35f3a21ea7e6dbc2c4c1dc9a4144"><td class="memItemLeft" align="right" valign="top"><a id="a2e3b35f3a21ea7e6dbc2c4c1dc9a4144"></a>
 volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>rb_</b></td></tr>
 <tr class="separator:a2e3b35f3a21ea7e6dbc2c4c1dc9a4144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af00273a9d337662cc5cac00577ff8a9d"><td class="memItemLeft" align="right" valign="top"><a id="af00273a9d337662cc5cac00577ff8a9d"></a>
-dimensionedScalar&#160;</td><td class="memItemRight" valign="bottom"><b>R_</b></td></tr>
-<tr class="separator:af00273a9d337662cc5cac00577ff8a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e9ea1d309e3b87a57154f71b2a8267a"><td class="memItemLeft" align="right" valign="top"><a id="a1e9ea1d309e3b87a57154f71b2a8267a"></a>
+volScalarField&#160;</td><td class="memItemRight" valign="bottom"><b>alphaOld</b></td></tr>
+<tr class="separator:a1e9ea1d309e3b87a57154f71b2a8267a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42df166941d11a893adccff4c3c0a22d"><td class="memItemLeft" align="right" valign="top"><a id="a42df166941d11a893adccff4c3c0a22d"></a>
 dimensionedScalar&#160;</td><td class="memItemRight" valign="bottom"><b>rhoPropellant</b></td></tr>
 <tr class="separator:a42df166941d11a893adccff4c3c0a22d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a03f8447a640b732e2b20a419ec131d"><td class="memItemLeft" align="right" valign="top"><a id="a6a03f8447a640b732e2b20a419ec131d"></a>
-dimensionedScalar&#160;</td><td class="memItemRight" valign="bottom"><b>rhoParticle</b></td></tr>
-<tr class="separator:a6a03f8447a640b732e2b20a419ec131d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eee7d21e82b09f281c21fed6355db39"><td class="memItemLeft" align="right" valign="top"><a id="a5eee7d21e82b09f281c21fed6355db39"></a>
-dimensionedScalar&#160;</td><td class="memItemRight" valign="bottom"><b>alphaRhoAl</b></td></tr>
-<tr class="separator:a5eee7d21e82b09f281c21fed6355db39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60aa2cd9621b167d8e8e25a094e36718"><td class="memItemLeft" align="right" valign="top"><a id="a60aa2cd9621b167d8e8e25a094e36718"></a>
 volVectorField&#160;</td><td class="memItemRight" valign="bottom"><b>Ug_</b></td></tr>
 <tr class="separator:a60aa2cd9621b167d8e8e25a094e36718"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,9 +197,6 @@ rDmdtTable&#160;</td><td class="memItemRight" valign="bottom"><b>rDmdt_</b></td>
 <tr class="memitem:ab91cb6c0f537b1ab1faf67849685e9a6"><td class="memItemLeft" align="right" valign="top"><a id="ab91cb6c0f537b1ab1faf67849685e9a6"></a>
 coeffTable&#160;</td><td class="memItemRight" valign="bottom"><b>coeff_</b></td></tr>
 <tr class="separator:ab91cb6c0f537b1ab1faf67849685e9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9edc690719a82930140d659e6e63a5c"><td class="memItemLeft" align="right" valign="top"><a id="af9edc690719a82930140d659e6e63a5c"></a>
-autoPtr&lt; saturationModel &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>saturationModel_</b></td></tr>
-<tr class="separator:af9edc690719a82930140d659e6e63a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class BasePhaseSystem&gt;<br />
@@ -233,8 +205,8 @@ class Foam::PropellantRegressionPhaseSystem&lt; BasePhaseSystem &gt;</h3>
 
 <p class="definition">Definition at line <a class="el" href="PropellantRegressionPhaseSystem_8H_source.html#l00056">56</a> of file <a class="el" href="PropellantRegressionPhaseSystem_8H_source.html">PropellantRegressionPhaseSystem.H</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/ganeshkumar/OpenFOAM/ganeshkumar-v2112/Propellant-Regression-Framework/src/PhaseSystems/PropellantRegressionPhaseSystem/<a class="el" href="PropellantRegressionPhaseSystem_8H_source.html">PropellantRegressionPhaseSystem.H</a></li>
-<li>/home/ganeshkumar/OpenFOAM/ganeshkumar-v2112/Propellant-Regression-Framework/src/PhaseSystems/PropellantRegressionPhaseSystem/<a class="el" href="PropellantRegressionPhaseSystem_8C_source.html">PropellantRegressionPhaseSystem.C</a></li>
+<li>/home/ganeshkumar/OpenFOAM/ganeshkumar-v2112/RocPerf-CFD/src/PhaseSystems/PropellantRegressionPhaseSystem/<a class="el" href="PropellantRegressionPhaseSystem_8H_source.html">PropellantRegressionPhaseSystem.H</a></li>
+<li>/home/ganeshkumar/OpenFOAM/ganeshkumar-v2112/RocPerf-CFD/src/PhaseSystems/PropellantRegressionPhaseSystem/<a class="el" href="PropellantRegressionPhaseSystem_8C_source.html">PropellantRegressionPhaseSystem.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

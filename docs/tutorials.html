@@ -351,13 +351,27 @@
                           <code class="cmd-block">decomposePar<br>mpirun -np 8 rocketMotor -parallel</br></code>
                           <p><small><em>Note: The number of processors can be adjusted in the <code>decomposeParDict</code> file.</em></small></p>
                         </div>
-                      
-                        <div class="tip-box">
-                          <div>
-                            <strong>💡 Tip for Higher Accuracy:</strong><br>
-                            To obtain accurate simulation results (as shown in the plots below), simply double the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
-                          </div>
+
+                        <div class="sim-step">
+                            <span class="step-label">4. Post-process results</span>
+                            <p>The specific impulse and characteristic velocity can be computed from the thrust and mass flow rate 
+                                at the outlet patch. To obtain mass flow rate of gas and particle phase and the thrust for each time step, run:
+                            </p>
+                            <code class="cmd-block">postProcessRocket</code>
+                            <p>This will generate a csv file containing mass flow rates and thrust for each time step, which can be further used 
+                                to calculate specific impulse and $C^*$ as, 
+                                $$
+                                    C^* = \frac{P_cA_t}{\dot{m}_{gas} + \dot{m}_{particles}} \hspace{20pt} I_{\text{sp}} = \frac{F}{(\dot{m}_{gas} + \dot{m}_{particles})g_0}
+                                $$ 
+                            </p>
                         </div>
+
+                        <div class="tip-box">
+                            <div>
+                              <strong>💡 Tip for Higher Accuracy:</strong><br>
+                              To obtain accurate simulation results (as shown in the plots below), simply double the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
+                            </div>
+                          </div>
                       
                       </div>  
         
@@ -376,6 +390,29 @@
                                         Variation of Wall Mach number along the length
                                     </figcaption></td>
                                 </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            The thrust and specific impulse of the JPL nozzle computed from the simulations are presented in this table.
+                        </p>
+                        <table class="styled-table" aria-describedby="jpl-thrust-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Simulation</th>
+                                    <th colspan="2">Gas-phase Thrust $(\text{N})$</th>
+                                    <th rowspan="2">Total Thrust $(\text{N})$</th>
+                                    <th rowspan="2">Mass flow rate $(\text{kg/s})$</th>
+                                    <th rowspan="2">$I_{\text{sp}} (\text{s})$</th>
+                                </tr>
+                                <tr>
+                                    <th class="sub-header">Computed</th>
+                                    <th class="sub-header">Chang et. al., 1996</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Pure gas phase</strong></td><td>2097</td><td>2114</td><td>2097</td><td>2.191</td><td>97.6</td></tr>
+                                <tr><td><strong>Gas-particle $(2.0 \mu\text{m})$</strong></td><td>1630</td><td>1636</td><td>2198</td><td>2.635</td><td>85.35</td></tr>
+                                <tr><td><strong>Gas-particle $(20.0 \mu\text{m})$</strong></td><td>1870</td><td>1948</td><td>2230</td><td>2.956</td><td>76.9</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -434,13 +471,12 @@
                         <div class="description">
                             <h3>Case Description</h3>
                             <p>
-                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a 
-                                lab-scale rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. Rather than 
-                                modeling the transient process of propellant grain regression, this simulation focuses on a 
-                                statistically steady instant during the firing duration of the rocket motor. By treating the 
-                                grain geometry as fixed and the burning surface as a mass injection boundary, the simulation  
-                                provides a high-fidelity 'snapshot' of the flow dynamics inside the rocket motor. The 2D axisymmetric 
-                                mesh and the boundaries of the lab-scale rocket motor is shown in figure 3.1.    
+                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a lab-scale 
+                                rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. Rather than modeling the transient 
+                                process of propellant grain regression, this simulation focuses on a statistically steady-state 'snapshot' 
+                                during the firing duration. By treating the grain geometry as fixed and the burning surface as a mass 
+                                injection boundary, the simulation provides high-fidelity insights into the internal flow dynamics. 
+                                The 2D axisymmetric mesh and the boundary conditions for the lab-scale rocket motor are shown in Figure 3.1.   
                             </p>
                         </div>
                         <div class="media-container">
@@ -449,19 +485,21 @@
                         </div>
                         <div class="description">
                             <p>
-                                For the steady-state simulation of the ALICE propellant lab-scale motor, the gas phase mass flow rate at the 
-                                propellant grain interface is set to $0.1 \text{ g/s}$ with an associated particle mass fraction of $0.7194$.
-                                The adibatic flame temperature of ALICE propellant with equivalence ratio of $0.943$ is $2270 \text{ K}$ (when combustion
-                                efficiency is $70 \%$). The gas and particle phase are assumed to enter the simulation domain with same velocities 
-                                and at a temperature of $2270 \text{ K}$. The particle diameter is taken to be $80 \text{ nm}$. To learn more about the propellant, 
-                                rocket motor firing experiments and the computational work, the readers can refer to Risha et. al., (2014) and Venukumar et. al., (2025).
+                                For the steady-state simulation, the gas phase mass flow rate at the propellant grain interface is set to 
+                                $0.1 \text{ g/s}$ with an associated particle mass fraction of $0.7194$.
+                                The adibatic flame temperature of the ALICE propellant, at an equivalence ratio of $0.943$ and a assumed 
+                                combustion efficiency of $70 \%$,is $2270 \text{ K}$. The gas and particle phases are assumed to enter the 
+                                simulation domain at the same velocity and at a temperature of $2270 \text{ K}$. The particle diameter is 
+                                taken as $80 \text{ nm}$. For further details regarding the propellant, rocket motor firing experiments, 
+                                and computational methodology, readers may refer to Risha et. al., (2014) and Venukumar et. al., (2025).
 
-                                For simplicity, thermophysical properties for both phases are assumed constant, with the gas phase defined by a specific heat 
-                                of $10000 \text{ J/kg}\cdot\text{K}$, a molecular weight of $2.9 \text{ g/mol}$, a dynamic viscosity of $1e^{-4} \text{ Ns/m}^2$, and a 
-                                Prandtl number of $0.7$. The particle phase density is $3950 \text{ kg/m}^3$ and the 
-                                specific heat is $1800 \text{ kJ/kg}\cdot\text{K}$. Interphase momentum exchange is governed by the Loth drag model 
-                                to account for compressibility and rarefaction effects, while the gas-particle thermal exchange is modeled via 
-                                the Ranz-Marshall correlation, modified by Kavanau’s correction factor to incorporate rarefactional influences.
+                                For simplicity, thermophysical properties for both phases are assumed constant. The gas phase is defined 
+                                by a specific heat of $10000 \text{ J/kg}\cdot\text{K}$, a molecular weight of $2.9 \text{ g/mol}$, 
+                                a dynamic viscosity of $1e^{-4} \text{ Ns/m}^2$, and a Prandtl number of $0.7$. The particle phase density 
+                                is $3950 \text{ kg/m}^3$ and the specific heat is $1800 \text{ kJ/kg}\cdot\text{K}$. Interphase momentum 
+                                exchange is governed by the Loth drag model to account for compressibility and rarefaction effects, 
+                                while gas-particle thermal exchange is modeled via the Ranz-Marshall correlation, modified by 
+                                Kavanau’s correction factor to incorporate rarefaction effects.
                             </p>
                         </div>
                     </div>
@@ -512,12 +550,26 @@
                           <code class="cmd-block">decomposePar<br>mpirun -np 8 rocketMotor -parallel</br></code>
                           <p><small><em>Note: The number of processors can be adjusted in the <code>decomposeParDict</code> file.</em></small></p>
                         </div>
-                      
+
+                        <div class="sim-step">
+                            <span class="step-label">4. Post-process results</span>
+                            <p>The specific impulse and characteristic velocity can be computed from the thrust and mass flow rate 
+                                at the outlet patch. To obtain mass flow rate of gas and particle phase and the thrust for each time step, run:
+                            </p>
+                            <code class="cmd-block">postProcessRocket</code>
+                            <p>This will generate a csv file containing mass flow rates and thrust for each time step, which can be further used 
+                                to calculate specific impulse and $C^*$ as, 
+                                $$
+                                    C^* = \frac{P_cA_t}{\dot{m}_{gas} + \dot{m}_{particles}} \hspace{20pt} I_{\text{sp}} = \frac{F}{(\dot{m}_{gas} + \dot{m}_{particles})g_0}
+                                $$ 
+                            </p>
+                        </div>
+
                         <div class="tip-box">
-                          <div>
-                            <strong>💡 Tip for Higher Resolution:</strong><br>
-                            To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
-                          </div>
+                            <div>
+                              <strong>💡 Tip for Higher Resolution:</strong><br>
+                              To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
+                            </div>
                         </div>
                       
                       </div>  
@@ -572,34 +624,42 @@
                         <div class="description">
                             <h3>Case Description</h3>
                             <p>
-                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a 
-                                lab-scale rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. Rather than 
-                                modeling the transient process of propellant grain regression, this simulation focuses on a 
-                                statistically steady instant during the firing duration of the rocket motor. By treating the 
-                                grain geometry as fixed and the burning surface as a mass injection boundary, the simulation  
-                                provides a high-fidelity 'snapshot' of the flow dynamics inside the rocket motor. The 2D axisymmetric 
-                                mesh and the boundaries of the lab-scale rocket motor is shown in figure 3.1.    
+                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a lab-scale 
+                                rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. The motor and grain dimensions are 
+                                derived from experimental data. A center-perforated propellant grain is considered, and the entire firing 
+                                duration of the rocket motor—including propellant surface regression—is simulated. The 2D axisymmetric mesh 
+                                and the boundary conditions for the lab-scale rocket motor are shown in Figure 4.1.   
                             </p>
                         </div>
                         <div class="media-container">
                             <img src="images/IB-Regression-Mesh.gif" alt="SRM Geometry Schematic" class="schematic-img">
-                            <p class="caption">Fig 4.1: 2D Axisymmetric Mesh and Boundary Conditions of the Lab-Scale Rocket Motor. </p>
+                            <p class="caption">Fig 4.1: 2D Axisymmetric Mesh and Boundary Conditions of the Lab-Scale ALICE Rocket Motor. </p>
                         </div>
                         <div class="description">
                             <p>
-                                For the steady-state simulation of the ALICE propellant lab-scale motor, the gas phase mass flow rate at the 
-                                propellant grain interface is set to $0.1 \text{ g/s}$ with an associated particle mass fraction of $0.7194$.
-                                The adibatic flame temperature of ALICE propellant with equivalence ratio of $0.943$ is $2270 \text{ K}$ (when combustion
-                                efficiency is $70 \%$). The gas and particle phase are assumed to enter the simulation domain with same velocities 
-                                and at a temperature of $2270 \text{ K}$. The particle diameter is taken to be $80 \text{ nm}$. To learn more about the propellant, 
-                                rocket motor firing experiments and the computational work, the readers can refer to Risha et. al., (2014) and Venukumar et. al., (2025).
+                                The propellant surface regression is tracked using an <code>interfaceTrackingModel</code> of type, 
+                                <code>entrainedInterfaceMotion</code>. This requires the propellant burning rate to be expressed according 
+                                to St. Robert’s Law; the burning rate pre-exponential factor and pressure exponent serve as inputs for 
+                                this model. For the ALICE propellant with an equivalence ratio of $0.943$, the burning rate is 
+                                expressed as (Connell Jr et. al., 2012):
+                                $$
+                                    r_b [\text{cm/s}] = 0.991\left(P[\text{MPa}]\right)^{0.405} 
+                                $$
+                                The multiphase system chosen for this case is <code>entrainedPropellantCombustionMultiphaseSystem</code>. 
+                                This sophisticated multiphase system was created specifically for ALICE rocket motors to study the effects 
+                                of combustion efficiency and particle retainment, which are major non-idealities affecting motor performance. 
+                                For more information, readers are referred to Risha et. al., (2014) and Venukumar et. al., (2025).
 
-                                For simplicity, thermophysical properties for both phases are assumed constant, with the gas phase defined by a specific heat 
-                                of $10000 \text{ J/kg}\cdot\text{K}$, a molecular weight of $2.9 \text{ g/mol}$, a dynamic viscosity of $1e^{-4} \text{ Ns/m}^2$, and a 
-                                Prandtl number of $0.7$. The particle phase density is $3950 \text{ kg/m}^3$ and the 
-                                specific heat is $1800 \text{ kJ/kg}\cdot\text{K}$. Interphase momentum exchange is governed by the Loth drag model 
-                                to account for compressibility and rarefaction effects, while the gas-particle thermal exchange is modeled via 
-                                the Ranz-Marshall correlation, modified by Kavanau’s correction factor to incorporate rarefactional influences.
+                                The adiabatic flame temperature of the ALICE propellant with an equivalence ratio of $0.943$ is $2740 \text{ K}$. 
+                                Both the gas and particle phases are assumed to enter the simulation domain at the same velocity and at a 
+                                temperature of $2740 \text{ K}$. The particle diameter is set to $80 \text{ nm}$. For simplicity, thermophysical 
+                                properties for both phases are assumed constant. The gas phase is defined by a specific heat 
+                                of $10000 \text{ J/kg}\cdot\text{K}$, a molecular weight of $2.9 \text{ g/mol}$, a dynamic viscosity of  
+                                $1e^{-4} \text{ Ns/m}^2$, and a Prandtl number of $0.7$. The particle phase density is $3950 \text{ kg/m}^3$ and the 
+                                specific heat is $1800 \text{ kJ/kg}\cdot\text{K}$. Interphase momentum exchange is governed by the Loth 
+                                drag model to account for compressibility and rarefaction effects, while gas-particle thermal exchange is 
+                                modeled via the Ranz-Marshall correlation, modified by Kavanau’s correction factor to incorporate 
+                                rarefaction effects.
                             </p>
                         </div>
                     </div>
@@ -607,16 +667,16 @@
                     <h3>Boundary Conditions</h3>
                     <table class="bc-table">
                         <thead>
-                            <tr><th>Variables</th><th>Inlet/Propellant surface</th><th>Outlet</th><th>Wall</th><th>Wedge faces</th></tr>
+                            <tr><th>Variables</th><th>Outlet</th><th>Wall</th><th>Wedge faces</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>$P$</strong></td><td>fixedFluxPressure </td><td>zeroGradient</td><td>fixedFluxPressure</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\boldsymbol{u}_g$</strong></td><td>gasFlowRateInletVelocity ($0.1 \text{ g/s}$)</td><td>zeroGradient</td><td>noSlip</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\boldsymbol{u}_p$</strong></td><td>sameAs - gas phase ($\boldsymbol{u}_g = \boldsymbol{u}_p$)</td><td>outletInlet (no reverse flow)</td><td>noSlip</td><td>cyclic</td></tr>
-                            <tr><td><strong>$T_g$</strong></td><td> $2270 \text{ K}$</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$T_p$</strong></td><td>sameAs - gas phase ($T_p = T_g$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\alpha_p$</strong></td><td>massLoadingFraction ($X_p = 0.7194$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$P$</strong></td><td>zeroGradient</td><td>fixedFluxPressure</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\boldsymbol{u}_g$</strong></td><td>zeroGradient</td><td>noSlip</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\boldsymbol{u}_p$</strong></td><td>outletInlet (no reverse flow)</td><td>noSlip</td><td>cyclic</td></tr>
+                            <tr><td><strong>$T_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$T_p$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_p$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
                         </tbody>
                     </table>
                     <h3>Numerical Schemes</h3>
@@ -636,6 +696,8 @@
                           <span class="step-label">2. Prepare the Case</span>
                           <p>The case file is available in the directory <code>tutorials/Steady-ALICE-motor</code>. Copy the case file to your working directory. To mesh the geometry, run:</p>
                           <code class="cmd-block">blockMesh</code>
+                          <p>To set the initial propellant phase volume fraction field (center-perforated grain), run:</p>
+                          <code class="cmd-block">setRocketInitField</code>
                         </div>
                       
                         <div class="sim-step">
@@ -650,13 +712,27 @@
                           <code class="cmd-block">decomposePar<br>mpirun -np 8 rocketMotor -parallel</br></code>
                           <p><small><em>Note: The number of processors can be adjusted in the <code>decomposeParDict</code> file.</em></small></p>
                         </div>
-                      
-                        <div class="tip-box">
-                          <div>
-                            <strong>💡 Tip for Higher Resolution:</strong><br>
-                            To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
-                          </div>
+
+                        <div class="sim-step">
+                            <span class="step-label">4. Post-process results</span>
+                            <p>The specific impulse and characteristic velocity can be computed from the thrust and mass flow rate 
+                                at the outlet patch. To obtain mass flow rate of gas and particle phase and the thrust for each time step, run:
+                            </p>
+                            <code class="cmd-block">postProcessRocket</code>
+                            <p>This will generate a csv file containing mass flow rates and thrust for each time step, which can be further used 
+                                to calculate specific impulse and $C^*$ as, 
+                                $$
+                                    C^* = \frac{P_cA_t}{\dot{m}_{gas} + \dot{m}_{particles}} \hspace{20pt} I_{\text{sp}} = \frac{F}{(\dot{m}_{gas} + \dot{m}_{particles})g_0}
+                                $$ 
+                            </p>
                         </div>
+
+                        <div class="tip-box">
+                            <div>
+                              <strong>💡 Tip for Higher Resolution:</strong><br>
+                              To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
+                            </div>
+                          </div>
                       
                       </div>  
                     <div>
@@ -673,6 +749,12 @@
                                 and Water (ALICE) Mixtures,” Journal of Propulsion and Power, Vol. 41, No. 3, 2025, pp. 330–346. doi: 
                                 <a href="https://doi.org/10.2514/1.B39541" target="_blank" rel="noopener noreferrer" 
                                 class="text-blue-700 underline">10.2514/1.B39541</a>.
+                            </li>
+                            <li>
+                                Connell Jr, T. L., Risha, G., Yetter, R. A., Yang, V., and Son, S. F., “Combustion of Bimodal Aluminum Particles 
+                                and Ice Mixtures,” International Journal of Energetic Materials and Chemical Propulsion, Vol. 11, No. 3, 2012. doi: 
+                                <a href="https://doi.org/10.1615/IntJEnergeticMaterialsChemProp.2013003588" target="_blank" rel="noopener noreferrer" 
+                                class="text-blue-700 underline">10.1615/IntJEnergeticMaterialsChemProp.2013003588</a>.
                             </li>
                         </ul>
                     </div>
@@ -692,7 +774,7 @@
             <button class="accordion">
                 <div class="acc-text-group">
                     <span class="acc-title">5. Internal Ballistic Simulation of NAWC motor no. 13</span>
-                    <span class="acc-desc">Time resolved internal ballistic simulation of Naval Air Warfare Center (NAWC) tactical motor no.13 with AP/HTPB propellant.</span>
+                    <span class="acc-desc">Time resolved internal ballistic simulation of Naval Air Warfare Center (NAWC) tactical motor no. 13 with AP/HTPB propellant.</span>
                 </div>
             </button>
         
@@ -703,34 +785,34 @@
                         <div class="description">
                             <h3>Case Description</h3>
                             <p>
-                                This simulation case investigates the internal ballistics and multi-phase flow dynamics within a 
-                                lab-scale rocket motor utilizing frozen nano-aluminum water (ALICE) propellant. Rather than 
-                                modeling the transient process of propellant grain regression, this simulation focuses on a 
-                                statistically steady instant during the firing duration of the rocket motor. By treating the 
-                                grain geometry as fixed and the burning surface as a mass injection boundary, the simulation  
-                                provides a high-fidelity 'snapshot' of the flow dynamics inside the rocket motor. The 2D axisymmetric 
-                                mesh and the boundaries of the lab-scale rocket motor is shown in figure 3.1.    
+                                This simulation models the gas-phase flow in the Naval Air Warfare Center (NAWC) tactical motor No. 13, 
+                                incorporating propellant regression. The 2D axisymmetric domain and its corresponding dimensions are 
+                                illustrated in Figure 5.1.     
                             </p>
                         </div>
                         <div class="media-container">
-                            <img src="images/IB-Steady-Mesh.gif" alt="SRM Geometry Schematic" class="schematic-img">
-                            <p class="caption">Fig 3.1: 2D Axisymmetric Mesh and Boundary Conditions of the Lab-Scale Rocket Motor. </p>
+                            <img src="images/NAWC-motor13.gif" alt="SRM Geometry Schematic" class="schematic-img">
+                            <p class="caption">Fig 5.1: 2D Axisymmetric Domain and Boundary Conditions of the NAWC motor no. 13. (Willcox et. al., 2007) </p>
                         </div>
                         <div class="description">
                             <p>
-                                For the steady-state simulation of the ALICE propellant lab-scale motor, the gas phase mass flow rate at the 
-                                propellant grain interface is set to $0.1 \text{ g/s}$ with an associated particle mass fraction of $0.7194$.
-                                The adibatic flame temperature of ALICE propellant with equivalence ratio of $0.943$ is $2270 \text{ K}$ (when combustion
-                                efficiency is $70 \%$). The gas and particle phase are assumed to enter the simulation domain with same velocities 
-                                and at a temperature of $2270 \text{ K}$. The particle diameter is taken to be $80 \text{ nm}$. To learn more about the propellant, 
-                                rocket motor firing experiments and the computational work, the readers can refer to Risha et. al., (2014) and Venukumar et. al., (2025).
-
-                                For simplicity, thermophysical properties for both phases are assumed constant, with the gas phase defined by a specific heat 
-                                of $10000 \text{ J/kg}\cdot\text{K}$, a molecular weight of $2.9 \text{ g/mol}$, a dynamic viscosity of $1e^{-4} \text{ Ns/m}^2$, and a 
-                                Prandtl number of $0.7$. The particle phase density is $3950 \text{ kg/m}^3$ and the 
-                                specific heat is $1800 \text{ kJ/kg}\cdot\text{K}$. Interphase momentum exchange is governed by the Loth drag model 
-                                to account for compressibility and rarefaction effects, while the gas-particle thermal exchange is modeled via 
-                                the Ranz-Marshall correlation, modified by Kavanau’s correction factor to incorporate rarefactional influences.
+                                The propellant utilized is NWR11b, composed of $83 \%$ Ammonium perchlorate, $11.9 \%$ Hydroxyl-terminated 
+                                polybutadiene (HTPB), $5 \%$ oxamide, and $0.1 \%$ carbon black. The regression of the propellant surface 
+                                is tracked using an <code>interfaceTrackingModel</code> of type <code>subCellularInterfaceMotion</code>. 
+                                This model requires the propellant burning rate to be defined according to St. Robert’s Law, using the 
+                                pre-exponential factor and pressure exponent as primary inputs. For NWR11b propellant, the burning rate 
+                                is $0.541 \text{ cm/s}$ at a chamber pressure of $6.9 \text{ MPa}$, with a pressure exponent of $0.461$ 
+                                (Willcox et al., 2007). Consequently, the burning rate is expressed as:
+                                $$
+                                    r_b [\text{cm/s}] = 0.222\left(P[\text{MPa}]\right)^{0.461} 
+                                $$
+                                The multiphase system selected for this study is a simplified model named <code>regressionMultiphaseSystem</code>. 
+                                This system requires only two parameters: the mass fraction of the particle phase in the combustion products
+                                and the adiabatic flame temperature of the propellant. In this specific case, as the propellant is non-aluminized, 
+                                the particle phase mass fraction is zero ($X_p = 0$). Based on chemical equilibrium analysis, the adiabatic 
+                                flame temperature was determined to be approximately $2850 \text{ K}$. Furthermore, the molecular weight 
+                                of the gas-phase combustion products is $25.4 \text{ g/mol}$, the specific heat constant is $1855 \text{ J/kgK}$.  
+                                The dynamic viscosity is assumed to be $1e^{-5} \text{ Ns/m}^2$, and the Prandtl number is $0.7$. 
                             </p>
                         </div>
                     </div>
@@ -738,16 +820,13 @@
                     <h3>Boundary Conditions</h3>
                     <table class="bc-table">
                         <thead>
-                            <tr><th>Variables</th><th>Inlet/Propellant surface</th><th>Outlet</th><th>Wall</th><th>Wedge faces</th></tr>
+                            <tr><th>Variables</th><th>Outlet</th><th>Wall</th><th>Wedge faces</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td><strong>$P$</strong></td><td>fixedFluxPressure </td><td>zeroGradient</td><td>fixedFluxPressure</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\boldsymbol{u}_g$</strong></td><td>gasFlowRateInletVelocity ($0.1 \text{ g/s}$)</td><td>zeroGradient</td><td>noSlip</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\boldsymbol{u}_p$</strong></td><td>sameAs - gas phase ($\boldsymbol{u}_g = \boldsymbol{u}_p$)</td><td>outletInlet (no reverse flow)</td><td>noSlip</td><td>cyclic</td></tr>
-                            <tr><td><strong>$T_g$</strong></td><td> $2270 \text{ K}$</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$T_p$</strong></td><td>sameAs - gas phase ($T_p = T_g$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
-                            <tr><td><strong>$\alpha_p$</strong></td><td>massLoadingFraction ($X_p = 0.7194$)</td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$P$</strong></td><td>zeroGradient</td><td>fixedFluxPressure</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\boldsymbol{u}_g$</strong></td><td>zeroGradient</td><td>noSlip</td><td>cyclic</td></tr>
+                            <tr><td><strong>$T_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
+                            <tr><td><strong>$\alpha_g$</strong></td><td>zeroGradient</td><td>zeroGradient</td><td>cyclic</td></tr>
                         </tbody>
                     </table>
                     <h3>Numerical Schemes</h3>
@@ -767,6 +846,8 @@
                           <span class="step-label">2. Prepare the Case</span>
                           <p>The case file is available in the directory <code>tutorials/Steady-ALICE-motor</code>. Copy the case file to your working directory. To mesh the geometry, run:</p>
                           <code class="cmd-block">blockMesh</code>
+                          <p>To set the initial propellant phase volume fraction field (center-perforated grain), run:</p>
+                          <code class="cmd-block">setRocketInitField</code>
                         </div>
                       
                         <div class="sim-step">
@@ -781,29 +862,38 @@
                           <code class="cmd-block">decomposePar<br>mpirun -np 8 rocketMotor -parallel</br></code>
                           <p><small><em>Note: The number of processors can be adjusted in the <code>decomposeParDict</code> file.</em></small></p>
                         </div>
-                      
-                        <div class="tip-box">
-                          <div>
-                            <strong>💡 Tip for Higher Resolution:</strong><br>
-                            To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
-                          </div>
+
+                        <div class="sim-step">
+                            <span class="step-label">4. Post-process results</span>
+                            <p>The specific impulse and characteristic velocity can be computed from the thrust and mass flow rate 
+                                at the outlet patch. To obtain mass flow rate of gas and particle phase and the thrust for each time step, run:
+                            </p>
+                            <code class="cmd-block">postProcessRocket</code>
+                            <p>This will generate a csv file containing mass flow rates and thrust for each time step, which can be further used 
+                                to calculate specific impulse and $C^*$ as, 
+                                $$
+                                    C^* = \frac{P_cA_t}{\dot{m}_{gas} + \dot{m}_{particles}} \hspace{20pt} I_{\text{sp}} = \frac{F}{(\dot{m}_{gas} + \dot{m}_{particles})g_0}
+                                $$ 
+                            </p>
                         </div>
+
+                        <div class="tip-box">
+                            <div>
+                              <strong>💡 Tip for Higher Resolution:</strong><br>
+                              To obtain higher resolution of flow dynamics, increase the mesh size in the <code>blockMeshDict</code> file before running the mesh generation.
+                            </div>
+                          </div>
                       
                       </div>  
                     <div>
                         <h3 class="font-bold">References</h3>
                         <ul class="list-disc list-outside space-y-3 pl-5 leading-relaxed">
                             <li>
-                                Risha, G. A., Connell Jr, T. L., Yetter, R. A., Sundaram, D. S., and Yang, V., “Combustion of Frozen 
-                                Nanoaluminum and Water Mixtures,” Journal of Propulsion and Power, Vol. 30, No. 1, 2014, pp. 133–142. doi: 
-                                <a href="https://doi.org/10.2514/1.B34783" target="_blank" rel="noopener noreferrer" 
-                                class="text-blue-700 underline">10.2514/1.B34783</a>.
-                            </li>
-                            <li>
-                                Venukumar, G., and Sundaram, D. S., “Computational Study of Propulsive Performance of Frozen Nano-Aluminum 
-                                and Water (ALICE) Mixtures,” Journal of Propulsion and Power, Vol. 41, No. 3, 2025, pp. 330–346. doi: 
-                                <a href="https://doi.org/10.2514/1.B39541" target="_blank" rel="noopener noreferrer" 
-                                class="text-blue-700 underline">10.2514/1.B39541</a>.
+                                Willcox, M.A., Brewster, M.Q., Tang, K.C., Stewart, D.S. and Kuznetsov, I., “Solid 
+                                rocket motor internal ballistics simulation using three-dimensional grain burnback,” 
+                                Journal of Propulsion and Power, Vol. 23, No. 3, 2007, pp. 575-584. doi: 
+                                <a href="https://doi.org/10.2514/1.22971" target="_blank" rel="noopener noreferrer" 
+                                class="text-blue-700 underline">10.2514/1.22971</a>.
                             </li>
                         </ul>
                     </div>
