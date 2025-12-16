@@ -1,0 +1,3 @@
+surfRegress.C
+
+EXE = $(FOAM_PRF_APPBIN)/surfRegress
