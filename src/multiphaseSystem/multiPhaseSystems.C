@@ -32,9 +32,9 @@ License
 #include "MomentumEnergyTransferPhaseSystem.H"
 #include "InterphaseHeatTransferPhaseSystem.H"
 #include "PropellantRegressionPhaseSystem.H"
-#include "PropellantInterfacePhaseSystem.H"
-#include "PropellantCombustionPhaseSystem.H"
-#include "PropellantTransferPhaseSystem.H"
+// #include "PropellantInterfacePhaseSystem.H"
+// #include "PropellantCombustionPhaseSystem.H"
+// #include "PropellantTransferPhaseSystem.H"
 #include "EntrainedPropellantCombustionPhaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -76,59 +76,59 @@ namespace Foam
         regressionMultiphaseSystem
     );
 
-    typedef
-        PropellantInterfacePhaseSystem
-        <
-            InterphaseHeatTransferPhaseSystem
-            <
-                MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
-            >
-        >
-        interfaceRegressionMultiphaseSystem;
+    // typedef
+    //     PropellantInterfacePhaseSystem
+    //     <
+    //         InterphaseHeatTransferPhaseSystem
+    //         <
+    //             MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
+    //         >
+    //     >
+    //     interfaceRegressionMultiphaseSystem;
 
-    addNamedToRunTimeSelectionTable
-    (
-        multiPhaseSystem,
-        interfaceRegressionMultiphaseSystem,
-        dictionary,
-        interfaceRegressionMultiphaseSystem
-    );
+    // addNamedToRunTimeSelectionTable
+    // (
+    //     multiPhaseSystem,
+    //     interfaceRegressionMultiphaseSystem,
+    //     dictionary,
+    //     interfaceRegressionMultiphaseSystem
+    // );
 
-    typedef
-        PropellantCombustionPhaseSystem
-        <
-            InterphaseHeatTransferPhaseSystem
-            <
-                MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
-            >
-        >
-        interfaceCombustionMultiphaseSystem;
+    // typedef
+    //     PropellantCombustionPhaseSystem
+    //     <
+    //         InterphaseHeatTransferPhaseSystem
+    //         <
+    //             MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
+    //         >
+    //     >
+    //     interfaceCombustionMultiphaseSystem;
 
-    addNamedToRunTimeSelectionTable
-    (
-        multiPhaseSystem,
-        interfaceCombustionMultiphaseSystem,
-        dictionary,
-        interfaceCombustionMultiphaseSystem
-    );
+    // addNamedToRunTimeSelectionTable
+    // (
+    //     multiPhaseSystem,
+    //     interfaceCombustionMultiphaseSystem,
+    //     dictionary,
+    //     interfaceCombustionMultiphaseSystem
+    // );
 
-    typedef
-        PropellantTransferPhaseSystem
-        <
-            InterphaseHeatTransferPhaseSystem
-            <
-                MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
-            >
-        >
-        propellantTransferMultiphaseSystem;
+    // typedef
+    //     PropellantTransferPhaseSystem
+    //     <
+    //         InterphaseHeatTransferPhaseSystem
+    //         <
+    //             MomentumEnergyTransferPhaseSystem<multiPhaseSystem>
+    //         >
+    //     >
+    //     propellantTransferMultiphaseSystem;
 
-    addNamedToRunTimeSelectionTable
-    (
-        multiPhaseSystem,
-        propellantTransferMultiphaseSystem,
-        dictionary,
-        propellantTransferMultiphaseSystem
-    );
+    // addNamedToRunTimeSelectionTable
+    // (
+    //     multiPhaseSystem,
+    //     propellantTransferMultiphaseSystem,
+    //     dictionary,
+    //     propellantTransferMultiphaseSystem
+    // );
 
     // Advanced phase system - tailored for ALICE propellant rocket motor simulations
     // Inputs include combustion efficiency, entrainment factor - relevant ALICE rocket motors

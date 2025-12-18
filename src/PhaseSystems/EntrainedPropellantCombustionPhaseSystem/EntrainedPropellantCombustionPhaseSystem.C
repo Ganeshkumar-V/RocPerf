@@ -168,10 +168,10 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::EntrainedPropel
         dimensionedVector("", dimVelocity, vector(0, 0, 0))
       )
     ),
-    saturationModel_
-    (
-        saturationModel::New(this->subDict("saturationModel"), mesh)
-    ),
+    // saturationModel_
+    // (
+    //     saturationModel::New(this->subDict("saturationModel"), mesh)
+    // ),
     eta(phaseProperties)
 {
     this->generatePairsAndSubModels
@@ -233,12 +233,12 @@ Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-template<class BasePhaseSystem>
-const Foam::saturationModel&
-Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::saturation() const
-{
-    return saturationModel_();
-}
+// template<class BasePhaseSystem>
+// const Foam::saturationModel&
+// Foam::EntrainedPropellantCombustionPhaseSystem<BasePhaseSystem>::saturation() const
+// {
+//     return saturationModel_();
+// }
 
 template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>

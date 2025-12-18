@@ -39,7 +39,7 @@ SourceFiles
 #define EntrainedPropellantCombustionPhaseSystem_H
 
 #include "phaseSystem.H"
-#include "saturationModel.H"
+// #include "saturationModel.H"
 #include "EntrainedSystem.H"
 #include "Surface.H"
 
@@ -120,7 +120,7 @@ protected:
             rDmdtTable rDmdt_;
 
             //- The saturation model used to evaluate Tsat = Tf
-            autoPtr<saturationModel> saturationModel_;
+            // autoPtr<saturationModel> saturationModel_;
 
     // Protected member functions
 
@@ -147,7 +147,7 @@ public:
     // Member Functions
 
     //- Return the saturationModel
-    const saturationModel& saturation() const;
+    // const saturationModel& saturation() const;
 
         //- Return the mass transfer rate for a pair
         virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;

@@ -39,7 +39,6 @@ SourceFiles
 #define PropellantRegressionPhaseSystem_H
 
 #include "phaseSystem.H"
-#include "saturationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
