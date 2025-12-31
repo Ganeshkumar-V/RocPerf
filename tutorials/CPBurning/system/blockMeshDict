@@ -1,0 +1,163 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale  0.01;
+
+// Cylinder dimensions
+r     1;  // radius of the cylinder
+l    10; // length of the cylinder
+
+// 5 block Mesh
+// Inner square dimensions
+fs    0.4;
+rs    #calc   "$fs*$r";
+xs    #calc   "$rs*sin(45.0*degToRad())";
+ys    #calc   "$rs*cos(45.0*degToRad())";
+// Outer Blocks
+x     #calc   "$r*sin(45.0*degToRad())";
+y     #calc   "$r*cos(45.0*degToRad())";
+
+
+vertices
+(
+ //block0 vertices (Z=0)
+ (-$xs $ys 0)          //0
+ (-$x $y 0)  //1
+ ($x $y 0)   //2
+ ($xs $ys 0)           //3
+
+ //block0 vertices (Z=6 -> 6 * 0.005 = 0.03m)
+ (-$xs $ys $l)          //4
+ (-$x $y $l)  //5
+ ($x $y $l)   //6
+ ($xs $ys $l)           //7
+
+ //block1 new vertices (Z=0)
+ ($xs -$ys 0)          //8
+ ($x -$y 0)  //9
+
+ //block1 new vertices (Z=6)
+ ($xs -$ys $l)          //10
+ ($x -$y $l)  //11
+
+ //block3 new vertices (Z=0)
+ (-$xs -$ys 0)         //12
+ (-$x -$y 0) //13
+
+ //block3 new vertices (Z=6)
+ (-$xs -$ys $l)         //14
+ (-$x -$y $l) //15
+);
+
+// Tangential cells (Inner square width)
+xcells 8; //6
+
+// Radial cells (Thickness from square to wall)
+ycells 20; //8
+
+// Axial cells (Height)
+zcells 100; //60
+
+// Inner square block dimensions
+xscells $xcells; //6
+yscells $xcells; //6
+
+stretch 0.1;
+
+blocks
+(
+ //block0 (Top)
+ hex (0 3 2 1 4 7 6 5) ($xcells $ycells $zcells) simpleGrading (1 $stretch 1)
+ //block1 (Right)
+ hex (3 8 9 2 7 10 11 6) ($xcells $ycells $zcells) simpleGrading (1 $stretch 1)
+ //block2 (Bottom)
+ hex (8 12 13 9 10 14 15 11) ($xcells $ycells $zcells) simpleGrading (1 $stretch 1)
+ //block3 (Left)
+ hex (12 0 1 13 14 4 5 15) ($xcells $ycells $zcells) simpleGrading (1 $stretch 1)
+ //block4 (Center)
+ hex (0 12 8 3 4 14 10 7) ($xscells $yscells $zcells) simpleGrading (1 1 1)
+);
+
+edges
+(
+ //block0 arc
+ arc 1 2 (0 $r 0)
+ arc 5 6 (0 $r $l)
+
+ //block1 arc
+ arc 2 9 ($r 0 0)
+ arc 6 11 ($r 0 $l)
+
+ //block2 arc
+ arc 9 13 (0 -$r 0)
+ arc 11 15 (0 -$r $l)
+
+ //block3 arc
+ arc 1 13 (-$r 0 0)
+ arc 5 15 (-$r 0 $l)
+);
+
+boundary
+(
+
+ // inlet
+ // {
+ //  type patch;
+ //  faces
+ //  (
+ //  (0 1 2 3)
+ //  (2 3 8 9)
+ //  (8 9 13 12)
+ //  (13 12 0 1)
+ //  (0 3 8 12)
+ //  );
+ // }
+
+ outlet
+ {
+    type patch;
+    faces
+    (
+    (4 5 6 7)
+    (6 7 10 11)
+    (15 11 10 14)
+    (15 14 4 5)
+    (4 7 10 14)
+    );
+ }
+
+ Wall
+ {
+    type wall;
+    faces
+    (
+    (1 5 6 2)
+    (2 6 11 9)
+    (9 11 15 13)
+    (15 13 5 1)
+    (0 1 2 3)
+    (2 3 8 9)
+    (8 9 13 12)
+    (13 12 0 1)
+    (0 3 8 12)
+    );
+ }
+
+);
+
+mergePatchPairs
+(
+);

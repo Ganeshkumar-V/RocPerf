@@ -18,12 +18,25 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
-        smoothLimiter   0;
-        tolerance       1e-9;
+	    nAlphaCorr      2;
+        nAlphaSubCycles 1;
+        cAlpha          2;
+
+        MULESCorr       no;
+        nLimiterIter    5;
+
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
         relTol          0;
-        minIter         1;
+        advectionScheme isoAdvection;
+        reconstructionScheme plicRDF;
+        writeFields     true;
+        snapTol         1e-6;
+        vof2IsoTol 1e-8;
+        surfCellTol 1e-8;
+
+	rb 	0.5765;
     }
 
     p_rgh1
@@ -109,7 +122,7 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    20;
+    nOuterCorrectors    2;
     nCorrectors         3;
     nNonOrthogonalCorrectors 0;
     nEnergyCorrectors   3;

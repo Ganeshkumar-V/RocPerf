@@ -22,9 +22,9 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         1;
+endTime         0.1;
 
-deltaT          1e-7;
+deltaT          1e-4;
 
 //writeControl    timeStep;
 writeControl    adjustableRunTime;
@@ -46,7 +46,7 @@ timePrecision   12;
 
 runTimeModifiable yes;
 
-adjustTimeStep  yes;
+adjustTimeStep  no;
 
 maxCo           0.8;
 transCo         0.8;
