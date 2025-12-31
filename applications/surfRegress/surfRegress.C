@@ -48,6 +48,37 @@ Description
 #include "GeometricField.H"
 #include "processorFvPatch.H"
 
+#include "reconstructionSchemes.H"
+
+label findAdjacent(label celli, const volScalarField& beta1)
+{
+    const fvMesh& mesh(beta1.mesh());
+    const labelList& Own(mesh.owner());
+    const labelList& Nei(mesh.neighbour());
+    scalar One(1.0);
+
+    forAll(Own, i)
+    {
+        if (Own[i] == celli)
+        {
+            Info << "Own[i]: " << Nei[i] << " Nei[i]: " << Own[i]<< " beta1[Nei[i]]: "<< beta1[Nei[i]] << " beta1[Own[i]]: "<< beta1[Own[i]] << endl;
+            if (beta1[Nei[i]] == One)
+            {
+                return Nei[i];
+            }
+        }
+        else if (Nei[i] == celli)
+        {
+            Info << "Nei[i]: " << Nei[i] << " Own[i]: " << Own[i] << " beta1[Own[i]] - One: "<< beta1[Own[i]] - One << " beta1[Nei[i]]: "<< beta1[Nei[i]] << endl;
+            if (beta1[Own[i]] == One)
+            {
+                 return Own[i];
+            }
+        }
+    }
+    return -1;
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -77,9 +108,19 @@ int main(int argc, char *argv[])
 
     runTime++;
     Info<< "Time = " << runTime.timeName() << nl << endl;
+    while (pimple.loop())
+    {
+      if (pimple.firstIter())
+      {   
+        // Reconstruct the interface and calculate surface area
+        alphaOld = alpha;
+        surf.reconstruct();
+        Info << "Constructed Interface" << endl;
+      }
 
-    // Regression code goes here --------
-
+      // Regression code goes here --------
+      #include "RegressFluid.H"
+    }
 
     runTime.write();
     runTime.printExecutionTime(Info);
