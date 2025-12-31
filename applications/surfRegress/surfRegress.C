@@ -61,7 +61,7 @@ label findAdjacent(label celli, const volScalarField& beta1)
     {
         if (Own[i] == celli)
         {
-            Info << "Own[i]: " << Nei[i] << " Nei[i]: " << Own[i]<< " beta1[Nei[i]]: "<< beta1[Nei[i]] << " beta1[Own[i]]: "<< beta1[Own[i]] << endl;
+            Info << "Own[i]: " << Nei[i] << " Nei[i]: " << Own[i]<< " alpha[Nei[i]]: "<< beta1[Nei[i]] << " beta1[Own[i]]: "<< beta1[Own[i]] << endl;
             if (beta1[Nei[i]] == One)
             {
                 return Nei[i];

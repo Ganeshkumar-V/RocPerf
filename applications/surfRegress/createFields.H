@@ -72,7 +72,7 @@ autoPtr<reconstructionSchemes> surf_
 );
 reconstructionSchemes& surf(surf_());
 
-dimensionedScalar rb("rb", dimVelocity, 1.0);
+dimensionedScalar rb("rb", dimVelocity, mesh.solverDict(alpha.name()).get<scalar>("rb"));
 
 volScalarField cellV
 (
