@@ -132,6 +132,8 @@ class continuousMultiphaseKEpsilon
 
     const word particlePhaseName_;
 
+    const bool writeFields_;
+
     // Private Member Functions
 
 

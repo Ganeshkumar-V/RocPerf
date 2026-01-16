@@ -576,7 +576,7 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
         {
           emptyCellSize = alpha[i] <= cutoff_ ? emptyCellSize + 1 : emptyCellSize;
         }
-        Info << "EmptyCellSize: " << emptyCellSize << endl;
+        // Info << "EmptyCellSize: " << emptyCellSize << endl;
         labelList emptyCells(emptyCellSize);
         label j = 0;
         forAll(alpha, i)
@@ -596,8 +596,11 @@ void Foam::RASModels::multiphaseKineticTheoryModel::correct()
         ThetaEqn.solve();
 
         // Impose wall on propellant surface
-        const volScalarField& alphaProp(this->db().lookupObject<volScalarField>("alpha.propellant"));
-        ImposeWall(Theta_, alphaProp);
+        if (this->db().foundObject<volScalarField>("alpha.propellant"))
+        {
+            const volScalarField& alphaProp(this->db().lookupObject<volScalarField>("alpha.propellant"));
+            ImposeWall(Theta_, alphaProp);
+        }
         Theta_ = pos0(alpha - residualAlpha_)*Theta_;
         fvOptions.correct(Theta_);
     }

@@ -127,13 +127,15 @@ namespace RASModels
 template<class BasicTurbulenceModel>
 class continuousMultiphaseKOmegaSST
 :
-    public kOmegaSST<kOmegaSSTBase<eddyViscosity<RASModel<BasicTurbulenceModel>>>>
+    public kOmegaSST<BasicTurbulenceModel>
 {
     // Private data
 
     volScalarField Kpg_;
 
     const word particlePhaseName_;
+
+    const bool writeFields_;
 
     // Private Member Functions
 
@@ -147,8 +149,6 @@ class continuousMultiphaseKOmegaSST
 protected:
 
     // Protected data
-
-    dimensionedScalar CEpsilon3_;
 
     // Protected Member Functions
 

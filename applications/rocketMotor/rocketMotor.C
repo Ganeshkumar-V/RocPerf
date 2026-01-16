@@ -109,6 +109,8 @@ int main(int argc, char *argv[])
     maxTemp = fluid.get<scalar>("maxTemp");
   }
 
+  // fluid.correctTurbulence();
+
   while (runTime.run())
   {
     #include "readTimeControls.H"
